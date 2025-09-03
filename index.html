@@ -1,0 +1,395 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Plano de Estudos - INSS (Adaptado para Mobile)</title>
+<style>
+:root {
+  --bg: #f5f7fb;
+  --card: #ffffff;
+  --text: #212529;
+  --muted: #6c757d;
+  --line: #e5e7eb;
+  --primary: #2563eb;
+  --primary-2: #1d4ed8;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  margin: 24px;
+}
+
+h1 { margin:0 0 16px 0; text-align:center; font-size:28px; }
+.subtitle { color: var(--muted); text-align:center; margin-bottom:24px; }
+
+.tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+.tab { padding:10px 14px; border-radius:10px 10px 0 0; background:#e9eefb; color:#1f2937; cursor:pointer; border:1px solid var(--line); border-bottom:none; }
+.tab.active { background: var(--primary); color:#fff; border-color: var(--primary); }
+
+.panel { display:none; background: var(--card); border:1px solid var(--line); border-radius:0 12px 12px 12px; padding:16px; box-shadow:0 6px 24px rgba(0,0,0,0.06); overflow-x:auto; }
+.panel.active { display:block; }
+
+.legend { font-size:14px; color: var(--muted); margin:6px 0 14px; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+th, td {
+  border:1px solid var(--line);
+  padding:8px;
+  vertical-align: top;
+  word-wrap: break-word;
+}
+
+th { background:#f3f4f6; text-align: left; }
+
+/* Colunas fixas e responsivas */
+th:nth-child(1), td:nth-child(1) { width: 180px; } 
+th:nth-child(2), td:nth-child(2) { width: 140px; } 
+th:nth-child(3), td:nth-child(3) { width: 200px; } 
+th:nth-child(4), td:nth-child(4) { width: auto; min-width:200px; } 
+
+.status { display:flex; flex-direction: column; gap:4px; }
+.chip { display:flex; align-items:center; gap:6px; background:#eef2ff; border:1px solid #c7d2fe; padding:4px 6px; border-radius:8px; font-size: 13px; }
+
+textarea, .editable, .link-input { width: 100%; border:1px solid var(--line); border-radius:6px; padding:6px; font-size:14px; box-sizing: border-box; }
+.editable { min-height:100px; resize: vertical; }
+.link-input { height:28px; padding:4px 6px; font-size:13px; }
+
+button { padding:5px 8px; border-radius:6px; border:1px solid var(--line); background:#fff; cursor:pointer; font-size:13px; }
+button.primary { background: var(--primary); color:#fff; border-color: var(--primary); }
+
+td a { 
+  display:inline-block; 
+  max-width: 100%; 
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap; 
+  vertical-align: middle;
+}
+
+/* Cada link com seus botões em linha flex */
+td .link-container { display:flex; flex-direction: column; gap:4px; overflow-x:auto; }
+.link-item { display:flex; gap:4px; flex-wrap:wrap; align-items:center; }
+.link-item input { flex:1 1 100px; min-width:100px; }
+
+.top-actions { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin:10px 0 22px; }
+.tip { font-size:12px; color: var(--muted); margin-top:6px; }
+
+/* Responsividade para smartphones */
+@media (max-width: 600px){
+  th:nth-child(1), td:nth-child(1){ min-width:150px; }
+  th:nth-child(2), td:nth-child(2){ min-width:100px; }
+  th:nth-child(3), td:nth-child(3){ min-width:140px; }
+  th:nth-child(4), td:nth-child(4){ min-width:200px; }
+
+  .link-item { flex-wrap:wrap; }
+  .link-item input { flex:1 1 100%; }
+  .editable { min-width: 100%; }
+}
+</style>
+</head>
+<body>
+<h1>Plano de Estudos — Concurso INSS</h1>
+<div class="subtitle">Marque o status, escreva anotações e os dados ficam salvos automaticamente no seu navegador.</div>
+
+<div class="tabs" id="tabs"></div>
+<div id="panels"></div>
+
+<div class="top-actions">
+  <button class="primary" id="exportBtn">Exportar progresso (JSON)</button>
+  <button id="importBtn">Importar progresso (JSON)</button>
+  <input type="file" id="importFile" accept="application/json" style="display:none" />
+  <button id="clearBtn">Zerar tudo</button>
+</div>
+
+<div class="tip">Dica: use Ctrl+F para localizar um tópico. Links priorizam fontes gratuitas e oficiais.</div>
+
+<script>
+// --- Dados de estudo (mantidos do seu original) ---
+
+const DATA = [
+  {
+    id: 'portugues',
+    titulo: 'Língua Portuguesa',
+    rows: [
+      { topico: 'Compreensão e interpretação de textos', key:'port-interpretacao', links: ['https://www.khanacademy.org.br/portugues/leitura-e-interpretacao'], notes: '' },
+      { topico: 'Tipologia textual', key:'port-tipologia', links: ['https://www.soportugues.com.br/secoes/textos/'], notes: '' },
+      { topico: 'Ortografia oficial', key:'port-ortografia', links: ['https://www.cursoemvideo.com/curso/portugues/'], notes: '' },
+      { topico: 'Acentuação gráfica', key:'port-acentuacao', links: ['https://www.soportugues.com.br/secoes/acentuacao.php'], notes: '' },
+      { topico: 'Emprego das classes de palavras', key:'port-classes', links: ['https://www.todamateria.com.br/classes-de-palavras/'], notes: '' },
+      { topico: 'Emprego do sinal indicativo de crase', key:'port-crase', links: ['https://www.soportugues.com.br/secoes/crase.php'], notes: '' },
+      { topico: 'Sintaxe da oração e do período', key:'port-sintaxe', links: ['https://www.todamateria.com.br/sintaxe/'], notes: '' },
+      { topico: 'Pontuação', key:'port-pontuacao', links: ['https://www.soportugues.com.br/secoes/pontuacao.php'], notes: '' },
+      { topico: 'Concordância nominal e verbal', key:'port-concordancia', links: ['https://www.todamateria.com.br/concordancia-verbal-e-nominal/'], notes: '' },
+      { topico: 'Regências nominal e verbal', key:'port-regencia', links: ['https://www.soportugues.com.br/secoes/regencia.php'], notes: '' },
+      { topico: 'Significação das palavras', key:'port-significacao', links: ['https://www.todamateria.com.br/semantica/'], notes: '' },
+      { topico: 'Redação de correspondências oficiais (MRPR)', key:'port-correspondencia', links: ['http://www.planalto.gov.br/ccivil_03/manual/'], notes: '' },
+    ]
+  },
+  {
+    id:'etica',
+    titulo:'Ética no Serviço Público',
+    rows:[
+      { topico:'Código de Ética do Servidor Público Civil (Dec. 1.171/1994)', key:'etica-1171', links:['https://www.planalto.gov.br/ccivil_03/decreto/1994-1999/D1171.htm'], notes:'' },
+      { topico:'Sistema de Gestão da Ética (Dec. 6.029/2007)', key:'etica-6029', links:['https://www.planalto.gov.br/ccivil_03/decreto/2007/d6029.htm'], notes:'' },
+    ]
+  },
+  {
+    id:'dir_constitucional',
+    titulo:'Noções de Direito Constitucional',
+    rows:[
+      { topico:'Direitos e garantias fundamentais', key:'dc-direitos', links:['https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm'], notes:'' },
+      { topico:'Administração pública (arts. 37 a 41 CF/88)', key:'dc-administracao', links:['https://www.planalto.gov.br/ccivil_03/constituicao/constituicao.htm'], notes:'' },
+    ]
+  },
+  {
+    id:'dir_administrativo',
+    titulo:'Noções de Direito Administrativo',
+    rows:[
+      { topico:'Estado, governo e administração pública', key:'da-estado', links:['https://www.todamateria.com.br/direito-administrativo/'], notes:'' },
+      { topico:'Direito administrativo: conceito, fontes e princípios', key:'da-conceito', links:['https://www.todamateria.com.br/direito-administrativo/'], notes:'' },
+      { topico:'Organização administrativa da União', key:'da-uniao', links:['https://www.todamateria.com.br/direito-administrativo/'], notes:'' },
+      { topico:'Agentes públicos: espécies, classificação e regime jurídico', key:'da-agentes', links:['https://www.todamateria.com.br/direito-administrativo/'], notes:'' },
+      { topico:'Poderes administrativos', key:'da-poderes', links:['https://www.todamateria.com.br/direito-administrativo/'], notes:'' },
+      { topico:'Ato administrativo: validade, eficácia e espécies', key:'da-ato', links:['https://www.todamateria.com.br/direito-administrativo/'], notes:'' },
+      { topico:'Serviços Públicos', key:'da-servicos', links:['https://www.todamateria.com.br/direito-administrativo/'], notes:'' },
+      { topico:'Controle e responsabilização da administração', key:'da-controle', links:['https://www.todamateria.com.br/direito-administrativo/'], notes:'' },
+      { topico:'Leis de Processo Administrativo', key:'da-leis', links:['https://www.planalto.gov.br/ccivil_03/leis/L9784.htm'], notes:'' },
+    ]
+  },
+  {
+    id:'informatica',
+    titulo:'Noções de Informática',
+    rows:[
+      { topico:'Conceitos de Internet e intranet', key:'info-internet', links:['https://www.todamateria.com.br/internet/'], notes:'' },
+      { topico:'Conceitos básicos e modos de utilização de tecnologias, ferramentas, aplicativos e procedimentos de informática', key:'info-tecnologias', links:['https://www.softwarelivre.gov.br/'], notes:'' },
+      { topico:'Aplicativos para edição de textos, planilhas e apresentações (LibreOffice)', key:'info-libreoffice', links:['https://www.libreoffice.org/get-help/documentation/'], notes:'' },
+      { topico:'Sistemas operacionais Windows 7 e 10', key:'info-windows', links:['https://www.microsoft.com/pt-br/windows'], notes:'' },
+      { topico:'Ferramentas e aplicativos de navegação e correio eletrônico', key:'info-navegacao', links:['https://www.todamateria.com.br/email/'], notes:'' },
+      { topico:'Segurança e proteção: vírus, worms e derivados', key:'info-seguranca', links:['https://www.cert.br/tecnologia/seguranca/'], notes:'' },
+    ]
+  },
+  {
+    id:'logico',
+    titulo:'Raciocínio Lógico-Matemático',
+    rows:[
+      { topico:'Conceitos básicos de raciocínio lógico: proposições, valores lógicos, sentenças abertas', key:'logico-basico', links:['https://www.todamateria.com.br/logica-matematica/'], notes:'' },
+      { topico:'Tautologia', key:'logico-tautologia', links:['https://www.todamateria.com.br/logica-matematica/'], notes:'' },
+      { topico:'Operação com conjuntos', key:'logico-conjuntos', links:['https://www.todamateria.com.br/teoria-dos-conjuntos/'], notes:'' },
+      { topico:'Cálculos com porcentagens', key:'logico-porcentagem', links:['https://www.todamateria.com.br/porcentagem/'], notes:'' },
+    ]
+  },
+  {
+    id:'conhecimentos_especificos',
+    titulo:'Conhecimentos Específicos (INSS)',
+    rows:[
+      { topico:'Seguridade Social: origem, evolução e conceitos', key:'cs-seguridade', links:['https://www.inss.gov.br/assuntos/'], notes:'' },
+      { topico:'Legislação Previdenciária: conteúdo, fontes e aplicação', key:'cs-legislacao', links:['https://www.planalto.gov.br/ccivil_03/leis/L8212.htm', 'https://www.planalto.gov.br/ccivil_03/leis/L8213.htm'], notes:'' },
+      { topico:'Regime Geral de Previdência Social: segurados e abrangência', key:'cs-regime', links:['https://www.inss.gov.br/beneficios/'], notes:'' },
+      { topico:'Empresa e empregador doméstico: conceito previdenciário', key:'cs-empresa', links:['https://www.inss.gov.br/beneficios/'], notes:'' },
+      { topico:'Financiamento da Seguridade Social: receitas e contribuições', key:'cs-financiamento', links:['https://www.inss.gov.br/assuntos/'], notes:'' },
+      { topico:'Decadência e prescrição', key:'cs-decadencia', links:['https://www.planalto.gov.br/ccivil_03/leis/L8213.htm'], notes:'' },
+      { topico:'Crimes contra a seguridade social', key:'cs-crimes', links:['https://www.planalto.gov.br/ccivil_03/leis/L8213.htm'], notes:'' },
+      { topico:'Recurso das decisões administrativas', key:'cs-recurso', links:['https://www.inss.gov.br/beneficios/'], notes:'' },
+      { topico:'Plano de Benefícios da Previdência Social', key:'cs-plano', links:['https://www.inss.gov.br/beneficios/'], notes:'' },
+      { topico:'Manutenção, perda e restabelecimento da qualidade de segurado', key:'cs-qualidade', links:['https://www.inss.gov.br/beneficios/'], notes:'' },
+      { topico:'Serviços Previdenciários: serviço social e reabilitação profissional', key:'cs-servicos', links:['https://www.inss.gov.br/assuntos/'], notes:'' },
+      { topico:'Benefícios decorrentes de legislações especiais', key:'cs-beneficios', links:['https://www.inss.gov.br/beneficios/'], notes:'' },
+      { topico:'Lei Orgânica da Assistência Social – LOAS', key:'cs-loas', links:['https://www.planalto.gov.br/ccivil_03/leis/L8742.htm'], notes:'' },
+      { topico:'Regimes Próprios de Previdência Social', key:'cs-regimes', links:['https://www.inss.gov.br/assuntos/'], notes:'' },
+      { topico:'Emenda Constitucional nº 103/2019', key:'cs-ec103', links:['https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc103.htm'], notes:'' },
+      { topico:'Lei Complementar nº 142/2013', key:'cs-lc142', links:['https://www.planalto.gov.br/ccivil_03/leis/LCP/Lcp142.htm'], notes:'' },
+      { topico:'Instrução Normativa PRES/INSS nº 128/2022', key:'cs-in128', links:['https://www.inss.gov.br/legislacao/instrucao-normativa-pres-inss-n-128-2022/'], notes:'' },
+      { topico:'O servidor público como agente de desenvolvimento social', key:'cs-servidor', links:['https://www.servidor.gov.br/'], notes:'' },
+      { topico:'Saúde e qualidade de vida no serviço público', key:'cs-saude', links:['https://www.todamateria.com.br/saude-no-trabalho/'], notes:'' },
+    ]
+  }
+];
+
+
+
+
+
+// --- LocalStorage ---
+function saveState(key, field, value){
+  const data = JSON.parse(localStorage.getItem('studyPlan')||'{}');
+  if(!data[key]) data[key]={};
+  data[key][field]=value;
+  localStorage.setItem('studyPlan', JSON.stringify(data));
+}
+function loadState(key, field){
+  const data = JSON.parse(localStorage.getItem('studyPlan')||'{}');
+  return data[key] ? data[key][field] : null;
+}
+
+// --- Status (mutuamente exclusivo) ---
+function toggleStatus(key, type){
+  const inProgress=document.getElementById(`${key}-inProgress`);
+  const done=document.getElementById(`${key}-done`);
+
+  if(type==='inProgress' && inProgress.checked){
+    done.checked=false;
+  }
+  if(type==='done' && done.checked){
+    inProgress.checked=false;
+  }
+  saveState(key,'inProgress',inProgress.checked);
+  saveState(key,'done',done.checked);
+}
+
+// --- Links ---
+function addLink(key){
+  const inputEl=document.getElementById(`${key}-link-input`);
+  const link=inputEl.value.trim();
+  if(!link) return;
+  const links=loadState(key,'links')||[];
+  links.push({url:link,note:''});
+  saveState(key,'links',links);
+  inputEl.value='';
+  renderLinks(key);
+}
+function renderLinks(key){
+  const links=loadState(key,'links')||[];
+  const outputEl=document.getElementById(`${key}-link-output`);
+  outputEl.innerHTML=links.map((l,i)=>`
+    <div class="link-item">
+      <a href="${l.url}" target="_blank">Link ${i+1}</a>
+      <input type="text" class="link-note" id="${key}-link-note-${i}" value="${l.note||''}" placeholder="Comentário" oninput="saveLinkNote('${key}',${i})">
+      <button onclick="deleteLink('${key}',${i})">Apagar</button>
+    </div>
+  `).join('');
+}
+function deleteLink(key,index){
+  const links=loadState(key,'links')||[];
+  links.splice(index,1);
+  saveState(key,'links',links);
+  renderLinks(key);
+}
+function saveLinkNote(key,index){
+  const links=loadState(key,'links')||[];
+  const noteInput=document.getElementById(`${key}-link-note-${index}`);
+  links[index].note=noteInput.value;
+  saveState(key,'links',links);
+}
+
+// --- Notas ---
+function saveNotes(key){
+  const notesEl=document.getElementById(`${key}-notes`);
+  saveState(key,'notes',notesEl.innerText);
+}
+function deleteNotes(key){
+  const notesEl=document.getElementById(`${key}-notes`);
+  if(confirm('Deseja apagar esta anotação?')){
+    notesEl.innerText='';
+    saveState(key,'notes','');
+  }
+}
+
+// --- Criar linha da tabela ---
+function makeRowHTML(row){
+  const inProgress=loadState(row.key,'inProgress')||false;
+  const done=loadState(row.key,'done')||false;
+  const savedNotes=loadState(row.key,'notes')||row.notes||'';
+
+  return `
+    <tr>
+      <td>${row.topico}</td>
+      <td>
+        <label class="chip"><input type="checkbox" id="${row.key}-inProgress" ${inProgress?'checked':''} onchange="toggleStatus('${row.key}','inProgress')"> Em andamento</label>
+        <label class="chip"><input type="checkbox" id="${row.key}-done" ${done?'checked':''} onchange="toggleStatus('${row.key}','done')"> Concluído</label>
+      </td>
+      <td>
+        <div class="link-container">
+          <div class="link-item">
+            <input type="text" id="${row.key}-link-input" class="link-input" placeholder="Cole link aqui" />
+            <button class="primary" onclick="addLink('${row.key}')">Gravar</button>
+            <button onclick="deleteLinkInput('${row.key}')">Apagar</button>
+          </div>
+          <div id="${row.key}-link-output"></div>
+        </div>
+      </td>
+      <td>
+        <div class="editable" id="${row.key}-notes" contenteditable="true" oninput="saveNotes('${row.key}')">${savedNotes}</div>
+        <button onclick="deleteNotes('${row.key}')" style="margin-top:4px;">Apagar</button>
+      </td>
+    </tr>
+  `;
+}
+
+function deleteLinkInput(key){
+  document.getElementById(`${key}-link-input`).value='';
+}
+
+// --- Criar abas ---
+function renderTab(panelId,title,rows){
+  const tabsEl=document.getElementById('tabs');
+  const panelsEl=document.getElementById('panels');
+
+  const panelEl=document.createElement('div');
+  panelEl.classList.add('panel');
+  panelEl.id=panelId;
+  panelEl.innerHTML=`
+    <h3>${title}</h3>
+    <table>
+      <thead>
+        <tr><th>Conteúdo</th><th>Status</th><th>Links</th><th>Anotações</th></tr>
+      </thead>
+      <tbody>${rows.map(makeRowHTML).join('')}</tbody>
+    </table>
+  `;
+  panelsEl.append(panelEl);
+
+  const tabEl=document.createElement('div');
+  tabEl.classList.add('tab');
+  tabEl.innerHTML=title;
+  tabEl.onclick=function(){
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    tabEl.classList.add('active');
+    panelEl.classList.add('active');
+  };
+  tabsEl.append(tabEl);
+}
+
+// --- Inicializar ---
+DATA.forEach(g=>renderTab(g.id,g.titulo,g.rows));
+document.querySelector('.tab').click();
+DATA.forEach(g=>g.rows.forEach(r=>renderLinks(r.key)));
+
+// --- Exportar/Importar ---
+document.getElementById('exportBtn').onclick=function(){
+  const data=localStorage.getItem('studyPlan');
+  const blob=new Blob([data],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='progresso.json'; a.click();
+  URL.revokeObjectURL(url);
+};
+
+document.getElementById('importBtn').onclick=function(){ document.getElementById('importFile').click(); };
+document.getElementById('importFile').onchange=function(e){
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=function(ev){ localStorage.setItem('studyPlan',ev.target.result); location.reload(); };
+  reader.readAsText(file);
+};
+
+// --- Limpar ---
+document.getElementById('clearBtn').onclick=function(){
+  if(confirm('Tem certeza que deseja limpar todo o progresso?')){
+    localStorage.removeItem('studyPlan'); location.reload();
+  }
+};
+</script>
+</body>
+</html>
