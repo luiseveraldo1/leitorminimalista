@@ -353,9 +353,34 @@ async function saveToCloud(){
 }
 
 function copyCloudLink(){
-  if(!cloudLink){ alert("Nenhum JSON salvo ainda. Salve primeiro!"); return; }
-  navigator.clipboard.writeText(cloudLink).then(()=>alert("Link copiado para a área de transferência!")).catch(err=>alert("Erro ao copiar link: "+err));
+  if(!cloudLink){ 
+    alert("Nenhum JSON salvo ainda."); 
+    return; 
+  }
+
+  const urlWeb = "https://jsonbin.io/b/" + cloudLink;         // visualização web
+  const urlRaw = "https://api.jsonbin.io/v3/b/" + cloudLink + "/latest"; // JSON puro
+
+  const message = 
+    "Links disponíveis:\n\n" +
+    "1️⃣ Web: " + urlWeb + "\n" +
+    "2️⃣ JSON: " + urlRaw + "\n\n" +
+    "Digite 1 para copiar o Web ou 2 para copiar o JSON:";
+
+  const choice = prompt(message, "1");
+
+  let url;
+  if(choice === "2"){
+    url = urlRaw;
+  } else {
+    url = urlWeb;
+  }
+
+  navigator.clipboard.writeText(url)
+    .then(()=>alert("Link copiado!\n" + url))
+    .catch(()=>alert("Falha ao copiar link."));
 }
+
 
 async function loadFromCloud(){
   const url=prompt("Cole o link do JSONBin.io:");
