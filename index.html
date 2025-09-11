@@ -15,124 +15,29 @@ body {
   align-items: center;
   transition: background 0.3s;
 }
-
 h2 { margin-bottom: 5px; color: #2c3e50; }
 h3 { margin: 20px 0 10px; color: #34495e; }
-
-#searchInput, textarea, button, input, select {
-  transition: all 0.2s ease;
-  font-family: inherit;
-}
-
-#searchInput {
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  min-width: 220px;
-  font-size: 15px;
-  background: #fff;
-}
-#searchInput:focus {
-  outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 8px rgba(74,144,226,0.2);
-}
-
-textarea {
-  width: 100%;
-  max-width: 820px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  padding: 12px 14px;
-  resize: vertical;
-  font-size: 16px;
-  background: #fff;
-}
-textarea:focus {
-  outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 10px rgba(74,144,226,0.25);
-}
-
-#processedText {
-  width: 100%;
-  max-width: 820px;
-  height: 140px;
-  margin-top: 12px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  padding: 12px 14px;
-  font-size: 16px;
-  background: #fff;
-  resize: vertical;
-}
-#processedText:focus {
-  outline: none;
-  border-color: #27ae60;
-  box-shadow: 0 0 10px rgba(39,174,96,0.25);
-}
-
-button, input, select {
-  margin: 6px;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  background: #fff;
-  cursor: pointer;
-  font-size: 15px;
-}
-
-button {
-  background: #4a90e2;
-  color: #fff;
-  border: none;
-  font-weight: 500;
-}
-button:hover { background: #357ABD; transform: translateY(-1px); }
-
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 15px;
-}
-.controls button, .controls select, .controls input { margin: 6px; }
-
-#output {
-  border-radius: 16px;
-  padding: 40px;
-  margin-top: 20px;
-  min-height: 160px;
-  width: 100%;
-  max-width: 820px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 26px;
-  text-align: center;
-  background: #ffffff;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-  transition: opacity 0.5s, transform 0.3s;
-}
-
-.motivation {
-  color: #27ae60;
-  font-weight: bold;
-  animation: blink 0.6s ease-in-out 2;
-}
-@keyframes blink {
-  0%,100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
+#searchInput { padding:10px 14px; border-radius:12px; border:1px solid #ccc; min-width:220px; font-size:15px; background:#fff; transition:all 0.2s ease;}
+#searchInput:focus { outline:none; border-color:#4a90e2; box-shadow:0 0 8px rgba(74,144,226,0.2); }
+textarea { width:100%; max-width:820px; border:1px solid #ccc; border-radius:12px; padding:12px 14px; resize:vertical; font-size:16px; background:#fff; transition:box-shadow 0.3s, border-color 0.3s; }
+textarea:focus { outline:none; border-color:#4a90e2; box-shadow:0 0 10px rgba(74,144,226,0.25); }
+#processedText { width:100%; max-width:820px; height:140px; margin-top:12px; border-radius:12px; border:1px solid #ccc; padding:12px 14px; font-size:16px; background:#fff; resize:vertical; transition:all 0.2s ease; }
+#processedText:focus { outline:none; border-color:#27ae60; box-shadow:0 0 10px rgba(39,174,96,0.25); }
+button, input, select { margin:6px; padding:10px 14px; border-radius:12px; border:1px solid #ccc; background:#fff; cursor:pointer; font-size:15px; font-family:inherit; transition:all 0.2s ease; }
+button { background:#4a90e2; color:#fff; border:none; font-weight:500; }
+button:hover { background:#357ABD; transform:translateY(-1px); }
+.controls { display:flex; flex-wrap:wrap; justify-content:center; margin-top:15px; }
+.controls button, .controls select, .controls input { margin:6px; }
+#output { border-radius:16px; padding:40px; margin-top:20px; min-height:160px; width:100%; max-width:820px; display:flex; align-items:center; justify-content:center; font-size:26px; text-align:center; background:#ffffff; box-shadow:0 6px 20px rgba(0,0,0,0.06); transition:opacity 0.5s, transform 0.3s; }
+.motivation { color:#27ae60; font-weight:bold; animation: blink 0.6s ease-in-out 2; }
+@keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
 </style>
 </head>
 <body>
-
 <h2>Leitor Minimalista</h2>
 
 <h3>Texto Bruto</h3>
 <textarea id="rawText" rows="6" placeholder="Cole seu texto aqui..."></textarea><br>
-
 <div class="controls">
   <button onclick="generateSentences()">📌 Gerar frases</button>
   <button onclick="generateSmartSummary()">📝 Resumo inteligente</button>
@@ -165,7 +70,9 @@ button:hover { background: #357ABD; transform: translateY(-1px); }
 <div class="controls">
   <select id="voiceSelect"></select>
   <button onclick="toggleVoice()">🔊 Ativar/Desativar Voz</button>
-  <label>Velocidade: <input type="number" id="voiceRate" value="1" min="0.1" max="3" step="0.1" style="width:60px"></label>
+  <label>Velocidade: 
+    <input type="number" id="voiceRate" value="1" min="0.1" max="3" step="0.1" style="width:60px">
+  </label>
 </div>
 
 <h3>Frases Motivacionais</h3>
@@ -187,16 +94,16 @@ button:hover { background: #357ABD; transform: translateY(-1px); }
 <h3>Gerenciamento de Textos</h3>
 <div class="controls">
   <button onclick="exportJSON()">💾 Exportar JSON</button>
+  <button onclick="saveToCloud()">☁️ Salvar JSON na nuvem (JSONBin.io)</button>
+  <button onclick="copyCloudLink()">🔗 Copiar link JSON</button>
+  <button onclick="loadFromCloud()">📥 Recuperar JSON da nuvem</button>
   <input type="file" id="importFile" onchange="importJSON(event)">
-  <button onclick="saveToGist()">☁️ Salvar JSON na nuvem (Gist)</button>
-  <button onclick="copyGistLink()">🔗 Copiar link do JSON</button>
-  <button onclick="loadFromGist()">📥 Recuperar JSON do Gist</button>
 </div>
 
 <script>
 let sentences=[], currentIndex=0, autoMode=false, voiceEnabled=false;
 let voices=[], selectedVoice=null, textReadCounts={};
-let gistLink = "";
+let cloudLink=""; // link do JSONBin.io
 const output=document.getElementById('output'), voiceSelect=document.getElementById('voiceSelect');
 const motivationalPhrases=[
   "Continue firme, você está indo bem!",
@@ -232,13 +139,26 @@ function generateSentences(){
 }
 
 function generateSmartSummary(){
-  const text=document.getElementById('rawText').value;
+  const text = document.getElementById('rawText').value;
   if(!text.trim()) return;
   const stopwords=["de","do","da","e","a","o","que","em","um","uma","para","com","não","se","por","os","as","no","na","dos","das"];
   const sents = text.split(/(?<=\.)\s+/).map(s => s.trim()).filter(Boolean);
   const freq = {};
-  sents.forEach(s => { s.split(/\s+/).forEach(w => { const word=w.toLowerCase().replace(/[.,!?]/g,''); if(!stopwords.includes(word)) freq[word]=(freq[word]||0)+1; }); });
-  const scored = sents.map(s => { const score = s.split(/\s+/).reduce((a,w)=>{ const word=w.toLowerCase().replace(/[.,!?]/g,''); return a+(freq[word]||0); },0); return {text: s, score}; });
+  sents.forEach(s => {
+    s.split(/\s+/).forEach(w => {
+      const word = w.toLowerCase().replace(/[.,!?]/g,'');
+      if(!stopwords.includes(word)){
+        freq[word] = (freq[word] || 0) + 1;
+      }
+    });
+  });
+  const scored = sents.map(s => {
+    const score = s.split(/\s+/).reduce((a, w) => {
+      const word = w.toLowerCase().replace(/[.,!?]/g,'');
+      return a + (freq[word] || 0);
+    }, 0);
+    return {text: s, score};
+  });
   scored.sort((a,b)=>b.score-a.score);
   const summary = scored.slice(0, Math.min(5, scored.length)).map(s=>s.text);
   sentences = insertMotivation(summary);
@@ -248,9 +168,9 @@ function generateSmartSummary(){
 }
 
 function syncProcessedText(){
-  const edited=document.getElementById('processedText').value;
-  sentences=edited.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean);
-  currentIndex=0;
+  const edited = document.getElementById('processedText').value;
+  sentences = edited.split(/\n\s*\n/).map(s => s.trim()).filter(Boolean);
+  currentIndex = 0;
   showCurrent();
 }
 
@@ -267,20 +187,13 @@ function insertMotivation(arr){
   return final;
 }
 
-function clearRawText(){
-  document.getElementById('rawText').value="";
-  document.getElementById('processedText').value="";
-  sentences=[];
-  output.textContent="Texto apagado.";
-}
-
+function clearRawText(){document.getElementById('rawText').value="";document.getElementById('processedText').value="";sentences=[];output.textContent="Texto apagado.";}
 function searchGoogle(){
-  const q=document.getElementById('searchInput').value.trim();
-  if(q){ window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank"); }
-  else{ alert("Digite algo para pesquisar."); document.getElementById('searchInput').focus(); }
+  const q = document.getElementById('searchInput').value.trim();
+  if(q){ window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank"); } 
+  else { alert("Digite algo para pesquisar."); document.getElementById('searchInput').focus(); }
 }
 
-// ===== Importar de link via servidor =====
 async function importFromLink(){
   const url=prompt("Cole o link do site (modo texto recomendado):");
   if(!url) return;
@@ -288,18 +201,18 @@ async function importFromLink(){
     const res=await fetch(`http://localhost:3000/extract-text?url=${encodeURIComponent(url)}`);
     const data=await res.json();
     if(data.text){ document.getElementById('rawText').value=data.text; alert("Texto extraído com sucesso!"); }
-    else alert("Não foi possível extrair o texto.");
+    else { alert("Não foi possível extrair o texto."); }
   } catch(err){ alert("Erro ao importar o texto: "+err.message); }
 }
 
 // ===== Mostrar Frase =====
 function showCurrent(){
-  if(!sentences.length){ output.textContent="Nenhuma frase gerada."; return; }
+  if(!sentences.length){output.textContent="Nenhuma frase gerada."; return;}
   output.style.fontSize=document.getElementById('fontSize').value+"px";
   output.style.color=document.getElementById('fontColor').value;
   output.style.fontFamily=document.getElementById('fontFamily').value;
   const text=sentences[currentIndex];
-  if(motivationalPhrases.includes(text)){ output.innerHTML=`<span class="motivation">${text}</span>`; }
+  if(motivationalPhrases.includes(text)){ output.innerHTML=`<span class="motivation">${text}</span>`; } 
   else { output.textContent=text; }
 }
 
@@ -307,19 +220,15 @@ function speakCurrent(){
   const text = sentences[currentIndex];
   if(!voiceEnabled || !selectedVoice){ if(autoMode) nextSentenceAuto(); return; }
   speechSynthesis.cancel();
-  const utter=new SpeechSynthesisUtterance(text);
-  utter.voice=selectedVoice;
-  utter.rate=parseFloat(document.getElementById('voiceRate').value)||1;
-  utter.onend=()=>{ incrementReadCount(document.getElementById('rawText').value); if(autoMode) nextSentenceAuto(); };
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.voice = selectedVoice;
+  utter.rate = parseFloat(document.getElementById('voiceRate').value) || 1;
+  utter.onend = () => { incrementReadCount(document.getElementById('rawText').value); if(autoMode) nextSentenceAuto(); };
   speechSynthesis.speak(utter);
 }
 
-function incrementReadCount(text){
-  const hash=hashCode(text);
-  textReadCounts[hash]=(textReadCounts[hash]||0)+1;
-}
-
-function hashCode(str){ let hash=0; for(let i=0;i<str.length;i++){ hash=((hash<<5)-hash)+str.charCodeAt(i); hash|=0; } return hash; }
+function incrementReadCount(text){ const hash=hashCode(text); textReadCounts[hash]=(textReadCounts[hash]||0)+1; }
+function hashCode(str){let hash=0; for(let i=0;i<str.length;i++){hash=((hash<<5)-hash)+str.charCodeAt(i);hash|=0;} return hash;}
 
 // ===== Controle Automático =====
 function startAuto(){ if(!sentences.length) return; autoMode=true; currentIndex=0; showCurrent(); speakCurrent(); }
@@ -332,71 +241,52 @@ function prevSentence(){ currentIndex=(currentIndex-1+sentences.length)%sentence
 function toggleVoice(){ voiceEnabled=!voiceEnabled; alert("Voz "+(voiceEnabled?"ativada":"desativada")); }
 
 // ===== Export/Import JSON =====
-function exportJSON(){
+function exportJSON(){ const data={sentences,textReadCounts}; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='memo22_textData.json'; a.click(); URL.revokeObjectURL(url); }
+function importJSON(event){ const file=event.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=(e)=>{ try{ const data=JSON.parse(e.target.result); if(data.sentences) sentences=data.sentences; if(data.textReadCounts) textReadCounts=data.textReadCounts; currentIndex=0; document.getElementById('processedText').value=sentences.join("\n\n"); showCurrent(); alert("JSON importado com sucesso!"); }catch(err){alert("Erro ao importar JSON: "+err);}}; reader.readAsText(file); }
+
+// ===== JSONBin.io Functions =====
+async function saveToCloud(){
   const data={sentences,textReadCounts};
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='memo22_textData.json'; a.click(); URL.revokeObjectURL(url);
+  try{
+    const res=await fetch("https://api.jsonbin.io/v3/b", {
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "X-API-Key":"$2a$10$2wR5NQoVsUWczmL.U8MAs.YILi4/aKD3YK01iPbnyFzfLn.xiChGK", // substitua pelo seu JSONBin.io API Key
+        "X-Bin-Private":"false"
+      },
+      body: JSON.stringify(data)
+    });
+    const json=await res.json();
+    cloudLink=`https://jsonbin.io/${json.metadata.id}`;
+    alert("JSON salvo na nuvem com sucesso!");
+  } catch(err){ alert("Erro ao salvar na nuvem: "+err.message); }
 }
-function importJSON(event){
-  const file=event.target.files[0];
-  if(!file) return;
-  const reader=new FileReader();
-  reader.onload=(e)=>{
-    try{
-      const data=JSON.parse(e.target.result);
-      if(data.sentences) sentences=data.sentences;
-      if(data.textReadCounts) textReadCounts=data.textReadCounts;
+
+function copyCloudLink(){
+  if(!cloudLink){ alert("Nenhum JSON salvo ainda. Salve primeiro!"); return; }
+  navigator.clipboard.writeText(cloudLink).then(()=> alert("Link copiado!")).catch(err=> alert("Erro ao copiar link: "+err));
+}
+
+async function loadFromCloud(){
+  const url=prompt("Cole o link JSON do JSONBin.io:");
+  if(!url) return;
+  try{
+    const id=url.split("/").pop();
+    const res=await fetch(`https://api.jsonbin.io/v3/b/${id}/latest`, {
+      headers: { "X-API-Key":"YOUR_JSONBIN_KEY" } // mesmo token usado para salvar
+    });
+    const json=await res.json();
+    if(json.record){
+      sentences=json.record.sentences || [];
+      textReadCounts=json.record.textReadCounts || {};
       currentIndex=0;
       document.getElementById('processedText').value=sentences.join("\n\n");
       showCurrent();
-      alert("JSON importado com sucesso!");
-    }catch(err){ alert("Erro ao importar JSON: "+err); }
-  };
-  reader.readAsText(file);
-}
-
-// ===== Salvar JSON na nuvem (Gist) =====
-async function saveToGist() {
-  const data = { sentences, textReadCounts };
-  try {
-    const res = await fetch("https://api.github.com/gists", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        "description": "Leitor Minimalista JSON",
-        "public": true,
-        "files": { "memo22_textData.json": { "content": JSON.stringify(data, null, 2) } }
-      })
-    });
-    const json = await res.json();
-    gistLink = json.html_url;
-    alert("JSON salvo no Gist com sucesso!");
-  } catch (err) { alert("Erro ao salvar no Gist: " + err.message); }
-}
-
-function copyGistLink() {
-  if(!gistLink){ alert("Nenhum Gist salvo ainda. Salve primeiro!"); return; }
-  navigator.clipboard.writeText(gistLink).then(()=> alert("Link copiado para a área de transferência!")).catch(err=> alert("Erro ao copiar link: "+err));
-}
-
-async function loadFromGist() {
-  const url = prompt("Cole o link público do Gist (JSON):");
-  if(!url) return;
-  try {
-    const res = await fetch(url.replace("https://gist.github.com/", "https://gist.githubusercontent.com/") + "/raw");
-    const json = await res.json();
-    if(json.sentences){
-      sentences = json.sentences;
-      textReadCounts = json.textReadCounts || {};
-      currentIndex = 0;
-      document.getElementById('processedText').value = sentences.join("\n\n");
-      showCurrent();
-      alert("JSON carregado do Gist com sucesso!");
-    } else alert("O JSON do Gist está inválido.");
-  } catch(err){ alert("Erro ao carregar Gist: " + err.message); }
+      alert("JSON carregado da nuvem com sucesso!");
+    } else { alert("Não foi possível recuperar o JSON."); }
+  } catch(err){ alert("Erro ao carregar JSON: "+err.message); }
 }
 </script>
 </body>
 </html>
-
