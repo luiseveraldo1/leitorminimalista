@@ -87,13 +87,14 @@ button:hover { background: #357ABD; transform: translateY(-1px); }
 <div class="controls">
   <button onclick="exportJSON()">💾 Exportar JSON</button>
   <button onclick="saveToCloud()">☁️ Salvar na Nuvem</button>
-  <button onclick="copyCloudLink()">🔗 Copiar Link</button>
+  <button onclick="copyCloudLink()">🔗 Copiar Link JSON Puro</button>
+  <button onclick="openWebLink()">🌐 Abrir JSON Web (modo texto)</button>
   <button onclick="listCloudBins()">📂 Carregar Bin da Nuvem</button>
   <input type="file" id="importFile" onchange="importJSON(event)">
 </div>
 
 <script>
-let sentences=[], currentIndex=0, autoMode=false, voiceEnabled=true; // ativada por padrão
+let sentences=[], currentIndex=0, autoMode=false, voiceEnabled=true; // Voz já ativa
 let voices=[], selectedVoice=null, textReadCounts={};
 let cloudLink = "";
 const output=document.getElementById('output'), voiceSelect=document.getElementById('voiceSelect');
@@ -108,149 +109,128 @@ const motivationalPhrases=[
 ];
 
 // ===== Vozes =====
-function loadVoices(){ 
-  voices=speechSynthesis.getVoices(); 
+function loadVoices(){
+  voices=speechSynthesis.getVoices();
   voiceSelect.innerHTML="";
-  voices.forEach((v,i)=>{ 
-    let o=document.createElement("option"); 
-    o.value=i; 
-    o.textContent=`${v.name} (${v.lang})`; 
-    voiceSelect.appendChild(o); 
-  }); 
-  if(voices.length>0) selectedVoice=voices[0]; 
+  voices.forEach((v,i)=>{
+    let o=document.createElement("option");
+    o.value=i;
+    o.textContent=`${v.name} (${v.lang})`;
+    voiceSelect.appendChild(o);
+  });
+  if(voices.length>0) selectedVoice=voices[0];
 }
 speechSynthesis.onvoiceschanged=loadVoices;
 voiceSelect.addEventListener("change",()=>{ selectedVoice=voices[voiceSelect.value]; });
 
 // ===== Funções de Texto =====
-function generateSentences(){ 
-  const text=document.getElementById('rawText').value; 
-  if(!text.trim()) return; 
-  sentences=text.split(/(?<=\.)\s+/).map(s=>s.trim()).filter(Boolean); 
-  sentences=insertMotivation(sentences); 
-  currentIndex=0; 
-  document.getElementById('processedText').value=sentences.join("\n\n"); 
-  showCurrent(); 
+function generateSentences(){
+  const text=document.getElementById('rawText').value;
+  if(!text.trim()) return;
+  sentences=text.split(/(?<=\.)\s+/).map(s=>s.trim()).filter(Boolean);
+  sentences=insertMotivation(sentences);
+  currentIndex=0;
+  document.getElementById('processedText').value=sentences.join("\n\n");
+  showCurrent();
 }
-function generateSmartSummary(){ 
-  const text=document.getElementById('rawText').value; 
-  if(!text.trim()) return; 
-  const stopwords=["de","do","da","e","a","o","que","em","um","uma","para","com","não","se","por","os","as","no","na","dos","das"]; 
-  const sents=text.split(/(?<=\.)\s+/).map(s=>s.trim()).filter(Boolean); 
-  const freq={}; 
-  sents.forEach(s=>{ 
-    s.split(/\s+/).forEach(w=>{ 
-      const word=w.toLowerCase().replace(/[.,!?]/g,''); 
-      if(!stopwords.includes(word)) freq[word]=(freq[word]||0)+1; 
-    }); 
-  }); 
-  const scored=sents.map(s=>{ 
-    const score=s.split(/\s+/).reduce((a,w)=>{ 
-      const word=w.toLowerCase().replace(/[.,!?]/g,''); 
-      return a+(freq[word]||0); 
-    },0); 
-    return {text:s,score}; 
-  }); 
-  scored.sort((a,b)=>b.score-a.score); 
-  const summary=scored.slice(0,Math.min(5,scored.length)).map(s=>s.text); 
-  sentences=insertMotivation(summary); 
-  currentIndex=0; 
-  document.getElementById('processedText').value=sentences.join("\n\n"); 
-  showCurrent(); 
+function generateSmartSummary(){
+  const text=document.getElementById('rawText').value;
+  if(!text.trim()) return;
+  const stopwords=["de","do","da","e","a","o","que","em","um","uma","para","com","não","se","por","os","as","no","na","dos","das"];
+  const sents=text.split(/(?<=\.)\s+/).map(s=>s.trim()).filter(Boolean);
+  const freq={};
+  sents.forEach(s=>{
+    s.split(/\s+/).forEach(w=>{
+      const word=w.toLowerCase().replace(/[.,!?]/g,'');
+      if(!stopwords.includes(word)) freq[word]=(freq[word]||0)+1;
+    });
+  });
+  const scored=sents.map(s=>{
+    const score=s.split(/\s+/).reduce((a,w)=>{
+      const word=w.toLowerCase().replace(/[.,!?]/g,'');
+      return a+(freq[word]||0);
+    },0);
+    return {text:s,score};
+  });
+  scored.sort((a,b)=>b.score-a.score);
+  const summary=scored.slice(0,Math.min(5,scored.length)).map(s=>s.text);
+  sentences=insertMotivation(summary);
+  currentIndex=0;
+  document.getElementById('processedText').value=sentences.join("\n\n");
+  showCurrent();
 }
-function syncProcessedText(){ 
-  const edited=document.getElementById('processedText').value; 
-  sentences=edited.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean); 
-  currentIndex=0; 
-  showCurrent(); 
+function syncProcessedText(){
+  const edited=document.getElementById('processedText').value;
+  sentences=edited.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean);
+  currentIndex=0;
+  showCurrent();
 }
-function insertMotivation(arr){ 
-  const every=parseInt(document.getElementById('motivationEvery').value)||0; 
-  if(every<=0) return arr; 
-  let final=[]; 
-  for(let i=0;i<arr.length;i++){ 
-    final.push(arr[i]); 
-    if((i+1)%every===0 && i!==arr.length-1){ 
-      final.push(motivationalPhrases[Math.floor(Math.random()*motivationalPhrases.length)]); 
-    } 
-  } 
-  return final; 
-}
-function clearRawText(){ 
-  document.getElementById('rawText').value=""; 
-  document.getElementById('processedText').value=""; 
-  sentences=[]; 
-  output.textContent="Texto apagado."; 
-}
-function searchGoogle(){ 
-  const q=document.getElementById('searchInput').value.trim(); 
-  if(q) window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank"); 
-  else { 
-    alert("Digite algo para pesquisar."); 
-    document.getElementById('searchInput').focus(); 
-  } 
-}
-
-// ===== Importar JSON ou Web =====
-async function importFromLink(){ 
-  const url=prompt("Cole o link do JSON ou do site (modo texto recomendado):"); 
-  if(!url) return; 
-  try{
-    let res, data;
-    if(url.endsWith(".json") || url.includes("jsonbin.io")){
-      res=await fetch(url);
-      data=await res.json();
-      if(data.record) data=data.record; // jsonbin.io latest
-      if(data.sentences) sentences=data.sentences;
-      if(data.textReadCounts) textReadCounts=data.textReadCounts;
-      currentIndex=0;
-      document.getElementById('processedText').value=sentences.join("\n\n");
-      showCurrent();
-      alert("JSON importado com sucesso!");
-    } else {
-      // abrir no navegador no modo texto
-      window.open(url,"_blank");
+function insertMotivation(arr){
+  const every=parseInt(document.getElementById('motivationEvery').value)||0;
+  if(every<=0) return arr;
+  let final=[];
+  for(let i=0;i<arr.length;i++){
+    final.push(arr[i]);
+    if((i+1)%every===0 && i!==arr.length-1){
+      final.push(motivationalPhrases[Math.floor(Math.random()*motivationalPhrases.length)]);
     }
-  } catch(err){ 
-    alert("Erro ao importar: "+err.message); 
-  } 
+  }
+  return final;
+}
+function clearRawText(){
+  document.getElementById('rawText').value="";
+  document.getElementById('processedText').value="";
+  sentences=[];
+  output.textContent="Texto apagado.";
+}
+function searchGoogle(){
+  const q=document.getElementById('searchInput').value.trim();
+  if(q) window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank");
+  else { alert("Digite algo para pesquisar."); document.getElementById('searchInput').focus(); }
+}
+async function importFromLink(){
+  const url=prompt("Cole o link do site (modo texto recomendado):");
+  if(!url) return;
+  try{
+    const res=await fetch(url);
+    const data=await res.text();
+    document.getElementById('rawText').value=data;
+    alert("Texto extraído com sucesso!");
+  } catch(err){ alert("Erro ao importar o texto: "+err.message); }
 }
 
 // ===== Mostrar Frase =====
-function showCurrent(){ 
-  if(!sentences.length){ 
-    output.textContent="Nenhuma frase gerada."; 
-    return; 
-  } 
-  output.style.fontSize=document.getElementById('fontSize').value+"px"; 
-  output.style.color=document.getElementById('fontColor').value; 
-  output.style.fontFamily=document.getElementById('fontFamily').value; 
-  const text=sentences[currentIndex]; 
-  if(motivationalPhrases.includes(text)) output.innerHTML=`<span class="motivation">${text}</span>`; 
-  else output.textContent=text; 
-  if(voiceEnabled) speakCurrent(); 
+function showCurrent(){
+  if(!sentences.length){ output.textContent="Nenhuma frase gerada."; return; }
+  output.style.fontSize=document.getElementById('fontSize').value+"px";
+  output.style.color=document.getElementById('fontColor').value;
+  output.style.fontFamily=document.getElementById('fontFamily').value;
+  const text=sentences[currentIndex];
+  if(motivationalPhrases.includes(text)) output.innerHTML=`<span class="motivation">${text}</span>`;
+  else output.textContent=text;
 }
-
-function speakCurrent(){ 
-  const text=sentences[currentIndex]; 
-  if(!voiceEnabled || !selectedVoice){ if(autoMode) nextSentenceAuto(); return; } 
-  speechSynthesis.cancel(); 
-  const utter=new SpeechSynthesisUtterance(text); 
-  utter.voice=selectedVoice; 
-  const rate=parseFloat(document.getElementById('voiceRate').value)||1; 
-  utter.rate=rate; 
-  utter.onend=()=>{ 
-    incrementReadCount(document.getElementById('rawText').value); 
-    if(autoMode) nextSentenceAuto(); 
-  }; 
-  speechSynthesis.speak(utter); 
+function speakCurrent(){
+  const text=sentences[currentIndex];
+  if(!voiceEnabled || !selectedVoice){ if(autoMode) nextSentenceAuto(); return; }
+  speechSynthesis.cancel();
+  const utter=new SpeechSynthesisUtterance(text);
+  utter.voice=selectedVoice;
+  utter.rate=parseFloat(document.getElementById('voiceRate').value)||1;
+  utter.onend=()=>{ incrementReadCount(document.getElementById('rawText').value); if(autoMode) nextSentenceAuto(); };
+  speechSynthesis.speak(utter);
 }
-
-function incrementReadCount(text){ 
-  const hash=hashCode(text); 
-  textReadCounts[hash]=(textReadCounts[hash]||0)+1; 
+function incrementReadCount(text){
+  const hash=hashCode(text);
+  textReadCounts[hash]=(textReadCounts[hash]||0)+1;
 }
-function hashCode(str){ let hash=0; for(let i=0;i<str.length;i++){ hash=((hash<<5)-hash)+str.charCodeAt(i); hash|=0; } return hash; }
+function hashCode(str){
+  let hash=0;
+  for(let i=0;i<str.length;i++){
+    hash=((hash<<5)-hash)+str.charCodeAt(i);
+    hash|=0;
+  }
+  return hash;
+}
 
 // ===== Controle Automático =====
 function startAuto(){ if(!sentences.length) return; autoMode=true; currentIndex=0; showCurrent(); speakCurrent(); }
@@ -258,35 +238,37 @@ function nextSentenceAuto(){ if(!autoMode || !sentences.length) return; currentI
 function pauseAuto(){ autoMode=false; speechSynthesis.cancel(); }
 function resetReader(){ pauseAuto(); currentIndex=0; showCurrent(); }
 function manualMode(){ pauseAuto(); showCurrent(); }
-function nextSentence(){ currentIndex=(currentIndex+1)%sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); }
-function prevSentence(){ currentIndex=(currentIndex-1+sentences.length)%sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); }
-function toggleVoice(){ voiceEnabled = !voiceEnabled; alert("Voz "+(voiceEnabled?"ativada":"desativada")); if(voiceEnabled) speakCurrent(); }
+function nextSentence(){ currentIndex=(currentIndex+1)%sentences.length; showCurrent(); speakCurrent(); }
+function prevSentence(){ currentIndex=(currentIndex-1+sentences.length)%sentences.length; showCurrent(); speakCurrent(); }
+function toggleVoice(){ voiceEnabled=!voiceEnabled; alert("Voz "+(voiceEnabled?"ativada":"desativada")); }
 
 // ===== Export/Import JSON =====
-function exportJSON(){ 
-  const data={sentences,textReadCounts}; 
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); 
-  const url=URL.createObjectURL(blob); 
-  const a=document.createElement('a'); 
-  a.href=url; a.download='memo22_textData.json'; a.click(); 
-  URL.revokeObjectURL(url); 
+function exportJSON(){
+  const data={sentences,textReadCounts};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='memo22_textData.json';
+  a.click();
+  URL.revokeObjectURL(url);
 }
-function importJSON(event){ 
-  const file=event.target.files[0]; 
-  if(!file) return; 
-  const reader=new FileReader(); 
-  reader.onload=(e)=>{ 
-    try{ 
-      const data=JSON.parse(e.target.result); 
-      if(data.sentences) sentences=data.sentences; 
-      if(data.textReadCounts) textReadCounts=data.textReadCounts; 
-      currentIndex=0; 
-      document.getElementById('processedText').value=sentences.join("\n\n"); 
-      showCurrent(); 
-      alert("JSON importado com sucesso!"); 
-    }catch(err){ alert("Erro ao importar JSON: "+err); } 
-  }; 
-  reader.readAsText(file); 
+function importJSON(event){
+  const file=event.target.files[0];
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.sentences) sentences=data.sentences;
+      if(data.textReadCounts) textReadCounts=data.textReadCounts;
+      currentIndex=0;
+      document.getElementById('processedText').value=sentences.join("\n\n");
+      showCurrent();
+      alert("JSON importado com sucesso!");
+    }catch(err){ alert("Erro ao importar JSON: "+err); }
+  };
+  reader.readAsText(file);
 }
 
 // ===== Nuvem JSONBin.io =====
@@ -304,10 +286,17 @@ async function saveToCloud(){
 
 function copyCloudLink(){
   if(!cloudLink){ alert("Nenhum JSON salvo ainda."); return; }
-  const url="https://jsonbin.io/b/"+cloudLink;
-  navigator.clipboard.writeText(url).then(()=>alert("Link copiado!"),()=>alert("Falha ao copiar link."));
+  const url="https://api.jsonbin.io/b/"+cloudLink;
+  navigator.clipboard.writeText(url).then(()=>alert("Link JSON puro copiado!"),()=>alert("Falha ao copiar link."));
 }
 
+function openWebLink(){
+  if(!cloudLink){ alert("Nenhum JSON salvo ainda."); return; }
+  const url="https://jsonbin.io/"+cloudLink+"/latest"; // abre em modo leitura/texto
+  window.open(url,"_blank");
+}
+
+// ===== Listar e carregar bins =====
 async function listCloudBins(){
   try{
     const res=await fetch("https://api.jsonbin.io/v3/b",{headers:{"X-Master-Key":MASTER_KEY}});
