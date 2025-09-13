@@ -435,7 +435,43 @@ function alignText(alignment, clickedButton) {
     clickedButton.classList.add('active');
 }
 
-function speakCurrent(){ const text=sentences[currentIndex]; if(!voiceEnabled || !selectedVoice){ if(autoMode) nextSentenceAuto(); return; } speechSynthesis.cancel(); const utter=new SpeechSynthesisUtterance(text); utter.voice=selectedVoice; const rate=parseFloat(document.getElementById('voiceRate').value)||1; utter.rate=rate; utter.onend=()=>{ incrementReadCount(document.getElementById('rawText').value); if(autoMode) nextSentenceAuto(); }; speechSynthesis.speak(utter); }
+// CÓDIGO NOVO E CORRIGIDO
+function speakCurrent() {
+    const text = sentences[currentIndex];
+
+    // Se a voz estiver desativada, ou se a voz selecionada ainda não foi carregada (null)
+    if (!voiceEnabled || !selectedVoice) {
+        // Se a lista de vozes do navegador ainda estiver vazia, tentamos carregar de novo.
+        if (speechSynthesis.getVoices().length > 0) {
+            loadVoices();
+        }
+
+        // Se, mesmo após a tentativa, ainda não houver uma voz selecionada...
+        if (!selectedVoice && voiceEnabled) {
+            pauseAuto(); // <-- A MUDANÇA MAIS IMPORTANTE: Para o loop!
+            alert("As vozes de leitura ainda não foram carregadas pelo navegador. Por favor, aguarde um momento e clique em ▶️ novamente.");
+            return; // Sai da função para não continuar o loop.
+        }
+
+        // Se a voz estiver simplesmente desabilitada, continua o ciclo sem som.
+        if (!voiceEnabled && autoMode) {
+            nextSentenceAuto();
+        }
+        return;
+    }
+
+    // Se tudo estiver certo, cancela qualquer fala anterior e inicia a nova.
+    speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.voice = selectedVoice;
+    const rate = parseFloat(document.getElementById('voiceRate').value) || 1;
+    utter.rate = rate;
+    utter.onend = () => {
+        incrementReadCount(document.getElementById('rawText').value);
+        if (autoMode) nextSentenceAuto();
+    };
+    speechSynthesis.speak(utter);
+}
 function incrementReadCount(text){ const hash=hashCode(text); textReadCounts[hash]=(textReadCounts[hash]||0)+1; }
 function hashCode(str){ let hash=0; for(let i=0;i<str.length;i++){ hash=((hash<<5)-hash)+str.charCodeAt(i); hash|=0; } return hash; }
 
