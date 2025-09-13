@@ -1,239 +1,420 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<title>Leitor Minimalista</title>
-<style>
-/* ===== Corpo e Layout ===== */
-body {
-  font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f2f4f7;
-  color: #222;
-  margin: 0;
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  transition: background 0.3s;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlowRead - Leitor Inteligente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===== VARIÁVEIS DE COR E ESTILO (Fácil de customizar) ===== */
+        :root {
+            --bg-color: #f5f7fa;
+            --card-bg-color: #ffffff;
+            --text-color: #2c3e50;
+            --heading-color: #1a2533;
+            --primary-color: #4a69bd;
+            --primary-hover-color: #3b5496;
+            --secondary-color: #788a9e;
+            --border-color: #dfe4ea;
+            --shadow-color: rgba(0, 0, 0, 0.07);
+            --success-color: #27ae60;
+            --font-family: 'Poppins', 'Segoe UI', sans-serif;
+            --border-radius: 16px;
+            --card-padding: 25px;
+        }
 
-h2 { margin-bottom: 5px; color: #2c3e50; }
-h3 { margin: 20px 0 10px; color: #34495e; }
+        /* ===== MODO ESCURO (DARK MODE) ===== */
+        body.dark-mode {
+            --bg-color: #1a2533;
+            --card-bg-color: #2c3e50;
+            --text-color: #e0e5eb;
+            --heading-color: #ffffff;
+            --border-color: #41546b;
+            --shadow-color: rgba(0, 0, 0, 0.15);
+        }
 
-/* ===== Inputs e Textareas ===== */
-#searchInput {
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  min-width: 220px;
-  font-size: 15px;
-  background: #fff;
-  transition: all 0.2s ease;
-}
-#searchInput:focus {
-  outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 8px rgba(74,144,226,0.2);
-}
+        /* ===== CORPO E LAYOUT PRINCIPAL ===== */
+        body {
+            font-family: var(--font-family);
+            background: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            transition: background 0.3s, color 0.3s;
+        }
 
-textarea {
-  width: 100%;
-  max-width: 820px;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  padding: 12px 14px;
-  resize: vertical;
-  font-size: 16px;
-  background: #fff;
-  transition: box-shadow 0.3s, border-color 0.3s;
-  text-align: left; /* alinhamento padrão */
-}
-textarea:focus {
-  outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 10px rgba(74,144,226,0.25);
-}
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 25px;
+        }
 
-/* ===== Caixa de leitura (terceira caixa) ===== */
-#output {
-  border-radius: 16px;
-  padding: 40px;
-  margin-top: 20px;
-  min-height: 160px;
-  width: 100%;
-  max-width: 820px;
-  display: flex;
-  align-items: flex-start; /* topo */
-  justify-content: flex-start; /* esquerda */
-  font-size: 26px;
-  text-align: left;
-  line-height: 1.5;
-  background: #ffffff;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-  transition: opacity 0.5s, transform 0.3s;
-  overflow-wrap: break-word;
-  white-space: pre-wrap; /* mantém quebras de linha */
-}
+        /* ===== CABEÇALHO ===== */
+        header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
 
-/* ===== Frases Motivacionais ===== */
-.motivation {
-  color: #27ae60;
-  font-weight: bold;
-  animation: blink 0.6s ease-in-out 2;
-}
-@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+        header h1 {
+            color: var(--heading-color);
+            margin: 0;
+            font-size: 2.2rem;
+        }
 
-/* ===== Controles ===== */
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: 15px;
-}
-.controls button, .controls select, .controls input {
-  margin: 6px;
-}
+        header h1 span {
+            color: var(--primary-color);
+        }
 
-/* ===== Botões ===== */
-button, input[type="button"], input[type="submit"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-color: #4a90e2;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 500;
-  padding: 10px 14px;
-  font-size: 15px;
-  font-family: inherit;
-  transition: all 0.2s ease;
-}
-button:hover, input[type="button"]:hover, input[type="submit"]:hover {
-  background-color: #357ABD;
-  transform: translateY(-1px);
-}
+        /* ===== CARDS DE CONTROLE (COLUNA ESQUERDA) ===== */
+        .controls-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
 
-/* ===== Inputs e selects nos controles ===== */
-input, select {
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  padding: 10px 14px;
-  font-size: 15px;
-  font-family: inherit;
-  transition: all 0.2s ease;
-}
+        .card {
+            background: var(--card-bg-color);
+            border-radius: var(--border-radius);
+            padding: var(--card-padding);
+            box-shadow: 0 8px 30px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+        
+        .card h3 {
+            margin: 0 0 15px 0;
+            color: var(--heading-color);
+            font-size: 1.1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
 
-/* ===== Configurações de Fonte ===== */
-#processedText {
-  width: 100%;
-  max-width: 820px;
-  height: 140px;
-  margin-top: 12px;
-  border-radius: 12px;
-  border: 1px solid #ccc;
-  padding: 12px 14px;
-  font-size: 16px;
-  background: #fff;
-  resize: vertical;
-  transition: all 0.2s ease;
-  text-align: left;
-}
-#processedText:focus {
-  outline: none;
-  border-color: #27ae60;
-  box-shadow: 0 0 10px rgba(39,174,96,0.25);
-}
-</style>
+        /* ===== ESTILOS DE INPUTS, TEXTAREAS E BOTÕES ===== */
+        textarea, input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            font-size: 15px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
 
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
+        }
+        
+        #rawText { height: 120px; resize: vertical; }
+        #processedText { height: 150px; resize: vertical; margin-top: 15px;}
 
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
 
+        button {
+            background-color: var(--primary-color);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            padding: 10px 15px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
+        button:hover {
+            background-color: var(--primary-hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .alignment-btn {
+            background-color: var(--secondary-color);
+            flex-grow: 1; /* Faz os botões ocuparem o mesmo espaço */
+        }
+
+        .alignment-btn.active {
+            background-color: var(--primary-hover-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        button.secondary {
+            background-color: var(--secondary-color);
+        }
+        button.secondary:hover { background-color: #5f7184; }
+
+        button.success { background-color: var(--success-color); }
+        button.success:hover { background-color: #219a52; }
+
+        label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .config-group { display: flex; gap: 15px; align-items: center; margin-bottom: 10px; }
+        .config-group label { margin-bottom: 0; }
+        .config-group input, .config-group select { margin-bottom: 0; }
+
+        /* ===== COLUNA DE LEITURA (DIREITA) ===== */
+        .reader-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        #output {
+            background: var(--card-bg-color);
+            border-radius: var(--border-radius);
+            padding: 50px;
+            flex-grow: 1;
+            font-size: 28px;
+            line-height: 1.6;
+            color: var(--heading-color);
+            box-shadow: 0 8px 30px var(--shadow-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: opacity 0.5s, transform 0.3s;
+            overflow-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        .motivation {
+            color: var(--success-color);
+            font-weight: bold;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* ===== CONTROLES DE LEITURA ===== */
+        .playback-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+        }
+        .playback-controls button {
+            font-size: 1.5rem; /* Aumenta o emoji/ícone */
+            padding: 12px 20px;
+        }
+        
+        /* ===== DARK MODE TOGGLE SWITCH ===== */
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        /* ===== RESPONSIVIDADE PARA DISPOSITIVOS MÓVEIS ===== */
+        @media (max-width: 1024px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            #output { min-height: 300px; font-size: 24px; padding: 30px; }
+        }
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            header h1 { font-size: 1.8rem; }
+            .button-group, .playback-controls {
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<h2>Leitor Minimalista</h2>
+    <div class="container">
+        <header>
+            <h1>Flow<span>Read</span></h1>
+            <label class="switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="slider"></span>
+            </label>
+        </header>
 
-<h3>Texto Bruto</h3>
-<textarea id="rawText" rows="6" placeholder="Cole seu texto aqui..."></textarea><br>
+        <aside class="controls-column">
+            
+            <div class="card">
+                <h3>1. Insira seu Texto</h3>
+                <textarea id="rawText" rows="6" placeholder="Cole seu texto aqui ou importe de um link..."></textarea>
+                <div class="button-group">
+                    <button onclick="importFromLink()">📎 Importar de Link</button>
+                    <button onclick="clearRawText()" class="secondary">🗑️ Limpar</button>
+                </div>
+                 <div class="button-group" style="margin-top: 15px;">
+                    <button onclick="generateSentences()">📌 Gerar Frases</button>
+                    <button onclick="generateSmartSummary()">📝 Resumo Inteligente</button>
+                </div>
+            </div>
 
-<div class="controls">
-  <button onclick="generateSentences()">📌 Gerar frases</button>
-  <button onclick="generateSmartSummary()">📝 Resumo inteligente</button>
-  <button onclick="clearRawText()">🗑️ Limpar</button>
-  <input type="text" id="searchInput" placeholder="Pesquisar no Google...">
-  <button onclick="searchGoogle()">🔍 Pesquisar Google</button>
-  <button onclick="importFromLink()">📎 Importar texto de link</button>
-</div>
+            <div class="card">
+                <h3>2. Revise e Edite</h3>
+                 <textarea id="processedText" placeholder="Frases extraídas ou resumidas aparecerão aqui. Você pode editá-las antes de iniciar a leitura."></textarea>
+                 <div class="button-group">
+                    <button onclick="syncProcessedText()">🔄 Sincronizar Edições</button>
+                 </div>
+            </div>
 
-<h3>Texto Processado</h3>
-<textarea id="processedText" placeholder="Frases extraídas ou resumidas aparecerão aqui..."></textarea>
-<button onclick="syncProcessedText()">🔄 Atualizar do Processado</button>
+            <div class="card">
+                <h3>⚙️ Configurações de Leitura</h3>
+                <label for="voiceSelect">Voz</label>
+                <select id="voiceSelect"></select>
+                
+                <div class="config-group">
+                    <label>Velocidade: <input type="number" id="voiceRate" value="1" min="0.1" max="3" step="0.1"></label>
+                    <label>Tamanho: <input type="number" id="fontSize" value="28" min="12" max="60"></label>
+                </div>
 
-<h3>Configurações de Fonte</h3>
-<div class="controls">
-  <label>Tamanho: <input type="number" id="fontSize" value="24" min="12" max="60"></label>
-  <label>Cor: <input type="color" id="fontColor" value="#111111"></label>
-  <label>Fonte:
-    <select id="fontFamily">
-      <option value="Arial">Arial</option>
-      <option value="Georgia">Georgia</option>
-      <option value="Courier New">Courier New</option>
-      <option value="Verdana">Verdana</option>
-      <option value="Times New Roman">Times New Roman</option>
-    </select>
-  </label>
-</div>
+                <div class="config-group">
+                    <label for="fontColor">Cor:</label>
+                    <input type="color" id="fontColor" value="#1a2533">
+                </div>
 
-<h3>Voz</h3>
-<div class="controls">
-  <select id="voiceSelect"></select>
-  <button onclick="toggleVoice()">🔊 Ativar/Desativar Voz</button>
-  <label>Velocidade: 
-    <input type="number" id="voiceRate" value="1" min="0.1" max="3" step="0.1" style="width:60px">
-  </label>
-</div>
+                <label for="fontFamily">Fonte</label>
+                <select id="fontFamily">
+                  <option value="Poppins, sans-serif">Poppins</option>
+                  <option value="Georgia, serif">Georgia</option>
+                  <option value="Arial, sans-serif">Arial</option>
+                  <option value="Courier New, monospace">Courier New</option>
+                  <option value="Verdana, sans-serif">Verdana</option>
+                </select>
+                
+                <label style="margin-top: 15px;">Alinhamento do Texto</label>
+                <div class="button-group">
+                    <button class="alignment-btn" onclick="alignText('left', this)">Esquerda</button>
+                    <button class="alignment-btn" onclick="alignText('justify', this)">Justificar</button>
+                    <button class="alignment-btn" onclick="alignText('right', this)">Direita</button>
+                </div>
+                
+                <label style="margin-top: 15px;">Frases Motivacionais</label>
+                <div class="config-group">
+                    <label>A cada <input type="number" id="motivationEvery" value="0" min="0" style="width:60px"> frases</label>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>💾 Gerenciamento</h3>
+                <div class="button-group">
+                    <button onclick="exportJSON()">📥 Exportar JSON</button>
+                    <label for="importFile" class="button secondary" style="cursor:pointer;">📤 Importar JSON</label>
+                    <input type="file" id="importFile" onchange="importJSON(event)" style="display:none;">
+                </div>
+                 <div class="button-group" style="margin-top: 10px;">
+                    <button onclick="saveToCloud()" class="success">☁️ Salvar e Copiar Link</button>
+                    <button onclick="loadBinByLink()">📂 Carregar da Nuvem</button>
+                </div>
+            </div>
+            
+        </aside>
 
-<h3>Frases Motivacionais</h3>
-<div class="controls">
-  <label>Inserir a cada <input type="number" id="motivationEvery" value="0" min="0" style="width:50px"> frases (0 = desativado)</label>
-</div>
+        <main class="reader-column">
+            
+            <div id="output">Bem-vindo ao FlowRead! Cole um texto e gere frases para começar.</div>
+            
+            <div class="card">
+                <div class="playback-controls">
+                    <button onclick="prevSentence()" title="Voltar">⬅️</button>
+                    <button onclick="startAuto()" title="Automático">▶️</button>
+                    <button onclick="pauseAuto()" title="Pausar">⏸️</button>
+                    <button onclick="resetReader()" title="Resetar">🔄</button>
+                    <button onclick="nextSentence()" title="Avançar">➡️</button>
+                </div>
+                 <div class="playback-controls" style="margin-top: 15px;">
+                     <button onclick="toggleVoice()">🔊 Voz On/Off</button>
+                     <button onclick="manualMode()">📖 Modo Manual</button>
+                 </div>
+            </div>
 
-<div id="output">Aguardando texto...</div>
-
-<div class="controls">
-  <button onclick="startAuto()">▶️ Automático</button>
-  <button onclick="pauseAuto()">⏸️ Pausar</button>
-  <button onclick="resetReader()">🔄 Reset</button>
-  <button onclick="manualMode()">📖 Controle Manual</button>
-  <button onclick="prevSentence()">⬅️ Voltar</button>
-  <button onclick="nextSentence()">➡️ Avançar</button>
-</div>
-
-<h3>Gerenciamento de Textos</h3>
-<div class="controls">
-  <button onclick="exportJSON()">💾 Exportar JSON</button>
-  <button onclick="saveToCloud()">☁️ Salvar na Nuvem</button>
-  <button onclick="copyCloudLink()">🔗 Copiar Link</button>
-  <button onclick="loadBinByLink()">📂 Carregar Bin da Nuvem</button>
-  <input type="file" id="importFile" onchange="importJSON(event)">
-</div>
+            <div class="card">
+                 <h3>Pesquisa Rápida</h3>
+                 <div style="display: flex; gap: 10px;">
+                     <input type="text" id="searchInput" placeholder="Pesquisar termo no Google...">
+                     <button onclick="searchGoogle()">🔍</button>
+                 </div>
+            </div>
+        </main>
+    </div>
 
 <script>
+// =======================================================
+// PARTE 1: LÓGICA DO DARK MODE E OUTRAS MELHORIAS
+// =======================================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Lógica do Dark Mode
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+    const fontColorInput = document.getElementById('fontColor');
+
+    function applyTheme(isDark) {
+        if (isDark) {
+            body.classList.add('dark-mode');
+            fontColorInput.value = '#ffffff';
+        } else {
+            body.classList.remove('dark-mode');
+            fontColorInput.value = '#1a2533';
+        }
+    }
+
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    darkModeToggle.checked = prefersDark;
+    applyTheme(prefersDark);
+    
+    darkModeToggle.addEventListener('change', () => {
+        applyTheme(darkModeToggle.checked);
+        if (typeof showCurrent === 'function' && window.sentences && window.sentences.length > 0) {
+            showCurrent();
+        }
+    });
+
+    loadVoices();
+});
+
+// =======================================================
+// PARTE 2: SEU CÓDIGO ORIGINAL (FUNÇÕES DO LEITOR)
+// =======================================================
 let sentences=[], currentIndex=0, autoMode=false, voiceEnabled=true;
 let voices=[], selectedVoice=null, textReadCounts={};
 let cloudLink = "";
 const output=document.getElementById('output'), voiceSelect=document.getElementById('voiceSelect');
 const motivationalPhrases=["Continue firme, você está indo bem!","Mais uma frase! Foque e avance!","Você está se superando a cada leitura!","Mantenha o ritmo, sua mente agradece!","A constância traz o resultado!","Respire fundo, você está no caminho certo!","Seu foco está criando resultados!"];
 
-// ===== Vozes =====
-function loadVoices(){ voices=speechSynthesis.getVoices(); voiceSelect.innerHTML=""; voices.forEach((v,i)=>{ let o=document.createElement("option"); o.value=i; o.textContent=`${v.name} (${v.lang})`; voiceSelect.appendChild(o); }); if(voices.length>0) selectedVoice=voices[0]; }
+function loadVoices(){ 
+    voices=speechSynthesis.getVoices(); 
+    voiceSelect.innerHTML=""; 
+    voices.forEach((v,i)=>{ 
+        let o=document.createElement("option"); 
+        o.value=i; o.textContent=`${v.name} (${v.lang})`; 
+        voiceSelect.appendChild(o); 
+    }); 
+    if(voices.length>0) selectedVoice=voices[0]; 
+}
 speechSynthesis.onvoiceschanged=loadVoices;
 voiceSelect.addEventListener("change",()=>{ selectedVoice=voices[voiceSelect.value]; });
 
-// ===== Funções de Texto =====
 function generateSentences(){ const text=document.getElementById('rawText').value; if(!text.trim()) return; sentences=text.split(/(?<=\.)\s+/).map(s=>s.trim()).filter(Boolean); sentences=insertMotivation(sentences); currentIndex=0; document.getElementById('processedText').value=sentences.join("\n\n"); showCurrent(); }
 function generateSmartSummary(){ const text=document.getElementById('rawText').value; if(!text.trim()) return; const stopwords=["de","do","da","e","a","o","que","em","um","uma","para","com","não","se","por","os","as","no","na","dos","das"]; const sents=text.split(/(?<=\.)\s+/).map(s=>s.trim()).filter(Boolean); const freq={}; sents.forEach(s=>{ s.split(/\s+/).forEach(w=>{ const word=w.toLowerCase().replace(/[.,!?]/g,''); if(!stopwords.includes(word)) freq[word]=(freq[word]||0)+1; }); }); const scored=sents.map(s=>{ const score=s.split(/\s+/).reduce((a,w)=>{ const word=w.toLowerCase().replace(/[.,!?]/g,''); return a+(freq[word]||0); },0); return {text:s,score}; }); scored.sort((a,b)=>b.score-a.score); const summary=scored.slice(0,Math.min(5,scored.length)).map(s=>s.text); sentences=insertMotivation(summary); currentIndex=0; document.getElementById('processedText').value=sentences.join("\n\n"); showCurrent(); }
 function syncProcessedText(){ const edited=document.getElementById('processedText').value; sentences=edited.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean); currentIndex=0; showCurrent(); }
@@ -242,46 +423,51 @@ function clearRawText(){ document.getElementById('rawText').value=""; document.g
 function searchGoogle(){ const q=document.getElementById('searchInput').value.trim(); if(q) window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank"); else { alert("Digite algo para pesquisar."); document.getElementById('searchInput').focus(); } }
 async function importFromLink(){ const url=prompt("Cole o link do site (modo texto recomendado):"); if(!url) return; try{ const res=await fetch(`http://localhost:3000/extract-text?url=${encodeURIComponent(url)}`); const data=await res.json(); if(data.text){ document.getElementById('rawText').value=data.text; alert("Texto extraído com sucesso!"); } else alert("Não foi possível extrair o texto."); } catch(err){ alert("Erro ao importar o texto: "+err.message); } }
 
-// ===== Mostrar Frase =====
-function showCurrent(){ if(!sentences.length){ output.textContent="Nenhuma frase gerada."; return; } output.style.fontSize=document.getElementById('fontSize').value+"px"; output.style.color=document.getElementById('fontColor').value; output.style.fontFamily=document.getElementById('fontFamily').value; const text=sentences[currentIndex]; if(motivationalPhrases.includes(text)) output.innerHTML=`<span class="motivation">${text}</span>`; else output.textContent=text; }
+function showCurrent(){ if(!sentences || !sentences.length){ output.textContent="Nenhuma frase gerada."; return; } output.style.fontSize=document.getElementById('fontSize').value+"px"; output.style.color=document.getElementById('fontColor').value; output.style.fontFamily=document.getElementById('fontFamily').value; const text=sentences[currentIndex]; if(motivationalPhrases.includes(text)) output.innerHTML=`<span class="motivation">${text}</span>`; else output.textContent=text; }
+
+function alignText(alignment, clickedButton) {
+    const output = document.getElementById('output');
+    output.style.textAlign = alignment;
+    const alignmentButtons = document.querySelectorAll('.alignment-btn');
+    alignmentButtons.forEach(btn => {
+        btn.classList.remove('active');
+    });
+    clickedButton.classList.add('active');
+}
+
 function speakCurrent(){ const text=sentences[currentIndex]; if(!voiceEnabled || !selectedVoice){ if(autoMode) nextSentenceAuto(); return; } speechSynthesis.cancel(); const utter=new SpeechSynthesisUtterance(text); utter.voice=selectedVoice; const rate=parseFloat(document.getElementById('voiceRate').value)||1; utter.rate=rate; utter.onend=()=>{ incrementReadCount(document.getElementById('rawText').value); if(autoMode) nextSentenceAuto(); }; speechSynthesis.speak(utter); }
 function incrementReadCount(text){ const hash=hashCode(text); textReadCounts[hash]=(textReadCounts[hash]||0)+1; }
 function hashCode(str){ let hash=0; for(let i=0;i<str.length;i++){ hash=((hash<<5)-hash)+str.charCodeAt(i); hash|=0; } return hash; }
 
-// ===== Controle Automático =====
 function startAuto(){ if(!sentences.length) return; autoMode=true; currentIndex=0; showCurrent(); speakCurrent(); }
 function nextSentenceAuto(){ if(!autoMode || !sentences.length) return; currentIndex=(currentIndex+1)%sentences.length; showCurrent(); speakCurrent(); }
 function pauseAuto(){ autoMode=false; speechSynthesis.cancel(); }
 function resetReader(){ pauseAuto(); currentIndex=0; showCurrent(); }
 function manualMode(){ pauseAuto(); showCurrent(); }
-function nextSentence(){ currentIndex=(currentIndex+1)%sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); }
-function prevSentence(){ currentIndex=(currentIndex-1+sentences.length)%sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); }
+function nextSentence(){ if (!sentences.length) return; currentIndex=(currentIndex+1)%sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); }
+function prevSentence(){ if (!sentences.length) return; currentIndex=(currentIndex-1+sentences.length)%sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); }
 function toggleVoice(){ voiceEnabled=!voiceEnabled; alert("Voz "+(voiceEnabled?"ativada":"desativada")); }
 
-// ===== Export/Import JSON =====
-function exportJSON(){ const data={sentences,textReadCounts}; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='memo22_textData.json'; a.click(); URL.revokeObjectURL(url); }
+function exportJSON(){ const data={sentences,textReadCounts}; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='flowread_data.json'; a.click(); URL.revokeObjectURL(url); }
 function importJSON(event){ const file=event.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=(e)=>{ try{ const data=JSON.parse(e.target.result); if(data.sentences) sentences=data.sentences; if(data.textReadCounts) textReadCounts=data.textReadCounts; currentIndex=0; document.getElementById('processedText').value=sentences.join("\n\n"); showCurrent(); alert("JSON importado com sucesso!"); }catch(err){ alert("Erro ao importar JSON: "+err); } }; reader.readAsText(file); }
 
-// ===== Nuvem JSONBin.io =====
 const MASTER_KEY="$2a$10$2wR5NQoVsUWczmL.U8MAs.YILi4/aKD3YK01iPbnyFzfLn.xiChGK";
-
 async function saveToCloud(){
   try{
     const data={sentences,textReadCounts};
     const res=await fetch("https://api.jsonbin.io/v3/b",{method:"POST",headers:{"Content-Type":"application/json","X-Master-Key":MASTER_KEY},body:JSON.stringify(data)});
     const json=await res.json();
     cloudLink=json.metadata.id;
-    alert("Salvo na nuvem! ID: "+cloudLink);
-  } catch(err){ alert("Erro ao salvar na nuvem: "+err.message); }
+    copyCloudLink(); 
+  } catch(err){ 
+    alert("Erro ao salvar na nuvem: "+err.message); 
+  }
 }
-
 function copyCloudLink(){
-  if(!cloudLink){ alert("Nenhum JSON salvo ainda."); return; }
+  if(!cloudLink){ alert("Nenhum JSON salvo ainda. Salve primeiro."); return; }
   const url="https://jsonbin.io/b/"+cloudLink;
-  navigator.clipboard.writeText(url).then(()=>alert("Link copiado!"),()=>alert("Falha ao copiar link."));
+  navigator.clipboard.writeText(url).then(()=>alert("Salvo na nuvem com sucesso! Link copiado para a área de transferência."),()=>alert("Falha ao copiar link."));
 }
-
-// ===== Carregar bin por link/ID =====
 async function loadBinByLink(){
   const input = prompt("Cole o ID ou link do bin JSON que deseja carregar:");
   if(!input) return;
@@ -305,5 +491,6 @@ async function loadBinByLink(){
   }
 }
 </script>
+
 </body>
 </html>
