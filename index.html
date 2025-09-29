@@ -399,7 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let sentences=[], currentIndex=0, autoMode=false, voiceEnabled=true;
 let voices=[], selectedVoice=null, textReadCounts={};
 let cloudLink = "";
-const output=document.getElementById('output'), voiceSelect=document.getElementById('voiceSelect');
+
 const motivationalPhrases=["Continue firme, você está indo bem!","Mais uma frase! Foque e avance!","Você está se superando a cada leitura!","Mantenha o ritmo, sua mente agradece!","A constância traz o resultado!","Respire fundo, você está no caminho certo!","Seu foco está criando resultados!"];
 
 function loadVoices(){ 
@@ -526,30 +526,26 @@ async function loadBinByLink(){
     console.error(err);
   }
 }
-    function limparEJustificar() {
-  let output = document.getElementById("output");
-  let texto = output.innerText;
+document.addEventListener('DOMContentLoaded', () => {
+  const output = document.getElementById("output");
 
-  // Remove quebras de página (\f)
-  texto = texto.replace(/\f/g, " ");
+  function limparEJustificar() {
+    let texto = output.innerText;
+    texto = texto.replace(/\f/g, " ");          // Remove quebras de página
+    texto = texto.replace(/\n\s*\n+/g, "\n");   // Substitui várias quebras de linha
+    texto = texto.replace(/\s+/g, " ");         // Remove espaços múltiplos
+    output.innerText = texto.trim();
+    output.style.textAlign = "justify";         // Alinha o texto
+  }
 
-  // Substitui várias quebras de linha seguidas por uma só
-  texto = texto.replace(/\n\s*\n+/g, "\n");
-
-  // Remove espaços múltiplos
-  texto = texto.replace(/\s+/g, " ");
-
-  // Atualiza o conteúdo
-  output.innerText = texto.trim();
-
-  // Garante que o alinhamento fique justificado
-  output.style.textAlign = "justify";
-}
-const output = document.getElementById("output");
-const observer = new MutationObserver(() => {
-  limparEJustificar();
+  // MutationObserver
+  const observer = new MutationObserver(() => {
+    limparEJustificar();
+  });
+  observer.observe(output, { childList: true, characterData: true, subtree: true });
 });
-observer.observe(output, { childList: true, characterData: true, subtree: true });
+
+    
 </script>
 
 </body>
