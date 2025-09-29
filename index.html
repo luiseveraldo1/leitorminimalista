@@ -1,1 +1,499 @@
-<!DOCTYPE html> <html lang="pt-BR"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>FlowRead - Leitor Inteligente</title> <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"> <style> /* ===== VARIÁVEIS DE COR E ESTILO (Fácil de customizar) ===== */ :root { --bg-color: #f5f7fa; --card-bg-color: #ffffff; --text-color: #2c3e50; --heading-color: #1a2533; --primary-color: #4a69bd; --primary-hover-color: #3b5496; --secondary-color: #788a9e; --border-color: #dfe4ea; --shadow-color: rgba(0, 0, 0, 0.07); --success-color: #27ae60; --font-family: 'Poppins', 'Segoe UI', sans-serif; --border-radius: 16px; --card-padding: 25px; } /* ===== MODO ESCURO (DARK MODE) ===== */ body.dark-mode { --bg-color: #1a2533; --card-bg-color: #2c3e50; --text-color: #e0e5eb; --heading-color: #ffffff; --border-color: #41546b; --shadow-color: rgba(0, 0, 0, 0.15); } /* ===== CORPO E LAYOUT PRINCIPAL ===== */ body { font-family: var(--font-family); background: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; display: flex; justify-content: center; transition: background 0.3s, color 0.3s; } .container { width: 100%; max-width: 1400px; display: grid; grid-template-columns: 400px 1fr; gap: 25px; } /* ===== CABEÇALHO ===== */ header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; } header h1 { color: var(--heading-color); margin: 0; font-size: 2.2rem; } header h1 span { color: var(--primary-color); } /* ===== CARDS DE CONTROLE (COLUNA ESQUERDA) ===== */ .controls-column { display: flex; flex-direction: column; gap: 25px; } .card { background: var(--card-bg-color); border-radius: var(--border-radius); padding: var(--card-padding); box-shadow: 0 8px 30px var(--shadow-color); transition: all 0.3s ease; } .card h3 { margin: 0 0 15px 0; color: var(--heading-color); font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; } /* ===== ESTILOS DE INPUTS, TEXTAREAS E BOTÕES ===== */ textarea, input[type="text"], input[type="number"], select { width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid var(--border-color); font-size: 15px; background: var(--bg-color); color: var(--text-color); transition: all 0.2s ease; box-sizing: border-box; margin-bottom: 10px; } textarea:focus, input:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent); } #rawText { height: 120px; resize: vertical; } #processedText { height: 150px; resize: vertical; margin-top: 15px;} .button-group { display: flex; flex-wrap: wrap; gap: 10px; } button { background-color: var(--primary-color); color: #fff; border: none; border-radius: 10px; cursor: pointer; font-weight: 500; padding: 10px 15px; font-size: 15px; font-family: inherit; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; } button:hover { background-color: var(--primary-hover-color); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); } .alignment-btn { background-color: var(--secondary-color); flex-grow: 1; /* Faz os botões ocuparem o mesmo espaço */ } .alignment-btn.active { background-color: var(--primary-hover-color); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); } button.secondary { background-color: var(--secondary-color); } button.secondary:hover { background-color: #5f7184; } button.success { background-color: var(--success-color); } button.success:hover { background-color: #219a52; } label { display: block; margin-bottom: 5px; font-weight: 500; } .config-group { display: flex; gap: 15px; align-items: center; margin-bottom: 10px; } .config-group label { margin-bottom: 0; } .config-group input, .config-group select { margin-bottom: 0; } /* ===== COLUNA DE LEITURA (DIREITA) ===== */ .reader-column { display: flex; flex-direction: column; gap: 25px; } #output { background: var(--card-bg-color); border-radius: var(--border-radius); padding: 50px; flex-grow: 1; font-size: 28px; line-height: 1.6; color: var(--heading-color); box-shadow: 0 8px 30px var(--shadow-color); display: flex; align-items: center; justify-content: center; text-align: center; transition: opacity 0.5s, transform 0.3s; overflow-wrap: break-word; white-space: pre-wrap; } .motivation { color: var(--success-color); font-weight: bold; animation: fadeIn 0.8s ease-in-out; } @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } } /* ===== CONTROLES DE LEITURA ===== */ .playback-controls { display: flex; justify-content: center; align-items: center; gap: 15px; } .playback-controls button { font-size: 1.5rem; /* Aumenta o emoji/ícone */ padding: 12px 20px; } /* ===== DARK MODE TOGGLE SWITCH ===== */ .switch { position: relative; display: inline-block; width: 50px; height: 28px; } .switch input { opacity: 0; width: 0; height: 0; } .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; } .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; } input:checked + .slider { background-color: var(--primary-color); } input:checked + .slider:before { transform: translateX(22px); } /* ===== RESPONSIVIDADE PARA DISPOSITIVOS MÓVEIS ===== */ @media (max-width: 1024px) { .container { grid-template-columns: 1fr; } header { flex-direction: column; align-items: flex-start; gap: 10px; } #output { min-height: 300px; font-size: 24px; padding: 30px; } } @media (max-width: 768px) { body { padding: 15px; } header h1 { font-size: 1.8rem; } .button-group, .playback-controls { justify-content: center; } } </style> </head> <body> <div class="container"> <header> <h1>Flow<span>Read</span></h1> <label class="switch"> <input type="checkbox" id="darkModeToggle"> <span class="slider"></span> </label> </header> <aside class="controls-column"> <div class="card"> <h3>1. Insira seu Texto</h3> <textarea id="rawText" rows="6" placeholder="Cole seu texto aqui ou importe de um link..."></textarea> <div class="button-group"> <button onclick="importFromLink()">📎 Importar de Link</button> <button onclick="clearRawText()" class="secondary">🗑️ Limpar</button> </div> <div class="button-group" style="margin-top: 15px;"> <button onclick="generateSentences()">📌 Gerar Frases</button> <button onclick="generateSmartSummary()">📝 Resumo Inteligente</button> </div> </div> <div class="card"> <h3>2. Revise e Edite</h3> <textarea id="processedText" placeholder="Frases extraídas ou resumidas aparecerão aqui. Você pode editá-las antes de iniciar a leitura."></textarea> <div class="button-group"> <button onclick="syncProcessedText()">🔄 Sincronizar Edições</button> </div> </div> <div class="card"> <h3>⚙️ Configurações de Leitura</h3> <label for="voiceSelect">Voz</label> <select id="voiceSelect"></select> <div class="config-group"> <label>Velocidade: <input type="number" id="voiceRate" value="1" min="0.1" max="3" step="0.1"></label> <label>Tamanho: <input type="number" id="fontSize" value="28" min="12" max="60"></label> </div> <div class="config-group"> <label for="fontColor">Cor:</label> <input type="color" id="fontColor" value="#1a2533"> </div> <label for="fontFamily">Fonte</label> <select id="fontFamily"> <option value="Poppins, sans-serif">Poppins</option> <option value="Georgia, serif">Georgia</option> <option value="Arial, sans-serif">Arial</option> <option value="Courier New, monospace">Courier New</option> <option value="Verdana, sans-serif">Verdana</option> </select> <label style="margin-top: 15px;">Alinhamento do Texto</label> <div class="button-group"> <button class="alignment-btn" onclick="alignText('left', this)">Esquerda</button> <button class="alignment-btn" onclick="alignText('justify', this)">Justificar</button> <button class="alignment-btn" onclick="alignText('right', this)">Direita</button> </div> <label style="margin-top: 15px;">Frases Motivacionais</label> <div class="config-group"> <label>A cada <input type="number" id="motivationEvery" value="0" min="0" style="width:60px"> frases</label> </div> </div> <div class="card"> <h3>💾 Gerenciamento</h3> <div class="button-group"> <button onclick="exportJSON()">📥 Exportar JSON</button> <label for="importFile" class="button secondary" style="cursor:pointer;">📤 Importar JSON</label> <input type="file" id="importFile" onchange="importJSON(event)" style="display:none;"> </div> <div class="button-group" style="margin-top: 10px;"> <button onclick="saveToCloud()" class="success">☁️ Salvar e Copiar Link</button> <button onclick="loadBinByLink()">📂 Carregar da Nuvem</button> </div> </div> </aside> <main class="reader-column"> <div id="output">Bem-vindo ao FlowRead! Cole um texto e gere frases para começar.</div> <div class="card"> <div class="playback-controls"> <button onclick="prevSentence()" title="Voltar">⬅️</button> <button onclick="startAuto()" title="Automático">▶️</button> <button onclick="pauseAuto()" title="Pausar">⏸️</button> <button onclick="resetReader()" title="Resetar">🔄</button> <button onclick="nextSentence()" title="Avançar">➡️</button> </div> <div class="playback-controls" style="margin-top: 15px;"> <button onclick="toggleVoice()">🔊 Voz On/Off</button> <button onclick="manualMode()">📖 Modo Manual</button> </div> </div> <div class="card"> <h3>Pesquisa Rápida</h3> <div style="display: flex; gap: 10px;"> <input type="text" id="searchInput" placeholder="Pesquisar termo no Google..."> <button onclick="searchGoogle()">🔍</button> </div> </div> </main> </div> <script> // ======================================================= // PARTE 1: LÓGICA DO DARK MODE E OUTRAS MELHORIAS // ======================================================= document.addEventListener('DOMContentLoaded', () => { // Lógica do Dark Mode const darkModeToggle = document.getElementById('darkModeToggle'); const body = document.body; const fontColorInput = document.getElementById('fontColor'); function applyTheme(isDark) { if (isDark) { body.classList.add('dark-mode'); fontColorInput.value = '#ffffff'; } else { body.classList.remove('dark-mode'); fontColorInput.value = '#1a2533'; } } const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches; darkModeToggle.checked = prefersDark; applyTheme(prefersDark); darkModeToggle.addEventListener('change', () => { applyTheme(darkModeToggle.checked); if (typeof showCurrent === 'function' && window.sentences && window.sentences.length > 0) { showCurrent(); } }); loadVoices(); }); // ======================================================= // PARTE 2: SEU CÓDIGO ORIGINAL (FUNÇÕES DO LEITOR) // ======================================================= let sentences=[], currentIndex=0, autoMode=false, voiceEnabled=true; let voices=[], selectedVoice=null, textReadCounts={}; let cloudLink = ""; const output=document.getElementById('output'), voiceSelect=document.getElementById('voiceSelect'); const motivationalPhrases=["Continue firme, você está indo bem!","Mais uma frase! Foque e avance!","Você está se superando a cada leitura!","Mantenha o ritmo, sua mente agradece!","A constância traz o resultado!","Respire fundo, você está no caminho certo!","Seu foco está criando resultados!"]; function loadVoices(){ voices=speechSynthesis.getVoices(); voiceSelect.innerHTML=""; voices.forEach((v,i)=>{ let o=document.createElement("option"); o.value=i; o.textContent=${v.name} (${v.lang}); voiceSelect.appendChild(o); }); if(voices.length>0) selectedVoice=voices[0]; } speechSynthesis.onvoiceschanged=loadVoices; voiceSelect.addEventListener("change",()=>{ selectedVoice=voices[voiceSelect.value]; }); function generateSentences(){ const text=document.getElementById('rawText').value; if(!text.trim()) return; sentences=text.split(/(?<=\.)\s+/).map(s=>s.trim()).filter(Boolean); sentences=insertMotivation(sentences); currentIndex=0; document.getElementById('processedText').value=sentences.join("\n\n"); showCurrent(); } function generateSmartSummary(){ const text=document.getElementById('rawText').value; if(!text.trim()) return; const stopwords=["de","do","da","e","a","o","que","em","um","uma","para","com","não","se","por","os","as","no","na","dos","das"]; const sents=text.split(/(?<=\.)\s+/).map(s=>s.trim()).filter(Boolean); const freq={}; sents.forEach(s=>{ s.split(/\s+/).forEach(w=>{ const word=w.toLowerCase().replace(/[.,!?]/g,''); if(!stopwords.includes(word)) freq[word]=(freq[word]||0)+1; }); }); const scored=sents.map(s=>{ const score=s.split(/\s+/).reduce((a,w)=>{ const word=w.toLowerCase().replace(/[.,!?]/g,''); return a+(freq[word]||0); },0); return {text:s,score}; }); scored.sort((a,b)=>b.score-a.score); const summary=scored.slice(0,Math.min(5,scored.length)).map(s=>s.text); sentences=insertMotivation(summary); currentIndex=0; document.getElementById('processedText').value=sentences.join("\n\n"); showCurrent(); } function syncProcessedText(){ const edited=document.getElementById('processedText').value; sentences=edited.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean); currentIndex=0; showCurrent(); } function insertMotivation(arr){ const every=parseInt(document.getElementById('motivationEvery').value)||0; if(every<=0) return arr; let final=[]; for(let i=0;i<arr.length;i++){ final.push(arr[i]); if((i+1)%every===0 && i!==arr.length-1){ final.push(motivationalPhrases[Math.floor(Math.random()*motivationalPhrases.length)]); } } return final; } function clearRawText(){ document.getElementById('rawText').value=""; document.getElementById('processedText').value=""; sentences=[]; output.textContent="Texto apagado."; } function searchGoogle(){ const q=document.getElementById('searchInput').value.trim(); if(q) window.open(https://www.google.com/search?q=${encodeURIComponent(q)}, "_blank"); else { alert("Digite algo para pesquisar."); document.getElementById('searchInput').focus(); } } async function importFromLink(){ const url=prompt("Cole o link do site (modo texto recomendado):"); if(!url) return; try{ const res=await fetch(http://localhost:3000/extract-text?url=${encodeURIComponent(url)}); const data=await res.json(); if(data.text){ document.getElementById('rawText').value=data.text; alert("Texto extraído com sucesso!"); } else alert("Não foi possível extrair o texto."); } catch(err){ alert("Erro ao importar o texto: "+err.message); } } function showCurrent(){ if(!sentences || !sentences.length){ output.textContent="Nenhuma frase gerada."; return; } output.style.fontSize=document.getElementById('fontSize').value+"px"; output.style.color=document.getElementById('fontColor').value; output.style.fontFamily=document.getElementById('fontFamily').value; const text=sentences[currentIndex]; if(motivationalPhrases.includes(text)) output.innerHTML=<span class="motivation">${text}</span>; else output.textContent=text; } function alignText(alignment, clickedButton) { const output = document.getElementById('output'); output.style.textAlign = alignment; const alignmentButtons = document.querySelectorAll('.alignment-btn'); alignmentButtons.forEach(btn => { btn.classList.remove('active'); }); clickedButton.classList.add('active'); } // CÓDIGO NOVO E CORRIGIDO function speakCurrent() { const text = sentences[currentIndex]; // Se a voz estiver desativada, ou se a voz selecionada ainda não foi carregada (null) if (!voiceEnabled || !selectedVoice) { // Se a lista de vozes do navegador ainda estiver vazia, tentamos carregar de novo. if (speechSynthesis.getVoices().length > 0) { loadVoices(); } // Se, mesmo após a tentativa, ainda não houver uma voz selecionada... if (!selectedVoice && voiceEnabled) { pauseAuto(); // <-- A MUDANÇA MAIS IMPORTANTE: Para o loop! alert("As vozes de leitura ainda não foram carregadas pelo navegador. Por favor, aguarde um momento e clique em ▶️ novamente."); return; // Sai da função para não continuar o loop. } // Se a voz estiver simplesmente desabilitada, continua o ciclo sem som. if (!voiceEnabled && autoMode) { nextSentenceAuto(); } return; } // Se tudo estiver certo, cancela qualquer fala anterior e inicia a nova. speechSynthesis.cancel(); const utter = new SpeechSynthesisUtterance(text); utter.voice = selectedVoice; const rate = parseFloat(document.getElementById('voiceRate').value) || 1; utter.rate = rate; utter.onend = () => { incrementReadCount(document.getElementById('rawText').value); if (autoMode) nextSentenceAuto(); }; speechSynthesis.speak(utter); } function incrementReadCount(text){ const hash=hashCode(text); textReadCounts[hash]=(textReadCounts[hash]||0)+1; } function hashCode(str){ let hash=0; for(let i=0;i<str.length;i++){ hash=((hash<<5)-hash)+str.charCodeAt(i); hash|=0; } return hash; } function startAuto(){ if(!sentences.length) return; autoMode=true; currentIndex=0; showCurrent(); speakCurrent(); } function nextSentenceAuto(){ if(!autoMode || !sentences.length) return; currentIndex=(currentIndex+1)%sentences.length; showCurrent(); speakCurrent(); } function pauseAuto(){ autoMode=false; speechSynthesis.cancel(); } function resetReader(){ pauseAuto(); currentIndex=0; showCurrent(); } function manualMode(){ pauseAuto(); showCurrent(); } function nextSentence(){ if (!sentences.length) return; currentIndex=(currentIndex+1)%sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); } function prevSentence(){ if (!sentences.length) return; currentIndex=(currentIndex-1+sentences.length)%sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); } function toggleVoice(){ voiceEnabled=!voiceEnabled; alert("Voz "+(voiceEnabled?"ativada":"desativada")); } function exportJSON(){ const data={sentences,textReadCounts}; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='flowread_data.json'; a.click(); URL.revokeObjectURL(url); } function importJSON(event){ const file=event.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=(e)=>{ try{ const data=JSON.parse(e.target.result); if(data.sentences) sentences=data.sentences; if(data.textReadCounts) textReadCounts=data.textReadCounts; currentIndex=0; document.getElementById('processedText').value=sentences.join("\n\n"); showCurrent(); alert("JSON importado com sucesso!"); }catch(err){ alert("Erro ao importar JSON: "+err); } }; reader.readAsText(file); } const MASTER_KEY="$2a$10$2wR5NQoVsUWczmL.U8MAs.YILi4/aKD3YK01iPbnyFzfLn.xiChGK"; async function saveToCloud(){ try{ const data={sentences,textReadCounts}; const res=await fetch("https://api.jsonbin.io/v3/b",{method:"POST",headers:{"Content-Type":"application/json","X-Master-Key":MASTER_KEY},body:JSON.stringify(data)}); const json=await res.json(); cloudLink=json.metadata.id; copyCloudLink(); } catch(err){ alert("Erro ao salvar na nuvem: "+err.message); } } function copyCloudLink(){ if(!cloudLink){ alert("Nenhum JSON salvo ainda. Salve primeiro."); return; } const url="https://jsonbin.io/b/"+cloudLink; navigator.clipboard.writeText(url).then(()=>alert("Salvo na nuvem com sucesso! Link copiado para a área de transferência."),()=>alert("Falha ao copiar link.")); } async function loadBinByLink(){ const input = prompt("Cole o ID ou link do bin JSON que deseja carregar:"); if(!input) return; let binId = input.includes("jsonbin.io") ? input.split("/b/")[1].split("/")[0] : input; try{ const res = await fetch(https://api.jsonbin.io/v3/b/${binId}/latest, { headers: {"X-Master-Key": MASTER_KEY} }); const json = await res.json(); if(json.record){ sentences = json.record.sentences || []; textReadCounts = json.record.textReadCounts || {}; currentIndex = 0; document.getElementById('processedText').value = sentences.join("\n\n"); showCurrent(); alert("Bin carregado com sucesso!"); } else alert("Não foi possível carregar o bin."); } catch(err){ alert("Erro ao carregar bin: "+err.message); console.error(err); } } </script> </body> </html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowRead - Leitor Inteligente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ===== VARIÁVEIS DE COR E ESTILO ===== */
+    :root {
+      --bg-color: #f5f7fa;
+      --card-bg-color: #ffffff;
+      --text-color: #2c3e50;
+      --heading-color: #1a2533;
+      --primary-color: #4a69bd;
+      --primary-hover-color: #3b5496;
+      --secondary-color: #788a9e;
+      --border-color: #dfe4ea;
+      --shadow-color: rgba(0, 0, 0, 0.07);
+      --success-color: #27ae60;
+      --font-family: 'Poppins', 'Segoe UI', sans-serif;
+      --border-radius: 16px;
+      --card-padding: 25px;
+    }
+
+    /* ===== MODO ESCURO ===== */
+    body.dark-mode {
+      --bg-color: #1a2533;
+      --card-bg-color: #2c3e50;
+      --text-color: #e0e5eb;
+      --heading-color: #ffffff;
+      --border-color: #41546b;
+      --shadow-color: rgba(0, 0, 0, 0.15);
+    }
+
+    /* ===== CORPO E LAYOUT PRINCIPAL ===== */
+    body {
+      font-family: var(--font-family);
+      background: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      display: grid;
+      grid-template-columns: 400px 1fr;
+      gap: 25px;
+    }
+
+    header {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    header h1 {
+      color: var(--heading-color);
+      margin: 0;
+      font-size: 2.2rem;
+    }
+    header h1 span { color: var(--primary-color); }
+
+    .controls-column {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+    }
+
+    .card {
+      background: var(--card-bg-color);
+      border-radius: var(--border-radius);
+      padding: var(--card-padding);
+      box-shadow: 0 8px 30px var(--shadow-color);
+      transition: all 0.3s ease;
+    }
+    .card h3 {
+      margin: 0 0 15px 0;
+      color: var(--heading-color);
+      font-size: 1.1rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    textarea, input[type="text"], input[type="number"], select {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      font-size: 15px;
+      background: var(--bg-color);
+      color: var(--text-color);
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+    }
+    textarea:focus, input:focus, select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
+    }
+    #rawText { height: 120px; resize: vertical; }
+    #processedText { height: 150px; resize: vertical; margin-top: 15px; }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button {
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 500;
+      padding: 10px 15px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    button:hover {
+      background-color: var(--primary-hover-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .alignment-btn { background-color: var(--secondary-color); flex-grow: 1; }
+    .alignment-btn.active {
+      background-color: var(--primary-hover-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    button.secondary { background-color: var(--secondary-color); }
+    button.secondary:hover { background-color: #5f7184; }
+    button.success { background-color: var(--success-color); }
+    button.success:hover { background-color: #219a52; }
+
+    label { display: block; margin-bottom: 5px; font-weight: 500; }
+    .config-group { display: flex; gap: 15px; align-items: center; margin-bottom: 10px; }
+    .config-group label { margin-bottom: 0; }
+    .config-group input, .config-group select { margin-bottom: 0; }
+
+    .reader-column { display: flex; flex-direction: column; gap: 25px; }
+    #output {
+      background: var(--card-bg-color);
+      border-radius: var(--border-radius);
+      padding: 50px;
+      flex-grow: 1;
+      font-size: 28px;
+      line-height: 1.6;
+      color: var(--heading-color);
+      box-shadow: 0 8px 30px var(--shadow-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      transition: opacity 0.5s, transform 0.3s;
+      overflow-wrap: break-word;
+      white-space: pre-wrap;
+    }
+
+    .motivation {
+      color: var(--success-color);
+      font-weight: bold;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .playback-controls { display: flex; justify-content: center; align-items: center; gap: 15px; }
+    .playback-controls button { font-size: 1.5rem; padding: 12px 20px; }
+
+    .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 20px; width: 20px;
+      left: 4px; bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--primary-color); }
+    input:checked + .slider:before { transform: translateX(22px); }
+
+    @media (max-width: 1024px) {
+      .container { grid-template-columns: 1fr; }
+      header { flex-direction: column; align-items: flex-start; gap: 10px; }
+      #output { min-height: 300px; font-size: 24px; padding: 30px; }
+    }
+    @media (max-width: 768px) {
+      body { padding: 15px; }
+      header h1 { font-size: 1.8rem; }
+      .button-group, .playback-controls { justify-content: center; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <!-- HEADER -->
+    <header>
+      <h1>Flow<span>Read</span></h1>
+      <label class="switch">
+        <input type="checkbox" id="darkModeToggle">
+        <span class="slider"></span>
+      </label>
+    </header>
+
+    <!-- CONTROLES -->
+    <aside class="controls-column">
+      <div class="card">
+        <h3>1. Insira seu Texto</h3>
+        <textarea id="rawText" rows="6" placeholder="Cole seu texto aqui ou importe de um link..."></textarea>
+        <div class="button-group">
+          <button onclick="importFromLink()">📎 Importar de Link</button>
+          <button onclick="clearRawText()" class="secondary">🗑️ Limpar</button>
+        </div>
+        <div class="button-group" style="margin-top: 15px;">
+          <button onclick="generateSentences()">📌 Gerar Frases</button>
+          <button onclick="generateSmartSummary()">📝 Resumo Inteligente</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>2. Revise e Edite</h3>
+        <textarea id="processedText" placeholder="Frases extraídas ou resumidas aparecerão aqui. Você pode editá-las antes de iniciar a leitura."></textarea>
+        <div class="button-group">
+          <button onclick="syncProcessedText()">🔄 Sincronizar Edições</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>⚙️ Configurações de Leitura</h3>
+        <label for="voiceSelect">Voz</label>
+        <select id="voiceSelect"></select>
+
+        <div class="config-group">
+          <label>Velocidade: <input type="number" id="voiceRate" value="1" min="0.1" max="3" step="0.1"></label>
+          <label>Tamanho: <input type="number" id="fontSize" value="28" min="12" max="60"></label>
+        </div>
+
+        <div class="config-group">
+          <label for="fontColor">Cor:</label>
+          <input type="color" id="fontColor" value="#1a2533">
+        </div>
+
+        <label for="fontFamily">Fonte</label>
+        <select id="fontFamily">
+          <option value="Poppins, sans-serif">Poppins</option>
+          <option value="Georgia, serif">Georgia</option>
+          <option value="Arial, sans-serif">Arial</option>
+          <option value="Courier New, monospace">Courier New</option>
+          <option value="Verdana, sans-serif">Verdana</option>
+        </select>
+
+        <label style="margin-top: 15px;">Alinhamento do Texto</label>
+        <div class="button-group">
+          <button class="alignment-btn" onclick="alignText('left', this)">Esquerda</button>
+          <button class="alignment-btn" onclick="alignText('justify', this)">Justificar</button>
+          <button class="alignment-btn" onclick="alignText('right', this)">Direita</button>
+        </div>
+
+        <label style="margin-top: 15px;">Frases Motivacionais</label>
+        <div class="config-group">
+          <label>A cada <input type="number" id="motivationEvery" value="0" min="0" style="width:60px"> frases</label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>💾 Gerenciamento</h3>
+        <div class="button-group">
+          <button onclick="exportJSON()">📥 Exportar JSON</button>
+          <label for="importFile" class="button secondary" style="cursor:pointer;">📤 Importar JSON</label>
+          <input type="file" id="importFile" onchange="importJSON(event)" style="display:none;">
+        </div>
+        <div class="button-group" style="margin-top: 10px;">
+          <button onclick="saveToCloud()" class="success">☁️ Salvar e Copiar Link</button>
+          <button onclick="loadBinByLink()">📂 Carregar da Nuvem</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- LEITOR -->
+    <main class="reader-column">
+      <div id="output">
+        Bem-vindo ao FlowRead! Cole um texto e gere frases para começar.
+      </div>
+
+      <div class="card">
+        <div class="playback-controls">
+          <button onclick="prevSentence()" title="Voltar">⬅️</button>
+          <button onclick="startAuto()" title="Automático">▶️</button>
+          <button onclick="pauseAuto()" title="Pausar">⏸️</button>
+          <button onclick="resetReader()" title="Resetar">🔄</button>
+          <button onclick="nextSentence()" title="Avançar">➡️</button>
+        </div>
+        <div class="playback-controls" style="margin-top: 15px;">
+          <button onclick="toggleVoice()">🔊 Voz On/Off</button>
+          <button onclick="manualMode()">📖 Modo Manual</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Pesquisa Rápida</h3>
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="searchInput" placeholder="Pesquisar termo no Google...">
+          <button onclick="searchGoogle()">🔍</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // =======================
+    // VARIÁVEIS GLOBAIS
+    // =======================
+    let sentences = [];
+    let currentIndex = 0;
+    let autoInterval = null;
+    let voices = window.speechSynthesis.getVoices();
+    let autoPlay = false;
+    let voiceEnabled = true;
+
+    // =======================
+    // FUNÇÕES PRINCIPAIS
+    // =======================
+    function generateSentences() {
+      const text = document.getElementById('rawText').value.trim();
+      if (!text) return alert("Cole um texto primeiro!");
+      sentences = text.match(/[^.!?]+[.!?]?/g) || [text];
+      document.getElementById('processedText').value = sentences.join('\n');
+      currentIndex = 0;
+      displaySentence();
+    }
+
+    function generateSmartSummary() {
+      const text = document.getElementById('rawText').value.trim();
+      if (!text) return alert("Cole um texto primeiro!");
+      const summary = text.split('.').slice(0,3).join('.') + '.';
+      sentences = summary.match(/[^.!?]+[.!?]?/g) || [summary];
+      document.getElementById('processedText').value = sentences.join('\n');
+      currentIndex = 0;
+      displaySentence();
+    }
+
+    function displaySentence() {
+      if (sentences.length === 0) return;
+      document.getElementById('output').textContent = sentences[currentIndex];
+    }
+
+    function nextSentence() {
+      if (currentIndex < sentences.length -1) currentIndex++;
+      displaySentence();
+    }
+
+    function prevSentence() {
+      if (currentIndex > 0) currentIndex--;
+      displaySentence();
+    }
+
+    function startAuto() {
+      if (autoInterval) clearInterval(autoInterval);
+      autoInterval = setInterval(() => {
+        nextSentence();
+        if (currentIndex === sentences.length -1) clearInterval(autoInterval);
+      }, 2000);
+    }
+
+    function pauseAuto() {
+      if (autoInterval) clearInterval(autoInterval);
+    }
+
+    function resetReader() {
+      currentIndex = 0;
+      displaySentence();
+    }
+
+    function clearRawText() {
+      document.getElementById('rawText').value = '';
+      sentences = [];
+      currentIndex = 0;
+      displaySentence();
+    }
+
+    function syncProcessedText() {
+      const text = document.getElementById('processedText').value.trim();
+      sentences = text.split('\n').filter(s => s.trim());
+      currentIndex = 0;
+      displaySentence();
+    }
+
+    function alignText(direction, btn) {
+      document.getElementById('output').style.textAlign = direction;
+      document.querySelectorAll('.alignment-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function toggleVoice() { voiceEnabled = !voiceEnabled; }
+
+    function manualMode() { pauseAuto(); }
+
+    function searchGoogle() {
+      const query = document.getElementById('searchInput').value;
+      if (!query) return alert("Digite algo para pesquisar!");
+      window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+    }
+
+    function exportJSON() {
+      const data = { sentences, currentIndex };
+      const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "flowread.json";
+      a.click();
+    }
+
+    function importJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        const data = JSON.parse(e.target.result);
+        sentences = data.sentences || [];
+        currentIndex = data.currentIndex || 0;
+        document.getElementById('processedText').value = sentences.join('\n');
+        displaySentence();
+      };
+      reader.readAsText(file);
+    }
+
+    function importFromLink() {
+      const url = prompt("Cole a URL do texto:");
+      if (!url) return;
+      fetch(url)
+        .then(r => r.text())
+        .then(text => { document.getElementById('rawText').value = text; })
+        .catch(() => alert("Erro ao importar do link"));
+    }
+
+    function saveToCloud() {
+      alert("Funcionalidade de nuvem não implementada ainda.");
+    }
+
+    function loadBinByLink() {
+      alert("Funcionalidade de carregar da nuvem não implementada ainda.");
+    }
+
+    // =======================
+    // DARK MODE
+    // =======================
+    document.getElementById('darkModeToggle').addEventListener('change', e => {
+      document.body.classList.toggle('dark-mode', e.target.checked);
+    });
+
+    // =======================
+    // VOICES
+    // =======================
+    function populateVoices() {
+      voices = speechSynthesis.getVoices();
+      const select = document.getElementById('voiceSelect');
+      select.innerHTML = '';
+      voices.forEach(v => { 
+        const option = document.createElement('option');
+        option.value = v.name; option.textContent = v.name;
+        select.appendChild(option);
+      });
+    }
+    populateVoices();
+    if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = populateVoices;
+
+  </script>
+</body>
+</html>
