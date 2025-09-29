@@ -494,6 +494,46 @@
     populateVoices();
     if (speechSynthesis.onvoiceschanged !== undefined) speechSynthesis.onvoiceschanged = populateVoices;
 
+
+function limparEJustificar() {
+    const output = document.getElementById("output");
+    let texto = output.innerText;
+    texto = texto.replace(/\f/g, " ");          // Remove quebras de página
+    texto = texto.replace(/\n\s*\n+/g, "\n");   // Substitui várias quebras de linha
+    texto = texto.replace(/\s+/g, " ");         // Remove espaços múltiplos
+    output.innerText = texto.trim();
+    output.style.textAlign = "justify";         // Alinha o texto
+  }
+
+  // Modifique sua função showCurrent() para chamar limparEJustificar()
+  function showCurrent() {
+    const output = document.getElementById("output");
+    if (!sentences || !sentences.length) {
+      output.textContent = "Nenhuma frase gerada.";
+      return;
+    }
+
+    let text = sentences[currentIndex];
+    if (motivationalPhrases.includes(text)) {
+      output.innerHTML = `<span class="motivation">${text}</span>`;
+    } else {
+      output.textContent = text;
+    }
+
+    // Limpa e justifica sempre que o texto mudar
+    limparEJustificar();
+
+    // Ajusta estilo
+    output.style.fontSize = document.getElementById('fontSize').value + "px";
+    output.style.color = document.getElementById('fontColor').value;
+    output.style.fontFamily = document.getElementById('fontFamily').value;
+  }
+
+
+
+
+
+
   </script>
 </body>
 </html>
