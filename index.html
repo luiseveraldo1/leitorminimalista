@@ -526,6 +526,30 @@ async function loadBinByLink(){
     console.error(err);
   }
 }
+    function limparEJustificar() {
+  let output = document.getElementById("output");
+  let texto = output.innerText;
+
+  // Remove quebras de página (\f)
+  texto = texto.replace(/\f/g, " ");
+
+  // Substitui várias quebras de linha seguidas por uma só
+  texto = texto.replace(/\n\s*\n+/g, "\n");
+
+  // Remove espaços múltiplos
+  texto = texto.replace(/\s+/g, " ");
+
+  // Atualiza o conteúdo
+  output.innerText = texto.trim();
+
+  // Garante que o alinhamento fique justificado
+  output.style.textAlign = "justify";
+}
+const output = document.getElementById("output");
+const observer = new MutationObserver(() => {
+  limparEJustificar();
+});
+observer.observe(output, { childList: true, characterData: true, subtree: true });
 </script>
 
 </body>
