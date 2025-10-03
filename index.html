@@ -8,245 +8,62 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ===== VARIÁVEIS DE COR E ESTILO (Fácil de customizar) ===== */
         :root {
-            --bg-color: #f5f7fa;
-            --card-bg-color: #ffffff;
-            --text-color: #2c3e50;
-            --heading-color: #1a2533;
-            --primary-color: #4a69bd;
-            --primary-hover-color: #3b5496;
-            --secondary-color: #788a9e;
-            --border-color: #dfe4ea;
-            --shadow-color: rgba(0, 0, 0, 0.07);
-            --success-color: #27ae60;
-            --font-family: 'Poppins', 'Segoe UI', sans-serif;
-            --border-radius: 16px;
-            --card-padding: 25px;
+            --bg-color: #f5f7fa; --card-bg-color: #ffffff; --text-color: #2c3e50;
+            --heading-color: #1a2533; --primary-color: #4a69bd; --primary-hover-color: #3b5496;
+            --secondary-color: #788a9e; --border-color: #dfe4ea; --shadow-color: rgba(0, 0, 0, 0.07);
+            --success-color: #27ae60; --font-family: 'Poppins', 'Segoe UI', sans-serif;
+            --border-radius: 16px; --card-padding: 25px;
         }
-
-        /* ===== MODO ESCURO (DARK MODE) ===== */
         body.dark-mode {
-            --bg-color: #1a2533;
-            --card-bg-color: #2c3e50;
-            --text-color: #e0e5eb;
-            --heading-color: #ffffff;
-            --border-color: #41546b;
-            --shadow-color: rgba(0, 0, 0, 0.15);
+            --bg-color: #1a2533; --card-bg-color: #2c3e50; --text-color: #e0e5eb;
+            --heading-color: #ffffff; --border-color: #41546b; --shadow-color: rgba(0, 0, 0, 0.15);
         }
-
-        /* ===== CORPO E LAYOUT PRINCIPAL ===== */
-        body {
-            font-family: var(--font-family);
-            background: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1400px;
-            display: grid;
-            grid-template-columns: 400px 1fr;
-            gap: 25px;
-        }
-
-        /* ===== CABEÇALHO ===== */
-        header {
-            grid-column: 1 / -1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        header h1 {
-            color: var(--heading-color);
-            margin: 0;
-            font-size: 2.2rem;
-        }
-
-        header h1 span {
-            color: var(--primary-color);
-        }
-
-        /* ===== CARDS DE CONTROLE (COLUNA ESQUERDA) ===== */
-        .controls-column {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .card {
-            background: var(--card-bg-color);
-            border-radius: var(--border-radius);
-            padding: var(--card-padding);
-            box-shadow: 0 8px 30px var(--shadow-color);
-            transition: all 0.3s ease;
-        }
-        
-        .card h3 {
-            margin: 0 0 15px 0;
-            color: var(--heading-color);
-            font-size: 1.1rem;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-
-        /* ===== ESTILOS DE INPUTS, TEXTAREAS E BOTÕES ===== */
-        textarea, input[type="text"], input[type="number"], select {
-            width: 100%;
-            padding: 12px 15px;
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
-            font-size: 15px;
-            background: var(--bg-color);
-            color: var(--text-color);
-            transition: all 0.2s ease;
-            box-sizing: border-box;
-            margin-bottom: 10px;
-        }
-
-        textarea:focus, input:focus, select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent);
-        }
-        
+        body { font-family: var(--font-family); background: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; display: flex; justify-content: center; transition: background 0.3s, color 0.3s; }
+        .container { width: 100%; max-width: 1400px; display: grid; grid-template-columns: 400px 1fr; gap: 25px; }
+        header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        header h1 { color: var(--heading-color); margin: 0; font-size: 2.2rem; }
+        header h1 span { color: var(--primary-color); }
+        .controls-column { display: flex; flex-direction: column; gap: 25px; }
+        .card { background: var(--card-bg-color); border-radius: var(--border-radius); padding: var(--card-padding); box-shadow: 0 8px 30px var(--shadow-color); transition: all 0.3s ease; }
+        .card h3 { margin: 0 0 15px 0; color: var(--heading-color); font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        textarea, input[type="text"], input[type="number"], select { width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid var(--border-color); font-size: 15px; background: var(--bg-color); color: var(--text-color); transition: all 0.2s ease; box-sizing: border-box; margin-bottom: 10px; }
+        textarea:focus, input:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent); }
         #rawText { height: 120px; resize: vertical; }
         #processedText { height: 150px; resize: vertical; margin-top: 15px;}
-
-        .button-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        button {
-            background-color: var(--primary-color);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 500;
-            padding: 10px 15px;
-            font-size: 15px;
-            font-family: inherit;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        button:hover {
-            background-color: var(--primary-hover-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .alignment-btn {
-            background-color: var(--secondary-color);
-            flex-grow: 1; /* Faz os botões ocuparem o mesmo espaço */
-        }
-
-        .alignment-btn.active {
-            background-color: var(--primary-hover-color);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        button.secondary {
-            background-color: var(--secondary-color);
-        }
+        .button-group { display: flex; flex-wrap: wrap; gap: 10px; }
+        button { background-color: var(--primary-color); color: #fff; border: none; border-radius: 10px; cursor: pointer; font-weight: 500; padding: 10px 15px; font-size: 15px; font-family: inherit; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
+        button:hover { background-color: var(--primary-hover-color); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+        .alignment-btn { background-color: var(--secondary-color); flex-grow: 1; }
+        .alignment-btn.active { background-color: var(--primary-hover-color); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+        button.secondary { background-color: var(--secondary-color); }
         button.secondary:hover { background-color: #5f7184; }
-
         button.success { background-color: var(--success-color); }
         button.success:hover { background-color: #219a52; }
-
-        label { display: block; margin-bottom: 5px; font-weight: 500; }
-        .config-group { display: flex; gap: 15px; align-items: center; margin-bottom: 10px; }
-        .config-group label { margin-bottom: 0; }
-        .config-group input, .config-group select { margin-bottom: 0; }
-
-        /* ===== COLUNA DE LEITURA (DIREITA) ===== */
-        .reader-column {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        #output {
-            background: var(--card-bg-color);
-            border-radius: var(--border-radius);
-            padding: 50px;
-            flex-grow: 1;
-            font-size: 28px;
-            line-height: 1.6;
-            color: var(--heading-color);
-            box-shadow: 0 8px 30px var(--shadow-color);
-            display: flex;
-            align-items: center;
-            justify-content: justify;
-            text-align: center;
-            transition: opacity 0.5s, transform 0.3s;
-            overflow-wrap: break-word;
-            white-space: pre-wrap;
-        }
-
-        .motivation {
-            color: var(--success-color);
-            font-weight: bold;
-            animation: fadeIn 0.8s ease-in-out;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-
-        /* ===== CONTROLES DE LEITURA ===== */
-        .playback-controls {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-        }
-        .playback-controls button {
-            font-size: 1.5rem; /* Aumenta o emoji/ícone */
-            padding: 12px 20px;
-        }
-        
-        /* ===== DARK MODE TOGGLE SWITCH ===== */
-        .switch { position: relative; display: inline-block; width: 50px; height: 28px; }
-        .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
-        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
-        input:checked + .slider { background-color: var(--primary-color); }
-        input:checked + .slider:before { transform: translateX(22px); }
-
-        /* ===== RESPONSIVIDADE PARA DISPOSITIVOS MÓVEIS ===== */
-        @media (max-width: 1024px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            #output { min-height: 300px; font-size: 24px; padding: 30px; }
-        }
-        @media (max-width: 768px) {
-            body { padding: 15px; }
-            header h1 { font-size: 1.8rem; }
-            .button-group, .playback-controls {
-                justify-content: center;
-            }
-        }
+        label { display: block; margin-bottom: 5px; font-weight: 500; } .config-group { display: flex; gap: 15px; align-items: center; margin-bottom: 10px; } .config-group label { margin-bottom: 0; } .config-group input, .config-group select { margin-bottom: 0; }
+        .reader-column { display: flex; flex-direction: column; gap: 25px; }
+        #output { background: var(--card-bg-color); border-radius: var(--border-radius); padding: 50px; flex-grow: 1; font-size: 28px; line-height: 1.6; color: var(--heading-color); box-shadow: 0 8px 30px var(--shadow-color); display: flex; align-items: center; justify-content: center; text-align: center; transition: opacity 0.5s, transform 0.3s; overflow-wrap: break-word; white-space: pre-wrap; }
+        .motivation { color: var(--success-color); font-weight: bold; animation: fadeIn 0.8s ease-in-out; } @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        .playback-controls { display: flex; justify-content: center; align-items: center; gap: 15px; }
+        .playback-controls button { font-size: 1.5rem; padding: 12px 20px; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; } .switch input { opacity: 0; width: 0; height: 0; } .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; } .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; } input:checked + .slider { background-color: var(--primary-color); } input:checked + .slider:before { transform: translateX(22px); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: var(--card-bg-color); padding: 20px; border-radius: var(--border-radius); width: 90%; max-width: 800px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        body.dark-mode .modal-content { background: var(--bg-color); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 15px; margin-bottom: 15px; }
+        .modal-header h3 { margin: 0; color: var(--heading-color); }
+        .modal-close-btn { font-size: 24px; font-weight: bold; border: none; background: transparent; cursor: pointer; color: var(--text-color); }
+        .editor-list { max-height: 60vh; overflow-y: auto; padding-right: 10px; }
+        .editor-item { display: flex; align-items: flex-start; gap: 15px; padding: 12px; border-bottom: 1px solid var(--border-color); font-size: 16px; }
+        .editor-item:last-child { border-bottom: none; }
+        .editor-item p { margin: 0; flex-grow: 1; line-height: 1.6; }
+        .editor-item .delete-period-btn { background-color: #ef4444; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; font-size: 14px; line-height: 24px; padding: 0; cursor: pointer; flex-shrink: 0; text-align: center; }
+        .editor-footer { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border-color); text-align: right; }
+        @media (max-width: 1024px) { .container { grid-template-columns: 1fr; } header { flex-direction: column; align-items: flex-start; gap: 10px; } #output { min-height: 300px; font-size: 24px; padding: 30px; } }
+        @media (max-width: 768px) { body { padding: 15px; } header h1 { font-size: 1.8rem; } .button-group, .playback-controls { justify-content: center; } }
     </style>
 </head>
 <body>
-
     <div class="container">
         <header>
             <h1>Flow<span>Read</span></h1>
@@ -257,43 +74,49 @@
         </header>
 
         <aside class="controls-column">
-            
             <div class="card">
-                <h3>1. Insira seu Texto</h3>
-                <textarea id="rawText" rows="6" placeholder="Cole seu texto aqui ou importe de um link..."></textarea>
+                <h3>1. Insira seu Texto <span id="rawTextCounter" class="secondary" style="font-size: 0.8rem; font-weight: 400; color: var(--secondary-color);"></span></h3>
+               <textarea id="rawText" rows="6" placeholder="Cole seu texto aqui..." oninput="updateCounters()"></textarea>
                 <div class="button-group">
+                    <button onclick="pasteFromClipboard()">📋 Colar</button>
+                    <button onclick="openManualEditor()">✂️ Editar Texto</button>
                     <button onclick="importFromLink()">📎 Importar de Link</button>
                     <button onclick="clearRawText()" class="secondary">🗑️ Limpar</button>
                 </div>
-                 <div class="button-group" style="margin-top: 15px;">
+				
+				
+				<div style="margin-top: 15px;">
+    <label for="summaryPercent">Tamanho do Resumo (em % de frases)</label>
+    <input type="number" id="summaryPercent" value="25" min="5" max="80" step="5" style="width: 100px; display: inline-block;">
+</div>
+
+
+
+
+                <div class="button-group" style="margin-top: 15px;">
                     <button onclick="generateSentences()">📌 Gerar Frases</button>
                     <button onclick="generateSmartSummary()">📝 Resumo Inteligente</button>
                 </div>
             </div>
-
             <div class="card">
-                <h3>2. Revise e Edite</h3>
-                 <textarea id="processedText" placeholder="Frases extraídas ou resumidas aparecerão aqui. Você pode editá-las antes de iniciar a leitura."></textarea>
-                 <div class="button-group">
+               <h3>2. Revise e Edite <span id="processedTextCounter" class="secondary" style="font-size: 0.8rem; font-weight: 400; color: var(--secondary-color);"></span></h3>
+                <textarea id="processedText" placeholder="Frases extraídas ou resumidas aparecerão aqui." oninput="updateCounters()"></textarea>
+                <div class="button-group">
                     <button onclick="syncProcessedText()">🔄 Sincronizar Edições</button>
-                 </div>
+                </div>
             </div>
-
             <div class="card">
                 <h3>⚙️ Configurações de Leitura</h3>
                 <label for="voiceSelect">Voz</label>
                 <select id="voiceSelect"></select>
-                
                 <div class="config-group">
                     <label>Velocidade: <input type="number" id="voiceRate" value="1" min="0.1" max="3" step="0.1"></label>
                     <label>Tamanho: <input type="number" id="fontSize" value="28" min="12" max="60"></label>
                 </div>
-
                 <div class="config-group">
                     <label for="fontColor">Cor:</label>
                     <input type="color" id="fontColor" value="#1a2533">
                 </div>
-
                 <label for="fontFamily">Fonte</label>
                 <select id="fontFamily">
                   <option value="Poppins, sans-serif">Poppins</option>
@@ -302,20 +125,17 @@
                   <option value="Courier New, monospace">Courier New</option>
                   <option value="Verdana, sans-serif">Verdana</option>
                 </select>
-                
                 <label style="margin-top: 15px;">Alinhamento do Texto</label>
                 <div class="button-group">
                     <button class="alignment-btn" onclick="alignText('left', this)">Esquerda</button>
                     <button class="alignment-btn" onclick="alignText('justify', this)">Justificar</button>
                     <button class="alignment-btn" onclick="alignText('right', this)">Direita</button>
                 </div>
-                
                 <label style="margin-top: 15px;">Frases Motivacionais</label>
                 <div class="config-group">
                     <label>A cada <input type="number" id="motivationEvery" value="0" min="0" style="width:60px"> frases</label>
                 </div>
             </div>
-            
             <div class="card">
                 <h3>💾 Gerenciamento</h3>
                 <div class="button-group">
@@ -328,13 +148,10 @@
                     <button onclick="loadBinByLink()">📂 Carregar da Nuvem</button>
                 </div>
             </div>
-            
         </aside>
 
         <main class="reader-column">
-            
-            <div id="output">Bem-vindo ao FlowRead! Cole um texto e gere frases para começar.</div>
-            
+            <div id="output">Bem-vindo ao FlowRead!</div>
             <div class="card">
                 <div class="playback-controls">
                     <button onclick="prevSentence()" title="Voltar">⬅️</button>
@@ -348,7 +165,6 @@
                      <button onclick="manualMode()">📖 Modo Manual</button>
                  </div>
             </div>
-
             <div class="card">
                  <h3>Pesquisa Rápida</h3>
                  <div style="display: flex; gap: 10px;">
@@ -359,16 +175,27 @@
         </main>
     </div>
 
+    <div id="manual-editor-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content editor-modal">
+            <div class="modal-header">
+                <h3>Editor de Períodos</h3>
+                <button class="modal-close-btn" onclick="closeManualEditor()">&times;</button>
+            </div>
+            <div id="editor-list" class="editor-list"></div>
+            <div class="editor-footer">
+                <button class="success" onclick="saveManualChanges()">✓ Salvar Alterações e Fechar</button>
+            </div>
+        </div>
+    </div>
+
 <script>
 // =======================================================
-// PARTE 1: LÓGICA DO DARK MODE E OUTRAS MELHORIAS
+// LÓGICA DO DARK MODE E OUTRAS MELHORIAS (MANTIDO)
 // =======================================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Lógica do Dark Mode
     const darkModeToggle = document.getElementById('darkModeToggle');
     const body = document.body;
     const fontColorInput = document.getElementById('fontColor');
-
     function applyTheme(isDark) {
         if (isDark) {
             body.classList.add('dark-mode');
@@ -378,155 +205,352 @@ document.addEventListener('DOMContentLoaded', () => {
             fontColorInput.value = '#1a2533';
         }
     }
-
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    darkModeToggle.checked = prefersDark;
-    applyTheme(prefersDark);
-    
-    darkModeToggle.addEventListener('change', () => {
-        applyTheme(darkModeToggle.checked);
-        if (typeof showCurrent === 'function' && window.sentences && window.sentences.length > 0) {
-            showCurrent();
-        }
-    });
-
+    if(darkModeToggle) {
+        darkModeToggle.checked = prefersDark;
+        applyTheme(prefersDark);
+        darkModeToggle.addEventListener('change', () => {
+            applyTheme(darkModeToggle.checked);
+            if (typeof showCurrent === 'function') showCurrent();
+        });
+    }
     loadVoices();
+	 const rawTextarea = document.getElementById('rawText');
+    if (rawTextarea && rawTextarea.value.trim() === '') {
+        rawTextarea.value = `O rover Curiosity, da NASA, pousou em Marte em 2012 para investigar o passado geológico do planeta.
+A missão do Curiosity é determinar se Marte já teve as condições ambientais necessárias para sustentar vida microbiana.
+Para isso, o Curiosity explora a cratera Gale, onde ele tem coletado amostras de solo e rochas.
+Recentemente, o Curiosity encontrou evidências de água e compostos orgânicos, o que reforça a possibilidade de vida no passado de Marte.
+O Curiosity continua sua exploração, enviando dados valiosos sobre a história do planeta vermelho.`;
+    }
+	updateCounters(); 
 });
 
 // =======================================================
-// PARTE 2: SEU CÓDIGO ORIGINAL (FUNÇÕES DO LEITOR)
+// VARIÁVEIS GLOBAIS E CONSTANTES (MANTIDO)
 // =======================================================
 let sentences=[], currentIndex=0, autoMode=false, voiceEnabled=true;
 let voices=[], selectedVoice=null, textReadCounts={};
 let cloudLink = "";
-const output=document.getElementById('output'), voiceSelect=document.getElementById('voiceSelect');
+const output=document.getElementById('output');
+const voiceSelect=document.getElementById('voiceSelect');
+const rawTextArea = document.getElementById('rawText');
 const motivationalPhrases=["Continue firme, você está indo bem!","Mais uma frase! Foque e avance!","Você está se superando a cada leitura!","Mantenha o ritmo, sua mente agradece!","A constância traz o resultado!","Respire fundo, você está no caminho certo!","Seu foco está criando resultados!"];
 
-function loadVoices(){ 
-    voices=speechSynthesis.getVoices(); 
-    voiceSelect.innerHTML=""; 
-    voices.forEach((v,i)=>{ 
-        let o=document.createElement("option"); 
-        o.value=i; o.textContent=`${v.name} (${v.lang})`; 
-        voiceSelect.appendChild(o); 
-    }); 
-    if(voices.length>0) selectedVoice=voices[0]; 
-}
-speechSynthesis.onvoiceschanged=loadVoices;
-voiceSelect.addEventListener("change",()=>{ selectedVoice=voices[voiceSelect.value]; });
-
-function generateSentences(){ const text=document.getElementById('rawText').value; if(!text.trim()) return; sentences=text.split(/(?<=\.)\s+/).map(s=>s.trim()).filter(Boolean); sentences=insertMotivation(sentences); currentIndex=0; document.getElementById('processedText').value=sentences.join("\n\n"); showCurrent(); }
-function generateSmartSummary(){ const text=document.getElementById('rawText').value; if(!text.trim()) return; const stopwords=["de","do","da","e","a","o","que","em","um","uma","para","com","não","se","por","os","as","no","na","dos","das"]; const sents=text.split(/(?<=\.)\s+/).map(s=>s.trim()).filter(Boolean); const freq={}; sents.forEach(s=>{ s.split(/\s+/).forEach(w=>{ const word=w.toLowerCase().replace(/[.,!?]/g,''); if(!stopwords.includes(word)) freq[word]=(freq[word]||0)+1; }); }); const scored=sents.map(s=>{ const score=s.split(/\s+/).reduce((a,w)=>{ const word=w.toLowerCase().replace(/[.,!?]/g,''); return a+(freq[word]||0); },0); return {text:s,score}; }); scored.sort((a,b)=>b.score-a.score); const summary=scored.slice(0,Math.min(5,scored.length)).map(s=>s.text); sentences=insertMotivation(summary); currentIndex=0; document.getElementById('processedText').value=sentences.join("\n\n"); showCurrent(); }
-function syncProcessedText(){ const edited=document.getElementById('processedText').value; sentences=edited.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean); currentIndex=0; showCurrent(); }
-function insertMotivation(arr){ const every=parseInt(document.getElementById('motivationEvery').value)||0; if(every<=0) return arr; let final=[]; for(let i=0;i<arr.length;i++){ final.push(arr[i]); if((i+1)%every===0 && i!==arr.length-1){ final.push(motivationalPhrases[Math.floor(Math.random()*motivationalPhrases.length)]); } } return final; }
-function clearRawText(){ document.getElementById('rawText').value=""; document.getElementById('processedText').value=""; sentences=[]; output.textContent="Texto apagado."; }
-function searchGoogle(){ const q=document.getElementById('searchInput').value.trim(); if(q) window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank"); else { alert("Digite algo para pesquisar."); document.getElementById('searchInput').focus(); } }
-async function importFromLink(){ const url=prompt("Cole o link do site (modo texto recomendado):"); if(!url) return; try{ const res=await fetch(`http://localhost:3000/extract-text?url=${encodeURIComponent(url)}`); const data=await res.json(); if(data.text){ document.getElementById('rawText').value=data.text; alert("Texto extraído com sucesso!"); } else alert("Não foi possível extrair o texto."); } catch(err){ alert("Erro ao importar o texto: "+err.message); } }
-
-function showCurrent(){ if(!sentences || !sentences.length){ output.textContent="Nenhuma frase gerada."; return; } output.style.fontSize=document.getElementById('fontSize').value+"px"; output.style.color=document.getElementById('fontColor').value; output.style.fontFamily=document.getElementById('fontFamily').value; const text=sentences[currentIndex]; if(motivationalPhrases.includes(text)) output.innerHTML=`<span class="motivation">${text}</span>`; else output.textContent=text; }
-
-function alignText(alignment, clickedButton) {
-    const output = document.getElementById('output');
-    output.style.textAlign = alignment;
-    const alignmentButtons = document.querySelectorAll('.alignment-btn');
-    alignmentButtons.forEach(btn => {
-        btn.classList.remove('active');
-    });
-    clickedButton.classList.add('active');
+// 🚨 NOVO: Tokenizador de Sentenças para Navegador (REGEX)
+function sent_tokenize_browser(text) {
+    // Regex que divide o texto por ponto final, exclamação ou interrogação.
+    // O 'match' garante que os delimitadores sejam incluídos no final de cada frase.
+    return text.match(/[^.!?]+[.!?]+/g) || [text.trim()];
 }
 
-// CÓDIGO NOVO E CORRIGIDO
-function speakCurrent() {
-    const text = sentences[currentIndex];
+// 🚨 NOVO: Lista de Stop Words (para o Resumo Inteligente)
 
-    // Se a voz estiver desativada, ou se a voz selecionada ainda não foi carregada (null)
-    if (!voiceEnabled || !selectedVoice) {
-        // Se a lista de vozes do navegador ainda estiver vazia, tentamos carregar de novo.
-        if (speechSynthesis.getVoices().length > 0) {
-            loadVoices();
-        }
 
-        // Se, mesmo após a tentativa, ainda não houver uma voz selecionada...
-        if (!selectedVoice && voiceEnabled) {
-            pauseAuto(); // <-- A MUDANÇA MAIS IMPORTANTE: Para o loop!
-            alert("As vozes de leitura ainda não foram carregadas pelo navegador. Por favor, aguarde um momento e clique em ▶️ novamente.");
-            return; // Sai da função para não continuar o loop.
-        }
+// 🚨 NOVO: Lista de Stop Words (para o Resumo Inteligente)
+// MANTIDA a sua lista, mas a remoção de pontuação e números será feita no processamento
+const stopWordsPt = new Set([
+    'de', 'do', 'da', 'e', 'a', 'o', 'que', 'em', 'um', 'uma', 'para', 'com', 'não', 'se', 'por', 'os', 'as', 'no', 'na', 'dos', 'das',
+    'ao', 'aos', 'meu', 'minha', 'seu', 'sua', 'nosso', 'nossa', 'dele', 'dela', 'este', 'esta', 'isto', 
+    'aquele', 'aquela', 'aquilo', 'ser', 'foi', 'fui', 'somos', 'sou', 'são', 'você', 
+    'ele', 'ela', 'nós', 'vós', 'eles', 'elas', 'que', 'quem', 'onde', 'qual', 'quais',
+    '.', ',', ':', ';', '!', '?', '(', ')', '[', ']', '{', '}', '"', "'", '-', '—', 
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+]);
 
-        // Se a voz estiver simplesmente desabilitada, continua o ciclo sem som.
-        if (!voiceEnabled && autoMode) {
-            nextSentenceAuto();
+// -----------------------------------------------------------
+// --- FUNÇÕES DE CÁLCULO (TF-IDF) ---
+// -----------------------------------------------------------
+
+// 1. TF (Term Frequency) - Calcula a frequência normalizada
+function calcularTermFrequency(texto) {
+    const frequencia = {};
+    const palavras = texto.toLowerCase().split(/[\s\n]+/);
+    
+    for (let palavra of palavras) {
+        // Remoção de pontuação (Mantida sua lógica)
+        const palavraLimpa = palavra.replace(/[.,:;!?()"']/g, ''); 
+        
+        // Mantida sua lógica de filtro
+        if (palavraLimpa.length > 1 && !stopWordsPt.has(palavraLimpa)) {
+            frequencia[palavraLimpa] = (frequencia[palavraLimpa] || 0) + 1;
         }
-        return;
+    }
+    
+    // Normalização (divide pela frequência máxima)
+    const maxFrequencia = Math.max(...Object.values(frequencia));
+    if (maxFrequencia === 0) return {};
+    for (let palavra in frequencia) {
+        frequencia[palavra] /= maxFrequencia;
+    }
+    
+    return frequencia;
+}
+
+// 2. ISF (Inverse Sentence Frequency) - Calcula a raridade (o nosso Pseudo-IDF)
+function calcularInverseSentenceFrequency(frases, tf) {
+    const isf = {};
+    const totalFrases = frases.length;
+    
+    const contagemFrases = {};
+    for (const frase of frases) {
+        const palavrasUnicas = new Set();
+        frase.toLowerCase().split(/[\s\n]+/).forEach(w => {
+            const palavraLimpa = w.replace(/[.,:;!?()"']/g, '');
+            // Verifica se a palavra é relevante (passou pelo filtro do TF)
+            if (tf[palavraLimpa]) {
+                palavrasUnicas.add(palavraLimpa);
+            }
+        });
+        
+        palavrasUnicas.forEach(palavra => {
+            contagemFrases[palavra] = (contagemFrases[palavra] || 0) + 1;
+        });
     }
 
-    // Se tudo estiver certo, cancela qualquer fala anterior e inicia a nova.
-    speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.voice = selectedVoice;
-    const rate = parseFloat(document.getElementById('voiceRate').value) || 1;
-    utter.rate = rate;
-    utter.onend = () => {
-        incrementReadCount(document.getElementById('rawText').value);
-        if (autoMode) nextSentenceAuto();
-    };
-    speechSynthesis.speak(utter);
+    // Aplica a fórmula IDF: log(N / df)
+    for (const palavra in contagemFrases) {
+        isf[palavra] = Math.log10(totalFrases / contagemFrases[palavra]);
+    }
+    
+    return isf;
 }
-function incrementReadCount(text){ const hash=hashCode(text); textReadCounts[hash]=(textReadCounts[hash]||0)+1; }
-function hashCode(str){ let hash=0; for(let i=0;i<str.length;i++){ hash=((hash<<5)-hash)+str.charCodeAt(i); hash|=0; } return hash; }
 
-function startAuto(){ if(!sentences.length) return; autoMode=true; currentIndex=0; showCurrent(); speakCurrent(); }
-function nextSentenceAuto(){ if(!autoMode || !sentences.length) return; currentIndex=(currentIndex+1)%sentences.length; showCurrent(); speakCurrent(); }
-function pauseAuto(){ autoMode=false; speechSynthesis.cancel(); }
-function resetReader(){ pauseAuto(); currentIndex=0; showCurrent(); }
-function manualMode(){ pauseAuto(); showCurrent(); }
-function nextSentence(){ if (!sentences.length) return; currentIndex=(currentIndex+1)%sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); }
-function prevSentence(){ if (!sentences.length) return; currentIndex=(currentIndex-1+sentences.length)%sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); }
-function toggleVoice(){ voiceEnabled=!voiceEnabled; alert("Voz "+(voiceEnabled?"ativada":"desativada")); }
+// -----------------------------------------------------------
+// --- FUNÇÃO PRINCIPAL DE RESUMO (AGORA COM TF-IDF) ---
+// -----------------------------------------------------------
 
-function exportJSON(){ const data={sentences,textReadCounts}; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='flowread_data.json'; a.click(); URL.revokeObjectURL(url); }
-function importJSON(event){ const file=event.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=(e)=>{ try{ const data=JSON.parse(e.target.result); if(data.sentences) sentences=data.sentences; if(data.textReadCounts) textReadCounts=data.textReadCounts; currentIndex=0; document.getElementById('processedText').value=sentences.join("\n\n"); showCurrent(); alert("JSON importado com sucesso!"); }catch(err){ alert("Erro ao importar JSON: "+err); } }; reader.readAsText(file); }
+// A sua função gerarResumo foi refatorada para incorporar os cálculos de TF-IDF e pontuar as frases
+function gerarResumo(textoOriginal) {
+    // 1. Inicialização e Tokenização
+    const frases = sent_tokenize_browser(textoOriginal.trim());
+    const totalFrases = frases.length;
+    
+    // Lógica de Resumo Proporcional (USANDO sua lógica atual)
+    const percentual = document.getElementById('summaryPercent')?.value || 25; 
+    let numFrasesDesejadas = Math.ceil(totalFrases * (percentual / 100));
+    numFrasesDesejadas = Math.max(1, numFrasesDesejadas);
+    const frasesParaExtrair = Math.min(totalFrases, numFrasesDesejadas);
+    
+    if (totalFrases === 0) {
+        return "Texto muito curto ou sem palavras relevantes.";
+    }
+    
+    // 2. Cálculo do TF-IDF (As novas funções)
+    const tf = calcularTermFrequency(textoOriginal);
+    if (Object.keys(tf).length === 0) {
+        return "Texto muito curto ou sem palavras relevantes.";
+    }
+    const isf = calcularInverseSentenceFrequency(frases, tf);
 
-const MASTER_KEY="$2a$10$2wR5NQoVsUWczmL.U8MAs.YILi4/aKD3YK01iPbnyFzfLn.xiChGK";
-async function saveToCloud(){
-  try{
-    const data={sentences,textReadCounts};
-    const res=await fetch("https://api.jsonbin.io/v3/b",{method:"POST",headers:{"Content-Type":"application/json","X-Master-Key":MASTER_KEY},body:JSON.stringify(data)});
-    const json=await res.json();
-    cloudLink=json.metadata.id;
-    copyCloudLink(); 
-  } catch(err){ 
-    alert("Erro ao salvar na nuvem: "+err.message); 
-  }
+    // 3. Combina TF * ISF para o Score Final da Palavra
+    const pontuacaoPalavras = {};
+    for (const palavra in tf) {
+        pontuacaoPalavras[palavra] = tf[palavra] * (isf[palavra] || 0);
+    }
+    
+    // 4. Pontuação das Frases (Usando o Score TF-IDF)
+    const pontuacaoFrases = {};
+    frases.forEach((frase, i) => {
+        let score = 0;
+        frase.toLowerCase().split(/[\s\n]+/).forEach(w => {
+            const palavraLimpa = w.replace(/[.,:;!?()"']/g, '');
+            // Soma o score TF-IDF da palavra para dar o score total da frase
+            score += (pontuacaoPalavras[palavraLimpa] || 0); 
+        });
+        pontuacaoFrases[i] = score;
+    });
+    
+    // 5. Aplica Peso Estrutural (Coerência)
+    // OBS: Você precisa garantir que 'aplicarPesoEstrutural' esteja definida em outro lugar.
+    const pontuacaoFinal = aplicarPesoEstrutural(pontuacaoFrases, totalFrases);
+    
+    // 6. Ordenação e Extração
+    const frasesOrdenadas = Object.keys(pontuacaoFinal)
+        .map(i => [parseInt(i), pontuacaoFinal[i]])
+        .sort((a, b) => b[1] - a[1]);
+    
+    const indicesResumo = frasesOrdenadas
+        .slice(0, frasesParaExtrair)
+        .map(item => item[0])
+        .sort((a, b) => a - b);
+        
+    const resumo = indicesResumo
+        .map(i => frases[i].trim())
+        .join(' ');
+        
+    return resumo;
 }
-function copyCloudLink(){
-  if(!cloudLink){ alert("Nenhum JSON salvo ainda. Salve primeiro."); return; }
-  const url="https://jsonbin.io/b/"+cloudLink;
-  navigator.clipboard.writeText(url).then(()=>alert("Salvo na nuvem com sucesso! Link copiado para a área de transferência."),()=>alert("Falha ao copiar link."));
+
+// -----------------------------------------------------------
+// --- FUNÇÕES ANTIGAS REMOVIDAS ---
+// (contarFrequencia e pontuarFrases foram substituídas/integradas)
+// -----------------------------------------------------------
+
+// -----------------------------------------------------------
+// --- FUNÇÃO DE COERÊNCIA ESTRUTURAL ---
+// -----------------------------------------------------------
+function aplicarPesoEstrutural(pontuacaoFrases, totalFrases) {
+    const pontuacaoFinal = { ...pontuacaoFrases }; // Cria uma cópia para não alterar o original
+    
+    // Define o peso (você pode ajustar este valor)
+    const pesoEstrutural = 0.5; // Sugestão: 50% de peso extra para as extremidades
+
+    // A. Frase de Abertura (Índice 0)
+    if (pontuacaoFinal[0] !== undefined) {
+        pontuacaoFinal[0] += pesoEstrutural * pontuacaoFinal[0];
+    }
+
+    // B. Frase de Fechamento (Índice Final)
+    const ultimoIndice = totalFrases - 1;
+    if (pontuacaoFinal[ultimoIndice] !== undefined && ultimoIndice !== 0) {
+        pontuacaoFinal[ultimoIndice] += pesoEstrutural * pontuacaoFinal[ultimoIndice];
+    }
+
+    // C. Frases do Segundo e Penúltimo Parágrafo (Opcional: dar um peso menor)
+    // Se você usa a lógica de parágrafos, pode dar um peso de 0.25 para frases no índice 1 e (totalFrases-2)
+    // Se o texto for muito longo, pode-se usar uma proporção (ex: as 10% primeiras/últimas frases)
+    
+    return pontuacaoFinal;
 }
-async function loadBinByLink(){
-  const input = prompt("Cole o ID ou link do bin JSON que deseja carregar:");
-  if(!input) return;
-  let binId = input.includes("jsonbin.io") ? input.split("/b/")[1].split("/")[0] : input;
-  try{
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
-      headers: {"X-Master-Key": MASTER_KEY}
+
+
+
+
+// -----------------------------------------------------------
+// --- FUNÇÕES PRINCIPAIS DO LEITOR (ADAPTADAS) ---
+// -----------------------------------------------------------
+function loadVoices(){     voices=speechSynthesis.getVoices();     if(!voiceSelect) return;    voiceSelect.innerHTML="";     voices.forEach((v,i)=>{         let o=document.createElement("option");         o.value=i; o.textContent=`${v.name} (${v.lang})`;         voiceSelect.appendChild(o);     });     if(voices.length>0) selectedVoice=voices[0]; }speechSynthesis.onvoiceschanged=loadVoices;if(voiceSelect) voiceSelect.addEventListener("change",()=>{ selectedVoice=voices[voiceSelect.value]; });
+
+// 🚨 MODIFICADO: Atualiza a geração de frases para usar a função do navegador
+function generateSentences(){ 
+    const text=document.getElementById('rawText').value; 
+    if(!text.trim()) return; 
+    // Usando a função mais robusta para o navegador
+    sentences=sent_tokenize_browser(text).map(s=>s.trim()).filter(Boolean); 
+    sentences=insertMotivation(sentences); 
+    currentIndex=0; 
+    document.getElementById('processedText').value=sentences.join("\n\n"); 
+    showCurrent(); 
+}
+
+// 🚀 MODIFICADO/REESCRITO: Agora chama o novo algoritmo de resumo!
+function generateSmartSummary(){ 
+    const text=document.getElementById('rawText').value; 
+    if(!text.trim()) return; 
+    
+    // Define quantas frases você quer no resumo
+    const numFrases = 3; 
+    const resumoText = gerarResumo(text, numFrases);
+    
+    if (resumoText.includes("muito curto")) {
+        alert("O texto é muito curto ou não tem palavras suficientes para resumir.");
+        return;
+    }
+    
+    // Coloca o resumo na caixa de "Revise e Edite"
+    document.getElementById('processedText').value = resumoText;
+    
+    // Quebra o resumo gerado em frases para a leitura
+    sentences = sent_tokenize_browser(resumoText).map(s=>s.trim()).filter(Boolean);
+    sentences = insertMotivation(sentences);
+    currentIndex=0;
+    
+    alert(`Resumo gerado com sucesso! ${sentences.length} frases selecionadas.`);
+    showCurrent();
+	
+	updateCounters();
+}
+
+function syncProcessedText(){ const edited=document.getElementById('processedText').value; sentences=edited.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean); currentIndex=0; showCurrent(); updateCounters(); }function insertMotivation(arr){ const every=parseInt(document.getElementById('motivationEvery').value)||0; if(every<=0) return arr; let final=[]; for(let i=0;i<arr.length;i++){ final.push(arr[i]); if((i+1)%every===0 && i!==arr.length-1){ final.push(motivationalPhrases[Math.floor(Math.random()*motivationalPhrases.length)]); } } return final; }function clearRawText(){ document.getElementById('rawText').value=""; document.getElementById('processedText').value=""; sentences=[]; output.textContent="Texto apagado.";
+updateCounters();
+
+
+}
+
+function searchGoogle(){ const q=document.getElementById('searchInput').value.trim(); if(q) window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank"); else { alert("Digite algo para pesquisar."); document.getElementById('searchInput').focus(); } }async function importFromLink(){ const url=prompt("Cole o link do site (modo texto recomendado):"); if(!url) return; try{ const res=await fetch(`http://localhost:3000/extract-text?url=${encodeURIComponent(url)}`); const data=await res.json(); if(data.text){ document.getElementById('rawText').value=data.text; alert("Texto extraído com sucesso!"); } else alert("Não foi possível extrair o texto."); } catch(err){ alert("Erro ao importar o texto: "+err.message); } }function showCurrent(){ if(!sentences || !sentences.length){ output.textContent="Nenhuma frase gerada."; return; } const fontSize = document.getElementById('fontSize')?.value || 28; const fontColor = document.getElementById('fontColor')?.value || '#1a2533'; const fontFamily = document.getElementById('fontFamily')?.value || 'Poppins, sans-serif'; output.style.fontSize=fontSize + "px"; output.style.color=fontColor; output.style.fontFamily=fontFamily; const text=sentences[currentIndex]; if(motivationalPhrases.includes(text)) output.innerHTML=`<span class="motivation">${text}</span>`; else output.textContent=text; }function alignText(alignment, clickedButton) { document.getElementById('output').style.textAlign = alignment; document.querySelectorAll('.alignment-btn').forEach(btn => btn.classList.remove('active')); clickedButton.classList.add('active');}function speakCurrent() { const text = sentences[currentIndex]; if (!voiceEnabled || !selectedVoice) { if (speechSynthesis.getVoices().length > 0 && !selectedVoice) { loadVoices(); } if (!selectedVoice && voiceEnabled) { pauseAuto(); alert("Vozes de leitura não carregadas. Tente novamente."); return; } if (!voiceEnabled && autoMode) { nextSentenceAuto(); } return; } speechSynthesis.cancel(); const utter = new SpeechSynthesisUtterance(text); utter.voice = selectedVoice; const rate = parseFloat(document.getElementById('voiceRate')?.value) || 1; utter.rate = rate; utter.onend = () => { if (autoMode) nextSentenceAuto(); }; speechSynthesis.speak(utter);}function startAuto(){ if(!sentences.length) return; autoMode=true; currentIndex=0; showCurrent(); speakCurrent(); }function nextSentenceAuto(){ if(!autoMode || !sentences.length) return; currentIndex=(currentIndex+1)%sentences.length; showCurrent(); speakCurrent(); }function pauseAuto(){ autoMode=false; speechSynthesis.cancel(); }function resetReader(){ pauseAuto(); currentIndex=0; showCurrent(); }function manualMode(){ pauseAuto(); showCurrent(); }function nextSentence(){ if (!sentences.length) return; currentIndex=(currentIndex+1)%sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); }function prevSentence(){ if (!sentences.length) return; currentIndex=(currentIndex-1+sentences.length)%sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); }function toggleVoice(){ voiceEnabled=!voiceEnabled; alert("Voz "+(voiceEnabled?"ativada":"desativada")); }function exportJSON(){ const data={sentences,textReadCounts:{}}; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='flowread_data.json'; a.click(); URL.revokeObjectURL(url); }function importJSON(event){ const file=event.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=(e)=>{ try{ const data=JSON.parse(e.target.result); if(data.sentences) sentences=data.sentences; if(data.textReadCounts) textReadCounts=data.textReadCounts; currentIndex=0; document.getElementById('processedText').value=sentences.join("\n\n"); showCurrent(); alert("JSON importado com sucesso!"); }catch(err){ alert("Erro ao importar JSON: "+err); } }; reader.readAsText(file); }const MASTER_KEY="$2a$10$2wR5NQoVsUWczmL.U8MAs.YILi4/aKD3YK01iPbnyFzfLn.xiChGK";async function saveToCloud(){ try{ const data={sentences,textReadCounts:{}}; const res=await fetch("https://api.jsonbin.io/v3/b",{method:"POST",headers:{"Content-Type":"application/json","X-Master-Key":MASTER_KEY},body:JSON.stringify(data)}); const json=await res.json(); cloudLink=json.metadata.id; copyCloudLink(); } catch(err){ alert("Erro ao salvar na nuvem: "+err.message); }}function copyCloudLink(){ if(!cloudLink){ alert("Nenhum JSON salvo ainda."); return; } const url="https://jsonbin.io/b/"+cloudLink; navigator.clipboard.writeText(url).then(()=>alert("Salvo! Link copiado."),()=>alert("Falha ao copiar."));}async function loadBinByLink(){ const input = prompt("Cole o ID ou link do bin JSON:"); if(!input) return; let binId = input.includes("jsonbin.io") ? input.split("/b/")[1].split("/")[0] : input; try{ const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, { headers: {"X-Master-Key": MASTER_KEY} }); const json = await res.json(); if(json.record){ sentences = json.record.sentences || []; textReadCounts = json.record.textReadCounts || {}; currentIndex = 0; document.getElementById('processedText').value = sentences.join("\n\n"); showCurrent(); alert("Bin carregado com sucesso!"); } else alert("Não foi possível carregar o bin."); } catch(err){ alert("Erro ao carregar bin: "+err.message); }}
+
+// ========================================
+// ===== NOVAS FUNÇÕES DE EDIÇÃO      =====
+// ========================================
+async function pasteFromClipboard() {    try {        const text = await navigator.clipboard.readText();        if (text) {            document.getElementById('rawText').value = text;        } else {            alert('Sua área de transferência está vazia.');        }    } catch (err) {        console.error('Falha ao colar texto: ', err);        alert('Não foi possível ler da área de transferência.');    }}function openManualEditor() {    const editorList = document.getElementById('editor-list');    const manualEditorModal = document.getElementById('manual-editor-modal');    const text = rawTextArea.value;    if (!text.trim()) {        alert('A caixa de texto está vazia.');
+        return;
+    }
+    // Usando o tokenizador de navegador
+    const periods = sent_tokenize_browser(text).map(s => s.trim()).filter(Boolean);
+    editorList.innerHTML = '';
+    periods.forEach(period => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'editor-item';
+        itemDiv.innerHTML = `<p>${period}</p><button class="delete-period-btn" onclick="this.parentElement.remove()" title="Apagar este período">&times;</button>`;
+        editorList.appendChild(itemDiv);
     });
-    const json = await res.json();
-    if(json.record){
-      sentences = json.record.sentences || [];
-      textReadCounts = json.record.textReadCounts || {};
-      currentIndex = 0;
-      document.getElementById('processedText').value = sentences.join("\n\n");
-      showCurrent();
-      alert("Bin carregado com sucesso!");
-    } else alert("Não foi possível carregar o bin.");
-  } catch(err){
-    alert("Erro ao carregar bin: "+err.message);
-    console.error(err);
-  }
-}
-</script>
+    manualEditorModal.style.display = 'flex';
+}function closeManualEditor() {    document.getElementById('manual-editor-modal').style.display = 'none';}function saveManualChanges() {    const editorList = document.getElementById('editor-list');    const remainingItems = editorList.querySelectorAll('.editor-item p');    let newText = [];    remainingItems.forEach(item => newText.push(item.textContent));    rawTextArea.value = newText.join(' ');    closeManualEditor();}
 
+
+
+// =======================================================
+// NOVAS FUNÇÕES DE CONTADORES
+// =======================================================
+
+function countWords(text) {
+    // Remove múltiplos espaços, quebras de linha e pontuações no início/fim para contar palavras de forma mais precisa
+    const cleanText = text.trim().replace(/\s+/g, ' ');
+    if (cleanText === '') return 0;
+    return cleanText.split(' ').length;
+}
+
+function updateCounters() {
+    const rawText = document.getElementById('rawText').value;
+    const processedText = document.getElementById('processedText').value;
+
+    const rawCharCount = rawText.length;
+    const rawWordCount = countWords(rawText);
+    
+    const processedCharCount = processedText.length;
+    const processedWordCount = countWords(processedText);
+
+    document.getElementById('rawTextCounter').textContent = `(${rawWordCount} palavras, ${rawCharCount} caracteres)`;
+    document.getElementById('processedTextCounter').textContent = `(${processedWordCount} palavras, ${processedCharCount} caracteres)`;
+}
+// -----------------------------------------------------------
+// FIM DAS NOVAS FUNÇÕES
+// -----------------------------------------------------------
+// =======================================================
+// NOVO: Aplica Bônus às Frases Iniciais e Finais
+// =======================================================
+// =======================================================
+// NOVO: Aplica Bônus às Frases Iniciais e Finais (CORRIGIDA E COMPLETA)
+// =======================================================
+function aplicarPesoEstrutural(pontuacaoFrases, totalFrases) {
+    // Define a porcentagem das frases iniciais/finais que receberão bônus
+    const pesoPercentual = 0.2; // 20% das primeiras e 20% das últimas frases
+    const numFrasesBonus = Math.ceil(totalFrases * pesoPercentual);
+    const bonus = 0.25; // Adiciona 25% do valor da pontuação atual como bônus
+
+    for (let i = 0; i < totalFrases; i++) {
+        let b = 0;
+        
+        // Bônus para frases introdutórias (primeiras X frases)
+        if (i < numFrasesBonus) {
+            b = pontuacaoFrases[i] * bonus; 
+        } 
+        
+        // Bônus para frases conclusivas (últimas X frases)
+        else if (i >= totalFrases - numFrasesBonus) {
+            b = pontuacaoFrases[i] * bonus;
+        }
+
+        // Adiciona o bônus à pontuação
+        pontuacaoFrases[i] += b;
+    }
+
+    return pontuacaoFrases; // <--- FIM DA FUNÇÃO
+}
+
+
+
+</script>
 </body>
 </html>
