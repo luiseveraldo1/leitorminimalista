@@ -375,7 +375,7 @@
 
                 <div class="controls-vertical">
                     <button id="playPauseBtn" onclick="playPauseToggle()" title="Play/Pause">▶️</button>
-                    <button id="stopBtn" onclick="stopReading()" title="Parar Leitura">⏹️</button>
+					<button id="stopBtn" onclick="stopReading()" title="Parar Leitura">⏹️</button>
                     <button id="nextBtn" onclick="nextSentence()" title="Próxima Frase">⏭️</button>
                     <button id="prevBtn" onclick="prevSentence()" title="Frase Anterior">⏮️</button>
                     
@@ -411,46 +411,46 @@
 // LÓGICA DO DARK MODE E OUTRAS MELHORIAS
 // =======================================================
 document.addEventListener('DOMContentLoaded', () => {
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const body = document.body;
-    const fontColorInput = document.getElementById('fontColor');
-    
-    function applyTheme(isDark) {
-        if (isDark) {
-            body.classList.add('dark-mode');
-            // Só muda a cor se a cor atual for a padrão Light
-            if (fontColorInput.value === '#1a2533') { 
-                fontColorInput.value = '#ffffff'; 
-            }
-        } else {
-            body.classList.remove('dark-mode');
-            // Só muda a cor se a cor atual for a padrão Dark
-            if (fontColorInput.value === '#ffffff') { 
-                fontColorInput.value = '#1a2533'; 
-            }
-        }
-    }
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    if(darkModeToggle) {
-        darkModeToggle.checked = prefersDark;
-        applyTheme(prefersDark);
-        darkModeToggle.addEventListener('change', () => {
-            applyTheme(darkModeToggle.checked);
-            if (typeof showCurrent === 'function') showCurrent();
-        });
-    }
-    loadVoices();
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+    const fontColorInput = document.getElementById('fontColor');
+    
+    function applyTheme(isDark) {
+        if (isDark) {
+            body.classList.add('dark-mode');
+            // Só muda a cor se a cor atual for a padrão Light
+            if (fontColorInput.value === '#1a2533') { 
+                fontColorInput.value = '#ffffff'; 
+            }
+        } else {
+            body.classList.remove('dark-mode');
+            // Só muda a cor se a cor atual for a padrão Dark
+            if (fontColorInput.value === '#ffffff') { 
+                fontColorInput.value = '#1a2533'; 
+            }
+        }
+    }
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if(darkModeToggle) {
+        darkModeToggle.checked = prefersDark;
+        applyTheme(prefersDark);
+        darkModeToggle.addEventListener('change', () => {
+            applyTheme(darkModeToggle.checked);
+            if (typeof showCurrent === 'function') showCurrent();
+        });
+    }
+    loadVoices();
 	const rawTextarea = document.getElementById('rawText');
-    if (rawTextarea && rawTextarea.value.trim() === '') {
-        rawTextarea.value = `O rover Curiosity, da NASA, pousou em Marte em 2012 para investigar o passado geológico do planeta.
+    if (rawTextarea && rawTextarea.value.trim() === '') {
+        rawTextarea.value = `O rover Curiosity, da NASA, pousou em Marte em 2012 para investigar o passado geológico do planeta.
 A missão do Curiosity é determinar se Marte já teve as condições ambientais necessárias para sustentar vida microbiana.
 Para isso, o Curiosity explora a cratera Gale, onde ele tem coletado amostras de solo e rochas.
 Recentemente, o Curiosity encontrou evidências de água e compostos orgânicos, o que reforça a possibilidade de vida no passado de Marte.
 O Curiosity continua sua exploração, enviando dados valiosos sobre a história do planeta vermelho.`;
-    }
-	updateCounters(); 
-    // Garante que o estado do switch seja refletido no JS
-    document.getElementById('autoModeSwitch').checked = autoMode;
+    }
+	updateCounters(); 
+    // Garante que o estado do switch seja refletido no JS
+    document.getElementById('autoModeSwitch').checked = autoMode;
 });
 
 // =======================================================
@@ -459,13 +459,13 @@ O Curiosity continua sua exploração, enviando dados valiosos sobre a história
 let sentences=[], currentIndex=0, autoMode=false, voiceEnabled=true;
 let voices=[], selectedVoice=null, textReadCounts={};
 let cloudLink = "";
-const output=document.getElementById('output'); 
+const output=document.getElementById('output'); 
 const voiceSelect=document.getElementById('voiceSelect');
 const rawTextArea = document.getElementById('rawText');
 const motivationalPhrases=["Continue firme, você está indo bem!","Mais uma frase! Foque e avance!","Você está se superando a cada leitura!","Mantenha o ritmo, sua mente agradece!","A constância traz o resultado!","Respire fundo, você está no caminho certo!","Seu foco está criando resultados!"];
 
 function sent_tokenize_browser(text) {
-    return text.match(/[^.!?]+[.!?]+/g) || [text.trim()];
+    return text.match(/[^.!?]+[.!?]+/g) || [text.trim()];
 }
 
 const stopWordsPt = new Set([
@@ -478,58 +478,58 @@ const stopWordsPt = new Set([
 ]);
 
 function calcularTermFrequency(texto) {
-    const frequencia = {};
-    const palavras = texto.toLowerCase().split(/[\s\n]+/);
-    for (let palavra of palavras) {
-        const palavraLimpa = palavra.replace(/[.,:;!?()"']/g, ''); 
-        if (palavraLimpa.length > 1 && !stopWordsPt.has(palavraLimpa)) {
-            frequencia[palavraLimpa] = (frequencia[palavraLimpa] || 0) + 1;
-        }
-    }
-    const maxFrequencia = Math.max(...Object.values(frequencia));
-    if (maxFrequencia === 0) return {};
-    for (let palavra in frequencia) {
-        frequencia[palavra] /= maxFrequencia;
-    }
-    return frequencia;
+    const frequencia = {};
+    const palavras = texto.toLowerCase().split(/[\s\n]+/);
+    for (let palavra of palavras) {
+        const palavraLimpa = palavra.replace(/[.,:;!?()"']/g, ''); 
+        if (palavraLimpa.length > 1 && !stopWordsPt.has(palavraLimpa)) {
+            frequencia[palavraLimpa] = (frequencia[palavraLimpa] || 0) + 1;
+        }
+    }
+    const maxFrequencia = Math.max(...Object.values(frequencia));
+    if (maxFrequencia === 0) return {};
+    for (let palavra in frequencia) {
+        frequencia[palavra] /= maxFrequencia;
+    }
+    return frequencia;
 }
 
 function calcularInverseSentenceFrequency(frases, tf) {
-    const isf = {};
-    const totalFrases = frases.length;
-    const contagemFrases = {};
-    for (const frase of frases) {
-        const palavrasUnicas = new Set();
-        frase.toLowerCase().split(/[\s\n]+/).forEach(w => {
-            const palavraLimpa = w.replace(/[.,:;!?()"']/g, '');
-            if (tf[palavraLimpa]) {
-                palavrasUnicas.add(palavraLimpa);
-            }
-        });
-        palavrasUnicas.forEach(palavra => {
-            contagemFrases[palavra] = (contagemFrases[palavra] || 0) + 1;
-        });
-    }
-    for (const palavra in contagemFrases) {
-        isf[palavra] = Math.log10(totalFrases / contagemFrases[palavra]);
-    }
-    return isf;
+    const isf = {};
+    const totalFrases = frases.length;
+    const contagemFrases = {};
+    for (const frase of frases) {
+        const palavrasUnicas = new Set();
+        frase.toLowerCase().split(/[\s\n]+/).forEach(w => {
+            const palavraLimpa = w.replace(/[.,:;!?()"']/g, '');
+            if (tf[palavraLimpa]) {
+                palavrasUnicas.add(palavraLimpa);
+            }
+        });
+        palavrasUnicas.forEach(palavra => {
+            contagemFrases[palavra] = (contagemFrases[palavra] || 0) + 1;
+        });
+    }
+    for (const palavra in contagemFrases) {
+        isf[palavra] = Math.log10(totalFrases / contagemFrases[palavra]);
+    }
+    return isf;
 }
 
 function aplicarPesoEstrutural(pontuacaoFrases, totalFrases) {
-    const pesoPercentual = 0.2; 
-    const numFrasesBonus = Math.ceil(totalFrases * pesoPercentual);
-    const bonus = 0.25; 
-    for (let i = 0; i < totalFrases; i++) {
-        let b = 0;
-        if (i < numFrasesBonus) {
-            b = pontuacaoFrases[i] * bonus; 
-        } else if (i >= totalFrases - numFrasesBonus) {
-            b = pontuacaoFrases[i] * bonus;
-        }
-        pontuacaoFrases[i] += b;
-    }
-    return pontuacaoFrases; 
+    const pesoPercentual = 0.2; 
+    const numFrasesBonus = Math.ceil(totalFrases * pesoPercentual);
+    const bonus = 0.25; 
+    for (let i = 0; i < totalFrases; i++) {
+        let b = 0;
+        if (i < numFrasesBonus) {
+            b = pontuacaoFrases[i] * bonus; 
+        } else if (i >= totalFrases - numFrasesBonus) {
+            b = pontuacaoFrases[i] * bonus;
+        }
+        pontuacaoFrases[i] += b;
+    }
+    return pontuacaoFrases; 
 }
 
 function gerarResumo(textoOriginal) {
@@ -540,17 +540,17 @@ function gerarResumo(textoOriginal) {
     numFrasesDesejadas = Math.max(1, numFrasesDesejadas);
     const frasesParaExtrair = Math.min(totalFrases, numFrasesDesejadas);
     if (totalFrases === 0) { return "Texto muito curto ou sem palavras relevantes."; }
-    const tf = calcularTermFrequency(textoOriginal);
+    const tf = calcularTermFrequency(textoOriginal);
     if (Object.keys(tf).length === 0) { return "Texto muito curto ou sem palavras relevantes."; }
-    const isf = calcularInverseSentenceFrequency(frases, tf);
-    const pontuacaoPalavras = {};
-    for (const palavra in tf) { pontuacaoPalavras[palavra] = tf[palavra] * (isf[palavra] || 0); }
+    const isf = calcularInverseSentenceFrequency(frases, tf);
+    const pontuacaoPalavras = {};
+    for (const palavra in tf) { pontuacaoPalavras[palavra] = tf[palavra] * (isf[palavra] || 0); }
     const pontuacaoFrases = {};
     frases.forEach((frase, i) => {
         let score = 0;
         frase.toLowerCase().split(/[\s\n]+/).forEach(w => {
             const palavraLimpa = w.replace(/[.,:;!?()"']/g, '');
-            score += (pontuacaoPalavras[palavraLimpa] || 0); 
+            score += (pontuacaoPalavras[palavraLimpa] || 0); 
         });
         pontuacaoFrases[i] = score;
     });
@@ -568,283 +568,333 @@ function gerarResumo(textoOriginal) {
     return resumo;
 }
 
-function loadVoices(){     
-    voices=speechSynthesis.getVoices();     
-    if(!voiceSelect) return;    
-    voiceSelect.innerHTML="";     
-    
-    // Adiciona a opção "Automático" como primeiro item
-    let defaultOption = document.createElement("option");
-    defaultOption.value = -1;
-    defaultOption.textContent = "Automático (Padrão do Sistema)";
-    voiceSelect.appendChild(defaultOption);
+function loadVoices(){     
+    // 1. Obtém todas as vozes disponíveis no sistema do usuário
+    voices = speechSynthesis.getVoices();     
+    if(!voiceSelect) return;    
+    
+    voiceSelect.innerHTML = ""; // Limpa a lista atual     
+    
+    // --- NOVIDADE: Adiciona a opção "Automático" (fallback do sistema) ---
+    let defaultOption = document.createElement("option");
+    defaultOption.value = -1; // Usamos -1 para sinalizar o modo Automático
+    defaultOption.textContent = "Automático (Padrão do Sistema)";
+    voiceSelect.appendChild(defaultOption);
 
-    voices.forEach((v,i)=>{         
-        let o=document.createElement("option");         
-        o.value=i; o.textContent=`${v.name} (${v.lang})`;         
-        voiceSelect.appendChild(o);     
-    });     
-    
-    // Se não houver vozes (excluindo a 'Automático'), o selectedVoice fica null
-    if(voices.length > 0) {
-        selectedVoice = voices[0];
-        voiceSelect.value = 0; // Seleciona a primeira voz da lista
-    } else {
-        selectedVoice = null;
-        voiceSelect.value = -1; // Seleciona a opção Automático
-    }
+    // 2. Adiciona todas as vozes encontradas ao seletor
+    voices.forEach((v,i) => {         
+        let o = document.createElement("option");         
+        o.value = i; 
+        
+        // Exibe o nome da voz e o idioma (Ex: 'Google Portuguese (pt-BR)')
+        o.textContent = `${v.name} (${v.lang})`;         
+        
+        // NOVIDADE: Adiciona um ícone de estrela para vozes em português (pt-BR)
+        if (v.lang.startsWith('pt-')) {
+            o.textContent = `⭐ ${o.textContent}`;
+        }
+
+        voiceSelect.appendChild(o);     
+    });     
+    
+    // 3. Define a voz padrão após carregar todas as opções
+    if(voices.length > 0) {
+        // Tenta encontrar a primeira voz em português como padrão
+        const ptVoiceIndex = voices.findIndex(v => v.lang.startsWith('pt-'));
+
+        if (ptVoiceIndex !== -1) {
+            selectedVoice = voices[ptVoiceIndex];
+            voiceSelect.value = ptVoiceIndex; 
+        } else {
+            // Se não houver português, usa a primeira voz e define o valor no seletor.
+            selectedVoice = voices[0];
+            voiceSelect.value = 0;
+        }
+    } else {
+        // Se não houver vozes, seleciona a opção Automático.
+        selectedVoice = null;
+        voiceSelect.value = -1;
+    }
 }
 
-// Atualiza o event listener para tratar o valor -1 (Automático)
-if(voiceSelect) voiceSelect.addEventListener("change",()=>{ 
-    const index = parseInt(voiceSelect.value);
-    selectedVoice = (index === -1 || index >= voices.length) ? null : voices[index]; 
+speechSynthesis.onvoiceschanged = loadVoices;
+voiceSelect.addEventListener("change", () => { 
+    const index = parseInt(voiceSelect.value);
+    // Se o valor for -1, selectedVoice é null (Automático). Caso contrário, é a voz selecionada.
+    selectedVoice = (index === -1) ? null : voices[index]; 
 });
 
-function generateSentences(){ 
-    stopReading(); 
-    const text=document.getElementById('rawText').value; 
-    if(!text.trim()) return; 
-    sentences=sent_tokenize_browser(text).map(s=>s.trim()).filter(Boolean); 
-    sentences=insertMotivation(sentences); 
-    currentIndex=0; 
-    document.getElementById('processedText').value=sentences.join("\n\n"); 
-    showCurrent(); 
+
+
+
+
+function generateSentences(){ 
+    stopReading(); 
+    const text=document.getElementById('rawText').value; 
+    if(!text.trim()) return; 
+    sentences=sent_tokenize_browser(text).map(s=>s.trim()).filter(Boolean); 
+    sentences=insertMotivation(sentences); 
+    currentIndex=0; 
+    document.getElementById('processedText').value=sentences.join("\n\n"); 
+    showCurrent(); 
 }
 
-function generateSmartSummary(){ 
-    stopReading(); 
-    const text=document.getElementById('rawText').value; 
-    if(!text.trim()) return; 
-    const resumoText = gerarResumo(text);
-    if (resumoText.includes("muito curto")) {
-        alert("O texto é muito curto ou não tem palavras suficientes para resumir.");
-        return;
-    }
-    document.getElementById('processedText').value = resumoText;
-    sentences = sent_tokenize_browser(resumoText).map(s=>s.trim()).filter(Boolean);
-    sentences = insertMotivation(sentences);
-    currentIndex=0;
-    alert(`Resumo gerado com sucesso! ${sentences.length} frases selecionadas.`);
-    showCurrent();
+function generateSmartSummary(){ 
+    stopReading(); 
+    const text=document.getElementById('rawText').value; 
+    if(!text.trim()) return; 
+    const resumoText = gerarResumo(text);
+    if (resumoText.includes("muito curto")) {
+        alert("O texto é muito curto ou não tem palavras suficientes para resumir.");
+        return;
+    }
+    document.getElementById('processedText').value = resumoText;
+    sentences = sent_tokenize_browser(resumoText).map(s=>s.trim()).filter(Boolean);
+    sentences = insertMotivation(sentences);
+    currentIndex=0;
+    alert(`Resumo gerado com sucesso! ${sentences.length} frases selecionadas.`);
+    showCurrent();
 	updateCounters();
 }
 
-function syncProcessedText(){ 
-    stopReading(); 
-    const edited=document.getElementById('processedText').value; 
-    sentences=edited.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean); 
-    currentIndex=0; 
-    showCurrent(); 
-    updateCounters(); 
+function syncProcessedText(){ 
+    stopReading(); 
+    const edited=document.getElementById('processedText').value; 
+    sentences=edited.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean); 
+    currentIndex=0; 
+    showCurrent(); 
+    updateCounters(); 
 }
 
 function insertMotivation(arr){ const every=parseInt(document.getElementById('motivationEvery').value)||0; if(every<=0) return arr; let final=[]; for(let i=0;i<arr.length;i++){ final.push(arr[i]); if((i+1)%every===0 && i!==arr.length-1){ final.push(motivationalPhrases[Math.floor(Math.random()*motivationalPhrases.length)]); } } return final; }
 
-function clearRawText(){ 
-    stopReading(); 
-    document.getElementById('rawText').value=""; 
-    document.getElementById('processedText').value=""; 
-    sentences=[]; 
-    output.textContent="Texto apagado."; 
-    updateCounters();
+function clearRawText(){ 
+    stopReading(); 
+    document.getElementById('rawText').value=""; 
+    document.getElementById('processedText').value=""; 
+    sentences=[]; 
+    output.textContent="Texto apagado."; 
+    updateCounters();
 }
 
 function searchGoogle(){ const q=document.getElementById('searchInput').value.trim(); if(q) window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank"); else { alert("Digite algo para pesquisar."); document.getElementById('searchInput').focus(); } }
 
 async function importFromLink(){ const url=prompt("Cole o link do site (modo texto recomendado):"); if(!url) return; try{ const res=await fetch(`http://localhost:3000/extract-text?url=${encodeURIComponent(url)}`); const data=await res.json(); if(data.text){ document.getElementById('rawText').value=data.text; alert("Texto extraído com sucesso!"); } else alert("Não foi possível extrair o texto."); } catch(err){ alert("Erro ao importar o texto: "+err.message); } }
 
-function showCurrent(){ 
-    // Se não houver frases, exibe mensagem de erro.
-    if(!sentences || !sentences.length){ 
-        output.textContent="Nenhuma frase gerada."; 
-        return; 
-    } 
-    
-    // Configura estilos
-    const fontSize = document.getElementById('fontSize')?.value || 28; 
-    const fontColor = document.getElementById('fontColor')?.value || '#1a2533'; 
-    const fontFamily = document.getElementById('fontFamily')?.value || 'Poppins, sans-serif'; 
-    output.style.fontSize=fontSize + "px"; 
-    output.style.color=fontColor; 
-    output.style.fontFamily=fontFamily; 
-    output.style.textAlign = output.style.textAlign || 'center'; 
-    
-    // Exibe a frase atual, aplicando estilo se for motivacional
-    const text=sentences[currentIndex]; 
-    if(motivationalPhrases.includes(text)) {
-        output.innerHTML=`<span class="motivation">${text}</span>`; 
-    } else {
-        output.textContent=text;
-    }
-    
-    // ❌ REMOVIDO: Lógica que redefinia o ícone do Play/Pause.
-    // Isso deve ser tratado apenas nas funções de controle de voz.
+function showCurrent(){ 
+    // Se não houver frases, exibe mensagem de erro.
+    if(!sentences || !sentences.length){ 
+        output.textContent="Nenhuma frase gerada."; 
+        return; 
+    } 
+    
+    // Configura estilos
+    const fontSize = document.getElementById('fontSize')?.value || 28; 
+    const fontColor = document.getElementById('fontColor')?.value || '#1a2533'; 
+    const fontFamily = document.getElementById('fontFamily')?.value || 'Poppins, sans-serif'; 
+    output.style.fontSize=fontSize + "px"; 
+    output.style.color=fontColor; 
+    output.style.fontFamily=fontFamily; 
+    output.style.textAlign = output.style.textAlign || 'center'; 
+    
+    // Exibe a frase atual, aplicando estilo se for motivacional
+    const text=sentences[currentIndex]; 
+    if(motivationalPhrases.includes(text)) {
+        output.innerHTML=`<span class="motivation">${text}</span>`; 
+    } else {
+        output.textContent=text;
+    }
+    
+    // ❌ REMOVIDO: Lógica que redefinia o ícone do Play/Pause.
+    // Isso deve ser tratado apenas nas funções de controle de voz.
 }
 
-function alignText(alignment, clickedButton) { 
-    document.getElementById('output').style.textAlign = alignment; 
-    document.querySelectorAll('.alignment-btn').forEach(btn => btn.classList.remove('active')); 
-    clickedButton.classList.add('active');
+function alignText(alignment, clickedButton) { 
+    document.getElementById('output').style.textAlign = alignment; 
+    document.querySelectorAll('.alignment-btn').forEach(btn => btn.classList.remove('active')); 
+    clickedButton.classList.add('active');
 }
 
-function speakCurrent() { 
-    const text = sentences[currentIndex]; 
-    
-    // Verifica se pode falar (apenas voz ativada e texto válido). Permite selectedVoice=null (Automático).
-    if (!voiceEnabled || !text.trim()) { 
-        if (autoMode) nextSentenceAuto(); 
-        return; 
-    } 
-    
-    speechSynthesis.cancel(); 
-    
-    const utter = new SpeechSynthesisUtterance(text); 
-    
-    // Se uma voz específica foi selecionada (selectedVoice NÃO é null), define utter.voice.
-    // Caso contrário (Automático), usa a voz padrão do sistema.
-    if (selectedVoice) {
-        utter.voice = selectedVoice;
-    }
-    
-    const rate = parseFloat(document.getElementById('voiceRate')?.value) || 1; 
-    utter.rate = rate; 
-    
-    // --- Foco e Estilo de Início/Fim (Mantidos) ---
-    utter.onstart = () => {
-        document.getElementById('playPauseBtn').textContent = '⏸️';
-        // Adiciona um estilo sutil de "lendo"
-        output.style.border = '3px solid var(--primary-color)';
-        output.style.boxShadow = '0 0 20px color-mix(in srgb, var(--primary-color) 40%, transparent)';
-    };
-    
-    utter.onend = () => { 
-        // Remove o estilo de "lendo"
-        output.style.border = '1px solid var(--border-color)';
-        output.style.boxShadow = '0 8px 30px var(--shadow-color)';
+function speakCurrent() { 
+    const text = sentences[currentIndex]; 
+    
+    // CORREÇÃO CRÍTICA: Apenas verifica se a voz está DESLIGADA ou o texto está vazio. 
+    // Se selectedVoice for null (Modo Automático), o código segue para usar a voz padrão.
+    if (!voiceEnabled || !text.trim()) { 
+        if (autoMode) nextSentenceAuto(); // Chama a função para tentar avançar
+        return; 
+    } 
+    
+    speechSynthesis.cancel(); 
+    
+    const utter = new SpeechSynthesisUtterance(text); 
+    
+    // CORREÇÃO ESSENCIAL: Só define utter.voice se uma voz específica foi selecionada.
+    // Se selectedVoice for null, a API de Voz usará automaticamente a voz padrão do sistema,
+    // permitindo que a leitura inicie.
+    if (selectedVoice) {
+        utter.voice = selectedVoice;
+    } 
+    
+    const rate = parseFloat(document.getElementById('voiceRate')?.value) || 1; 
+    utter.rate = rate; 
+    
+    // --- Lógica de Início/Fim (Que está correta) ---
+    utter.onstart = () => {
+        document.getElementById('playPauseBtn').textContent = '⏸️';
+        output.style.border = '3px solid var(--primary-color)';
+        output.style.boxShadow = '0 0 20px color-mix(in srgb, var(--primary-color) 40%, transparent)';
+    };
+    
+    utter.onend = () => { 
+        output.style.border = '1px solid var(--border-color)';
+        output.style.boxShadow = '0 8px 30px var(--shadow-color)';
 
-        if (autoMode) {
-            // Pequeno atraso para o áudio realmente terminar antes de avançar
-            setTimeout(nextSentenceAuto, 200); 
-        } else {
-            document.getElementById('playPauseBtn').textContent = '▶️'; 
-        }
-    }; 
-    
-    // Trata erros de voz
-    utter.onerror = (event) => {
-        console.error('SpeechSynthesis Error:', event.error);
-        alert(`Erro de voz: ${event.error}. Tentando avançar...`);
-        document.getElementById('playPauseBtn').textContent = '▶️'; 
-        if (autoMode) nextSentenceAuto();
-    };
+        if (autoMode) {
+            // Chama a função que avança e reinicia a leitura
+            setTimeout(nextSentenceAuto, 200); 
+        } else {
+            document.getElementById('playPauseBtn').textContent = '▶️'; 
+        }
+    }; 
+    
+    // O tratamento de erro (interrupted) que removemos está correto e não precisa de mais ajustes.
+    utter.onerror = (event) => {
+        if (event.error === 'interrupted') return; // Ignora interrupções intencionais
+        
+        console.error('SpeechSynthesis Error:', event.error);
+        alert(`Erro de voz: ${event.error}. Tentando avançar...`);
+        document.getElementById('playPauseBtn').textContent = '▶️'; 
+        if (autoMode) nextSentenceAuto();
+    };
 
-    // Certifica que a voz está ativada e tenta falar
-    if ('speechSynthesis' in window && !speechSynthesis.speaking) {
-         speechSynthesis.speak(utter);
-    } else if (speechSynthesis.speaking) {
-         // Se já estiver falando, apenas cancela e começa a nova fala
-         speechSynthesis.cancel();
-         speechSynthesis.speak(utter);
-    }
+    // Certifica que a voz está ativada e tenta falar
+    if ('speechSynthesis' in window && !speechSynthesis.speaking) {
+         speechSynthesis.speak(utter);
+    } else if (speechSynthesis.speaking) {
+         speechSynthesis.cancel();
+         speechSynthesis.speak(utter);
+    }
 }
+
 // ⚠️ CORRIGIDO: O Play/Pause não liga mais o autoMode por padrão
 function playPauseToggle() {
-    if (!sentences.length) {
-        alert("Gere frases primeiro!");
-        return;
-    }
-    
-    if (speechSynthesis.speaking && !speechSynthesis.paused) {
-        speechSynthesis.pause();
-        document.getElementById('playPauseBtn').textContent = '▶️';
-    } else if (speechSynthesis.paused) {
-        speechSynthesis.resume();
-        document.getElementById('playPauseBtn').textContent = '⏸️';
-    } else {
-        // Se não estiver falando nem pausado, inicia a leitura na frase atual.
-        // Não altera o estado do autoMode.
-        if (currentIndex < 0 || currentIndex >= sentences.length) currentIndex = 0;
-        showCurrent(); 
-        speakCurrent(); 
-    }
+    if (!sentences.length) {
+        alert("Gere frases primeiro!");
+        return;
+    }
+    
+    if (speechSynthesis.speaking && !speechSynthesis.paused) {
+        speechSynthesis.pause();
+        document.getElementById('playPauseBtn').textContent = '▶️';
+    } else if (speechSynthesis.paused) {
+        speechSynthesis.resume();
+        document.getElementById('playPauseBtn').textContent = '⏸️';
+    } else {
+        // Se não estiver falando nem pausado, inicia a leitura na frase atual.
+        // Não altera o estado do autoMode.
+        if (currentIndex < 0 || currentIndex >= sentences.length) currentIndex = 0;
+        showCurrent(); 
+        speakCurrent(); 
+    }
 }
 
 function stopReading() {
-    // Cancela a síntese de voz (para a leitura)
-    speechSynthesis.cancel();
-    
-    // Garante que o ícone volte para PLAY.
-    document.getElementById('playPauseBtn').textContent = '▶️'; 
-    
-    // NOVIDADE: Remove explicitamente o estilo visual de "lendo" que a função speakCurrent() aplica.
-    const output = document.getElementById('output');
-    output.style.border = '1px solid var(--border-color)'; // Volta para a borda padrão
-    // O valor da sombra padrão é '0 8px 30px var(--shadow-color)'
-    output.style.boxShadow = '0 8px 30px var(--shadow-color)'; 
+    // 1. Desliga o modo automático para impedir que a voz reinicie
+    autoMode = false;
+    // Garante que o switch seja desligado visualmente
+    document.getElementById('autoModeSwitch').checked = false;
+    
+    // 2. Cancela a síntese de voz (para a leitura)
+    speechSynthesis.cancel();
+    
+    // 3. Garante que o ícone volte para PLAY.
+    document.getElementById('playPauseBtn').textContent = '▶️'; 
+    
+    // 4. Remove o estilo visual de "lendo"
+    const output = document.getElementById('output');
+    output.style.border = '1px solid var(--border-color)'; 
+    output.style.boxShadow = '0 8px 30px var(--shadow-color)'; 
 }
 
 // ⚙️ CORRIGIDO: Função de toggle do Switch
 function toggleAutoMode() {
-    autoMode = document.getElementById('autoModeSwitch').checked;
+    autoMode = document.getElementById('autoModeSwitch').checked;
+    
+    if (autoMode) {
+        // Se ligar, inicia a leitura (se não estiver lendo)
+        if (!speechSynthesis.speaking && !speechSynthesis.paused) {
+            if (currentIndex < 0 || currentIndex >= sentences.length) currentIndex = 0;
+            showCurrent();
+            speakCurrent();
+        }
+    } else {
+        // Se desligar o autoMode, para qualquer leitura em andamento
+        speechSynthesis.cancel();
+        document.getElementById('playPauseBtn').textContent = '▶️'; 
+    }
+}
+
+/**
+ * NOVO: Esta função é chamada automaticamente pelo 'utter.onend' quando o autoMode está ativo.
+ */
+function nextSentenceAuto(){ 
+    if (!sentences.length || !autoMode) {
+        stopReading();
+        return; 
+    }
+    
+    // Verifica se a frase atual é a última
+    const isLastSentence = currentIndex === sentences.length - 1;
+    
+    // Avança o índice (usando módulo para garantir que não saia do limite)
+    currentIndex = (currentIndex + 1) % sentences.length; 
+    
+    // Se era a última frase, o currentIndex resetou para 0. Paramos o autoMode.
+    if (isLastSentence) {
+        stopReading(); // Desliga autoMode e cancela fala.
+        return;
+    }
     
-    if (autoMode) {
-        // Se ligar, inicia a leitura (se não estiver lendo)
-        if (!speechSynthesis.speaking && !speechSynthesis.paused) {
-            if (currentIndex < 0 || currentIndex >= sentences.length) currentIndex = 0;
-            showCurrent();
-            speakCurrent();
-        }
-    } else {
-        // Se desligar o autoMode, para qualquer leitura em andamento
-        speechSynthesis.cancel();
-        document.getElementById('playPauseBtn').textContent = '▶️'; 
-    }
+    // Mostra a próxima frase e fala.
+    showCurrent(); 
+    speakCurrent(); 
 }
 
-function nextSentenceAuto(){ 
-    if(!autoMode || !sentences.length) return; 
-    currentIndex=(currentIndex+1)%sentences.length; 
-    showCurrent(); 
-    speakCurrent(); 
+
+function manualMode(){ 
+    stopReading(); // Reutiliza a função de parada total
+    showCurrent(); 
 }
 
-// ⏭️ CORRIGIDO: Navegação manual (para a voz e avança/recua)
-function nextSentence(){ 
-    if (!sentences.length) return; 
-    speechSynthesis.cancel(); // Para a voz imediatamente
-    document.getElementById('playPauseBtn').textContent = '▶️'; 
-
-    currentIndex=(currentIndex+1)%sentences.length; 
-    showCurrent(); 
+function nextSentence(){ 
+    if (!sentences.length) return; 
+    stopReading(); // Garante que o modo automático seja desativado ao avançar
+    currentIndex=(currentIndex+1)%sentences.length; 
+    showCurrent(); 
+    if(voiceEnabled) speakCurrent(); 
 }
 
-// ⏮️ CORRIGIDO: Navegação manual (para a voz e avança/recua)
-// ⏮️ CORRIGIDO: Navegação manual (para a voz e avança/recua)
-function prevSentence(){ 
-    if (!sentences.length) return; 
-    speechSynthesis.cancel(); // Para a voz imediatamente
-    document.getElementById('playPauseBtn').textContent = '▶️'; 
-
-    // --- MUDANÇA: Navegação Circular ---
-    // (currentIndex - 1 + sentences.length) garante que -1 se torne sentences.length - 1
-    currentIndex = (currentIndex - 1 + sentences.length) % sentences.length; 
-    showCurrent(); 
+function prevSentence(){ 
+    if (!sentences.length) return; 
+    stopReading(); // Garante que o modo automático seja desativado ao recuar
+    currentIndex=(currentIndex-1+sentences.length)%sentences.length; 
+    showCurrent(); 
+    if(voiceEnabled) speakCurrent(); 
 }
-
-function toggleVoice(){ 
-    voiceEnabled=!voiceEnabled; 
-    const voiceBtn = document.getElementById('voiceToggleBtn');
-    if (voiceBtn) {
-        voiceBtn.textContent = voiceEnabled ? '🗣️' : '🔇';
-    }
-    if (!voiceEnabled && (speechSynthesis.speaking || speechSynthesis.paused)) {
-        speechSynthesis.cancel();
-        document.getElementById('playPauseBtn').textContent = '▶️'; 
-        alert("Voz desativada. Leitura de texto interrompida.");
-    } else if (voiceEnabled) {
-         alert("Voz ativada.");
-    }
+function toggleVoice(){ 
+    voiceEnabled=!voiceEnabled; 
+    const voiceBtn = document.getElementById('voiceToggleBtn');
+    if (voiceBtn) {
+        voiceBtn.textContent = voiceEnabled ? '🗣️' : '🔇';
+    }
+    if (!voiceEnabled && (speechSynthesis.speaking || speechSynthesis.paused)) {
+        speechSynthesis.cancel();
+        document.getElementById('playPauseBtn').textContent = '▶️'; 
+        alert("Voz desativada. Leitura de texto interrompida.");
+    } else if (voiceEnabled) {
+         alert("Voz ativada.");
+    }
 }
 
 function exportJSON(){ const data={sentences,textReadCounts:{}}; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='flowread_data.json'; a.click(); URL.revokeObjectURL(url); }
@@ -856,72 +906,75 @@ async function saveToCloud(){ try{ const data={sentences,textReadCounts:{}}; con
 function copyCloudLink(){ if(!cloudLink){ alert("Nenhum JSON salvo ainda."); return; } const url="https://jsonbin.io/b/"+cloudLink; navigator.clipboard.writeText(url).then(()=>alert("Salvo! Link copiado."),()=>alert("Falha ao copiar."));}
 async function loadBinByLink(){ const input = prompt("Cole o ID ou link do bin JSON:"); if(!input) return; let binId = input.includes("jsonbin.io") ? input.split("/b/")[1].split("/")[0] : input; try{ const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, { headers: {"X-Master-Key": MASTER_KEY} }); const json = await res.json(); if(json.record){ sentences = json.record.sentences || []; textReadCounts = json.record.textReadCounts || {}; currentIndex = 0; document.getElementById('processedText').value = sentences.join("\n\n"); showCurrent(); alert("Bin carregado com sucesso!"); } else alert("Não foi possível carregar o bin."); } catch(err){ alert("Erro ao carregar bin: "+err.message); }}
 
-async function pasteFromClipboard() {    try {        const text = await navigator.clipboard.readText();        if (text) {            document.getElementById('rawText').value = text;        } else {            alert('Sua área de transferência está vazia.');
-        }    } catch (err) {        console.error('Falha ao colar texto: ', err);        alert('Não foi possível ler da área de transferência.');    }}
+async function pasteFromClipboard() {    try {        const text = await navigator.clipboard.readText();        if (text) {            document.getElementById('rawText').value = text;        } else {            alert('Sua área de transferência está vazia.');
+        }    } catch (err) {        console.error('Falha ao colar texto: ', err);        alert('Não foi possível ler da área de transferência.');    }}
 
 // =======================================================
 // FUNÇÕES DO EDITOR MANUAL
 // =======================================================
-function openManualEditor() {    
-    const editorList = document.getElementById('editor-list');    
-    const manualEditorModal = document.getElementById('manual-editor-modal');    
-    const text = rawTextArea.value;    
-    
-    if (!text.trim()) {        
-        alert('A caixa de texto está vazia.');
-        return;
-    }
-    
-    const periods = sent_tokenize_browser(text).map(s => s.trim()).filter(Boolean);
-    editorList.innerHTML = '';
-    
-    periods.forEach(period => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'editor-item';
-        itemDiv.innerHTML = `<p contenteditable="true">${period}</p><button class="delete-period-btn" onclick="this.parentElement.remove()" title="Apagar este período">&times;</button>`;
-        editorList.appendChild(itemDiv);
-    });
-    
-    manualEditorModal.style.display = 'flex';
+function openManualEditor() {    
+    const editorList = document.getElementById('editor-list');    
+    const manualEditorModal = document.getElementById('manual-editor-modal');    
+    const text = rawTextArea.value;    
+    
+    if (!text.trim()) {        
+        alert('A caixa de texto está vazia.');
+        return;
+    }
+    
+    const periods = sent_tokenize_browser(text).map(s => s.trim()).filter(Boolean);
+    editorList.innerHTML = '';
+    
+    periods.forEach(period => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'editor-item';
+        itemDiv.innerHTML = `<p contenteditable="true">${period}</p><button class="delete-period-btn" onclick="this.parentElement.remove()" title="Apagar este período">&times;</button>`;
+        editorList.appendChild(itemDiv);
+    });
+    
+    manualEditorModal.style.display = 'flex';
 }
 
-function closeManualEditor() {    
-    document.getElementById('manual-editor-modal').style.display = 'none';
+function closeManualEditor() {    
+    document.getElementById('manual-editor-modal').style.display = 'none';
 }
 
-function saveManualChanges() {    
-    const editorList = document.getElementById('editor-list');    
-    const remainingItems = editorList.querySelectorAll('.editor-item p');    
-    let newText = [];    
-    
-    remainingItems.forEach(item => newText.push(item.textContent.trim()));    
-    
-    rawTextArea.value = newText.join(' '); 
-    
-    closeManualEditor();
-    updateCounters(); 
+function saveManualChanges() {    
+    const editorList = document.getElementById('editor-list');    
+    const remainingItems = editorList.querySelectorAll('.editor-item p');    
+    let newText = [];    
+    
+    remainingItems.forEach(item => newText.push(item.textContent.trim()));    
+    
+    rawTextArea.value = newText.join(' '); 
+    
+    closeManualEditor();
+    updateCounters(); 
 }
 // =======================================================
 
 function countWords(text) {
-    const cleanText = text.trim().replace(/\s+/g, ' ');
-    if (cleanText === '') return 0;
-    return cleanText.split(' ').length;
+    const cleanText = text.trim().replace(/\s+/g, ' ');
+    if (cleanText === '') return 0;
+    return cleanText.split(' ').length;
 }
 
 function updateCounters() {
-    const rawText = document.getElementById('rawText').value;
-    const processedText = document.getElementById('processedText').value;
+    const rawText = document.getElementById('rawText').value;
+    const processedText = document.getElementById('processedText').value;
 
-    const rawCharCount = rawText.length;
-    const rawWordCount = countWords(rawText);
-    
-    const processedCharCount = processedText.length;
-    const processedWordCount = countWords(processedText);
+    const rawCharCount = rawText.length;
+    const rawWordCount = countWords(rawText);
+    
+    const processedCharCount = processedText.length;
+    const processedWordCount = countWords(processedText);
 
-    document.getElementById('rawTextCounter').textContent = `(${rawWordCount} palavras, ${rawCharCount} caracteres)`;
-    document.getElementById('processedTextCounter').textContent = `(${processedWordCount} palavras, ${processedCharCount} caracteres)`;
+    document.getElementById('rawTextCounter').textContent = `(${rawWordCount} palavras, ${rawCharCount} caracteres)`;
+    document.getElementById('processedTextCounter').textContent = `(${processedWordCount} palavras, ${processedCharCount} caracteres)`;
 }
 </script>
+
+
+
 </body>
 </html>
