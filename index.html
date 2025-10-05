@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+	<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -234,6 +234,61 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             background-color: var(--bg-color);
+			/* Ajusta o item do editor para usar flexbox, alinhando o parágrafo e os botões */
+.editor-item {
+    display: flex;
+    align-items: center; /* Alinha verticalmente */
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-color);
+}
+
+/* Container para os botões */
+.editor-item-controls {
+    display: flex;
+    gap: 5px; /* Espaço entre os botões + e X */
+    flex-shrink: 0; /* Impede que os botões encolham */
+}
+
+/* Estilo base para os botões do editor */
+.editor-item-controls button {
+    border: none;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    font-size: 1.1em;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    color: white;
+    transition: background-color 0.2s;
+}
+.editor-item-controls button:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+/* Estilo específico para o botão de ADICIONAR (+) */
+.add-period-btn {
+    background-color: var(--success-color); /* Verde */
+}
+.add-period-btn:hover {
+    background-color: #219a52;
+}
+
+/* Estilo específico para o botão de DELETAR (X) */
+.delete-period-btn {
+    background-color: #e74c3c; /* Vermelho */
+}
+.delete-period-btn:hover {
+    background-color: #c0392b;
+}
+			
+			
+			
         }
         .editor-item p {
             flex-grow: 1;
@@ -928,7 +983,16 @@ function openManualEditor() {    
     periods.forEach(period => {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'editor-item';
-        itemDiv.innerHTML = `<p contenteditable="true">${period}</p><button class="delete-period-btn" onclick="this.parentElement.remove()" title="Apagar este período">&times;</button>`;
+        
+// Adicionamos um novo botão com a classe 'add-period-btn'
+itemDiv.innerHTML = `
+    <p contenteditable="true">${period}</p>
+    <div class="editor-item-controls">
+        <button class="add-period-btn" onclick="insertNewPeriodAfter(this)" title="Adicionar período abaixo">+</button>
+        <button class="delete-period-btn" onclick="this.parentElement.parentElement.remove()" title="Apagar este período">&times;</button>
+    </div>
+`;
+
         editorList.appendChild(itemDiv);
     });
     
@@ -971,6 +1035,34 @@ function updateCounters() {
 
     document.getElementById('rawTextCounter').textContent = `(${rawWordCount} palavras, ${rawCharCount} caracteres)`;
     document.getElementById('processedTextCounter').textContent = `(${processedWordCount} palavras, ${processedCharCount} caracteres)`;
+}
+/**
+ * Insere uma nova célula de período em branco logo após o item de referência.
+ * @param {HTMLElement} buttonElement - O botão '+' que foi clicado.
+ */
+function insertNewPeriodAfter(buttonElement) {
+    // 1. A partir do botão, encontra o item da lista (a div 'editor-item') que o contém.
+    const currentItem = buttonElement.closest('.editor-item');
+
+    // 2. Cria a nova célula (div 'editor-item') que será inserida.
+    const newItem = document.createElement('div');
+    newItem.className = 'editor-item';
+
+    // 3. Define o HTML da nova célula, que também precisa ter os botões de adicionar e apagar.
+    newItem.innerHTML = `
+        <p contenteditable="true"></p>
+        <div class="editor-item-controls">
+            <button class="add-period-btn" onclick="insertNewPeriodAfter(this)" title="Adicionar período abaixo">+</button>
+            <button class="delete-period-btn" onclick="this.parentElement.parentElement.remove()" title="Apagar este período">&times;</button>
+        </div>
+    `;
+
+    // 4. Esta é a linha mais importante: Insere a nova célula criada
+    //    imediatamente após o item atual na estrutura do HTML.
+    currentItem.insertAdjacentElement('afterend', newItem);
+
+    // 5. Coloca o foco do cursor na nova célula para o usuário já poder digitar.
+    newItem.querySelector('p').focus();
 }
 </script>
 
