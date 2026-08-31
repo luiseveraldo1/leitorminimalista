@@ -1,148 +1,232 @@
-
-	<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FlowRead - Leitor Inteligente</title>
+    <title>Leitura Guiada - Leitor Inteligente</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f5f7fa; --card-bg-color: #ffffff; --text-color: #2c3e50;
-            --heading-color: #1a2533; --primary-color: #4a69bd; --primary-hover-color: #3b5496;
-            --secondary-color: #788a9e; --border-color: #dfe4ea; --shadow-color: rgba(0, 0, 0, 0.07);
-            --success-color: #27ae60; --font-family: 'Poppins', 'Segoe UI', sans-serif;
-            --border-radius: 16px; --card-padding: 25px;
+            --bg-color: #f0f4f8; 
+            --card-bg-color: #ffffff; 
+            --text-color: #1e293b;
+            --heading-color: #0f172a; 
+            --primary-color: #2563eb; 
+            --primary-hover-color: #1d4ed8;
+            --secondary-color: #64748b; 
+            --border-color: #cbd5e1; 
+            --shadow-color: rgba(15, 23, 42, 0.06);
+            --accent-glow: rgba(37, 99, 235, 0.15);
+            --success-color: #059669; 
+            --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            --border-radius: 12px; 
+            --card-padding: 22px;
         }
+        
         body.dark-mode {
-            --bg-color: #1a2533; --card-bg-color: #2c3e50; --text-color: #e0e5eb;
-            --heading-color: #ffffff; --border-color: #41546b; --shadow-color: rgba(0, 0, 0, 0.15);
+            --bg-color: #0b1320; 
+            --card-bg-color: #152238; 
+            --text-color: #e2e8f0;
+            --heading-color: #f8fafc; 
+            --primary-color: #3b82f6;
+            --primary-hover-color: #60a5fa;
+            --secondary-color: #94a3b8; 
+            --border-color: #233554; 
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --accent-glow: rgba(59, 130, 246, 0.25);
         }
-        body { font-family: var(--font-family); background: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; display: flex; justify-content: center; transition: background 0.3s, color 0.3s; }
-        .container { width: 100%; max-width: 1400px; display: grid; grid-template-columns: 400px 1fr; gap: 25px; }
-        header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        header h1 { color: var(--heading-color); margin: 0; font-size: 2.2rem; }
-        header h1 span { color: var(--primary-color); }
-        .controls-column { display: flex; flex-direction: column; gap: 25px; }
-        .card { background: var(--card-bg-color); border-radius: var(--border-radius); padding: var(--card-padding); box-shadow: 0 8px 30px var(--shadow-color); transition: all 0.3s ease; }
-        .card h3 { margin: 0 0 15px 0; color: var(--heading-color); font-size: 1.1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
-        textarea, input[type="text"], input[type="number"], select { width: 100%; padding: 12px 15px; border-radius: 10px; border: 1px solid var(--border-color); font-size: 15px; background: var(--bg-color); color: var(--text-color); transition: all 0.2s ease; box-sizing: border-box; margin-bottom: 10px; }
-        textarea:focus, input:focus, select:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 20%, transparent); }
-        #rawText { height: 120px; resize: vertical; }
-        #processedText { height: 150px; resize: vertical; margin-top: 15px;}
-        .button-group { display: flex; flex-wrap: wrap; gap: 10px; }
-        button { background-color: var(--primary-color); color: #fff; border: none; border-radius: 10px; cursor: pointer; font-weight: 500; padding: 10px 15px; font-size: 15px; font-family: inherit; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; }
-        button:hover { background-color: var(--primary-hover-color); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
-        .alignment-btn { background-color: var(--secondary-color); flex-grow: 1; }
-        .alignment-btn.active { background-color: var(--primary-hover-color); transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
-        button.secondary { background-color: var(--secondary-color); }
-        button.secondary:hover { background-color: #5f7184; }
-        button.success { background-color: var(--success-color); }
-        button.success:hover { background-color: #219a52; }
-        label { display: block; margin-bottom: 5px; font-weight: 500; } .config-group { display: flex; gap: 15px; align-items: center; margin-bottom: 10px; } .config-group label { margin-bottom: 0; } .config-group input, .config-group select { margin-bottom: 0; }
-        .reader-column { display: flex; flex-direction: column; gap: 25px; }
-        
-        .motivation { color: var(--success-color); font-weight: bold; animation: fadeIn 0.8s ease-in-out; } @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        
-        /* --- ESTILO DO DARK MODE E AUTO MODE TOGGLE (UNIFICADO) --- */
-        .switch { 
-            position: relative; 
-            display: inline-block; 
-            width: 60px; 
-            height: 34px; 
-            margin: 0 5px; /* Pequeno espaçamento lateral */
-        } 
-        .switch input { 
-            opacity: 0; 
-            width: 0; 
-            height: 0; 
-        } 
-        .slider { 
-            position: absolute; 
+
+        body { 
+            font-family: var(--font-family); 
+            background: var(--bg-color); 
+            color: var(--text-color); 
+            margin: 0; 
+            padding: 24px; 
+            display: flex; 
+            justify-content: center; 
+            transition: background 0.25s ease, color 0.25s ease; 
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 1350px; 
+            display: grid; 
+            grid-template-columns: 380px 1fr; 
+            gap: 24px; 
+        }
+
+        header { 
+            grid-column: 1 / -1; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 5px;
+        }
+
+        header h1 { 
+            color: var(--heading-color); 
+            margin: 0; 
+            font-size: 1.8rem; 
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        header h1 span { 
+            color: var(--primary-color); 
+        }
+
+        .controls-column { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 20px; 
+        }
+
+        .card { 
+            background: var(--card-bg-color); 
+            border-radius: var(--border-radius); 
+            padding: var(--card-padding); 
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow-color); 
+            transition: all 0.2s ease; 
+        }
+
+        .card h3 { 
+            margin: 0 0 14px 0; 
+            color: var(--heading-color); 
+            font-size: 1rem; 
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            border-bottom: 1px solid var(--border-color); 
+            padding-bottom: 8px; 
+        }
+
+        textarea, input[type="text"], input[type="number"], select { 
+            width: 100%; 
+            padding: 10px 12px; 
+            border-radius: 8px; 
+            border: 1px solid var(--border-color); 
+            font-size: 14px; 
+            font-family: inherit;
+            background: var(--bg-color); 
+            color: var(--text-color); 
+            transition: border-color 0.2s, box-shadow 0.2s; 
+            box-sizing: border-box; 
+            margin-bottom: 10px; 
+        }
+
+        textarea:focus, input:focus, select:focus { 
+            outline: none; 
+            border-color: var(--primary-color); 
+            box-shadow: 0 0 0 3px var(--accent-glow); 
+        }
+
+        #rawText { height: 110px; resize: vertical; }
+        #processedText { height: 130px; resize: vertical; margin-top: 10px;}
+
+        .button-group { display: flex; flex-wrap: wrap; gap: 8px; }
+
+        button { 
+            background-color: var(--primary-color); 
+            color: #ffffff; 
+            border: none; 
+            border-radius: 8px; 
             cursor: pointer; 
-            top: 0; 
-            left: 0; 
-            right: 0; 
-            bottom: 0; 
-            background-color: var(--secondary-color); 
-            transition: .4s; 
-            border-radius: 34px; 
-            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+            font-weight: 500; 
+            padding: 9px 14px; 
+            font-size: 14px; 
+            font-family: inherit; 
+            transition: all 0.2s ease; 
+            display: inline-flex; 
+            align-items: center; 
+            justify-content: center;
+            gap: 6px; 
+        }
+
+        button:hover { 
+            background-color: var(--primary-hover-color); 
+            transform: translateY(-1px); 
+        }
+
+        button.secondary { background-color: var(--secondary-color); }
+        button.secondary:hover { opacity: 0.9; }
+        button.success { background-color: var(--success-color); }
+        button.success:hover { opacity: 0.9; }
+
+        label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 13px; color: var(--secondary-color); } 
+        .config-group { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; } 
+        .config-group label { margin-bottom: 0; color: var(--text-color); } 
+        .config-group input, .config-group select { margin-bottom: 0; }
+
+        .reader-column { display: flex; flex-direction: column; gap: 20px; }
+        
+        /* Switch UI */
+        .switch { position: relative; display: inline-block; width: 50px; height: 28px; } 
+        .switch input { opacity: 0; width: 0; height: 0; } 
+        .slider { 
+            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; 
+            background-color: var(--secondary-color); transition: .3s; border-radius: 28px; 
         } 
         .slider:before { 
-            position: absolute; 
-            content: ""; 
-            height: 26px; 
-            width: 26px; 
-            left: 4px; 
-            bottom: 4px; 
-            background-color: white; 
-            transition: .4s; 
-            border-radius: 50%; 
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            position: absolute; content: ""; height: 20px; width: 20px; left: 4px; bottom: 4px; 
+            background-color: white; transition: .3s; border-radius: 50%; 
         } 
-        /* Cor de Ativo (padrão para ambos os switches) */
-        input:checked + .slider { 
-            background-color: var(--primary-color); 
-        } 
-        input:checked + .slider:before { 
-            transform: translateX(26px); 
-        }
-        /* Ícones para o Dark Mode */
-        #darkModeToggle:not(:checked) + .slider:after { content: '☀️'; position: absolute; top: 50%; right: 8px; transform: translateY(-50%); font-size: 14px; transition: opacity 0.4s; }
-        #darkModeToggle:checked + .slider:after { content: '🌙'; position: absolute; top: 50%; left: 8px; transform: translateY(-50%); font-size: 14px; color: #fff; transition: opacity 0.4s; right: auto; }
-        /* Ícones para o Auto Mode */
-        #autoModeSwitch:not(:checked) + .slider:after { content: 'M'; position: absolute; top: 50%; right: 10px; transform: translateY(-50%); font-size: 14px; font-weight: bold; color: white; transition: opacity 0.4s; }
+        input:checked + .slider { background-color: var(--primary-color); } 
+        input:checked + .slider:before { transform: translateX(22px); }
+
+        #darkModeToggle:not(:checked) + .slider:after { content: '☀️'; position: absolute; top: 50%; right: 6px; transform: translateY(-50%); font-size: 12px; }
+        #darkModeToggle:checked + .slider:after { content: '🌙'; position: absolute; top: 50%; left: 6px; transform: translateY(-50%); font-size: 12px; }
+
         #autoModeSwitch:checked + .slider { background-color: var(--success-color); }
-        #autoModeSwitch:checked + .slider:after { content: 'A'; position: absolute; top: 50%; left: 10px; transform: translateY(-50%); font-size: 14px; font-weight: bold; color: white; transition: opacity 0.4s; right: auto; }
 
-
-        /* --- CORREÇÃO DO FLEXBOX VERTICAL E LATERAL (CONTROLES DE LEITURA) --- */
-        
+        /* Estudo Visual & Ergonômico de Leitura Guiada */
         .reader-container {
             display: flex; 
-            gap: 25px; 
-            align-items: flex-start; 
+            gap: 20px; 
+            align-items: stretch; 
             width: 100%; 
         }
         
         .reader-container #output { 
             flex-grow: 1; 
-            min-height: 350px; 
-            padding: 50px; 
+            min-height: 380px; 
+            padding: 45px 55px; 
             background: var(--card-bg-color); 
             border-radius: var(--border-radius);
-            box-shadow: 0 8px 30px var(--shadow-color);
-            font-size: 28px; 
-            line-height: 1.6;
+            box-shadow: 0 4px 15px var(--shadow-color);
+            font-size: 26px; 
+            line-height: 1.7;
             color: var(--heading-color);
             display: flex; 
             align-items: center;
-            justify-content: center;
-            text-align: center;
+            justify-content: flex-start;
+            text-align: left !important; /* Alinhamento fixo à esquerda */
             overflow-wrap: break-word; 
             white-space: pre-wrap;
             border: 1px solid var(--border-color);
+            box-sizing: border-box;
         }
 
         .controls-vertical {
             display: flex;
             flex-direction: column; 
-            gap: 10px; 
-            padding: 15px 10px; 
+            gap: 12px; 
+            padding: 16px 12px; 
             background-color: var(--card-bg-color);
             border-radius: var(--border-radius);
-            box-shadow: 0 4px 15px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow-color);
             align-self: flex-start; 
             flex-shrink: 0; 
         }
         
         .controls-vertical button {
-            width: 50px; 
-            height: 50px; 
-            font-size: 1.4em; 
+            width: 44px; 
+            height: 44px; 
+            font-size: 1.2em; 
             border-radius: 50%; 
             background-color: var(--primary-color);
             color: white;
@@ -150,192 +234,69 @@
             display: flex; 
             align-items: center;
             justify-content: center;
-            transition: background-color 0.2s, transform 0.2s;
-            box-shadow: none; 
-            line-height: 1; 
+            transition: all 0.2s ease;
         }
         .controls-vertical button:hover {
             background-color: var(--primary-hover-color);
-            transform: scale(1.05); 
+            transform: scale(1.08); 
         }
 
-        /* O botão AutoMode antigo foi substituído por um switch no card de Configurações */
-        
         .search-container button {
-            width: 50px; 
-            height: 50px; 
-            font-size: 1.2em; 
-            border-radius: 50%; 
+            width: 42px; 
+            height: 42px; 
+            border-radius: 8px; 
             padding: 0;
             flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-        .search-container input {
-            margin-bottom: 0; 
-        }
+        .search-container input { margin-bottom: 0; }
         
-        /* --- ESTILOS DO MODAL/EDITOR MANUAL --- */
+        /* Modal Editor */
         .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(15, 23, 42, 0.6);
+            display: flex; justify-content: center; align-items: center; z-index: 1000;
+            backdrop-filter: blur(2px);
         }
         .modal-content {
             background-color: var(--card-bg-color);
             border-radius: var(--border-radius);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-            max-width: 800px;
-            width: 90%;
-            display: flex;
-            flex-direction: column;
-            max-height: 90vh;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            max-width: 750px; width: 90%;
+            display: flex; flex-direction: column; max-height: 85vh;
         }
         .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 25px;
-            border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 20px; border-bottom: 1px solid var(--border-color);
         }
-        .modal-header h3 {
-            margin: 0;
-            color: var(--heading-color);
-        }
+        .modal-header h3 { margin: 0; color: var(--heading-color); }
         .modal-close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5em;
-            cursor: pointer;
-            color: var(--secondary-color);
-            transition: color 0.2s;
+            background: none; border: none; font-size: 1.4em; cursor: pointer; color: var(--secondary-color);
         }
-        .modal-close-btn:hover {
-            color: var(--primary-color);
-        }
-        .editor-list {
-            padding: 20px 25px;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
+        .editor-list { padding: 20px; overflow-y: auto; flex-grow: 1; }
         .editor-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 12px;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+            padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 8px;
             background-color: var(--bg-color);
-			/* Ajusta o item do editor para usar flexbox, alinhando o parágrafo e os botões */
-.editor-item {
-    display: flex;
-    align-items: center; /* Alinha verticalmente */
-    gap: 10px;
-    margin-bottom: 12px;
-    padding: 10px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--bg-color);
-}
-
-/* Container para os botões */
-.editor-item-controls {
-    display: flex;
-    gap: 5px; /* Espaço entre os botões + e X */
-    flex-shrink: 0; /* Impede que os botões encolham */
-}
-
-/* Estilo base para os botões do editor */
-.editor-item-controls button {
-    border: none;
-    border-radius: 50%;
-    width: 25px;
-    height: 25px;
-    font-size: 1.1em;
-    cursor: pointer;
-    line-height: 1;
-    padding: 0;
-    color: white;
-    transition: background-color 0.2s;
-}
-.editor-item-controls button:hover {
-    transform: none;
-    box-shadow: none;
-}
-
-/* Estilo específico para o botão de ADICIONAR (+) */
-.add-period-btn {
-    background-color: var(--success-color); /* Verde */
-}
-.add-period-btn:hover {
-    background-color: #219a52;
-}
-
-/* Estilo específico para o botão de DELETAR (X) */
-.delete-period-btn {
-    background-color: #e74c3c; /* Vermelho */
-}
-.delete-period-btn:hover {
-    background-color: #c0392b;
-}
-			
-			
-			
         }
         .editor-item p {
-            flex-grow: 1;
-            margin: 0;
-            padding: 5px;
-            border-radius: 4px;
-            min-height: 1.2em;
-            outline: none;
-            color: var(--text-color);
-            transition: background-color 0.2s;
+            flex-grow: 1; margin: 0; padding: 4px; outline: none; color: var(--text-color);
         }
-        .editor-item p:focus {
-            background-color: color-mix(in srgb, var(--primary-color) 5%, transparent);
-            border: 1px dashed var(--primary-color);
+        .editor-item-controls { display: flex; gap: 6px; flex-shrink: 0; }
+        .editor-item-controls button {
+            border: none; border-radius: 50%; width: 26px; height: 26px;
+            font-size: 1em; cursor: pointer; padding: 0; color: white;
         }
-        .delete-period-btn {
-            background-color: #e74c3c;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 25px;
-            height: 25px;
-            font-size: 1.1em;
-            cursor: pointer;
-            line-height: 1;
-            padding: 0;
-            transition: background-color 0.2s;
-            flex-shrink: 0;
-        }
-        .delete-period-btn:hover {
-            background-color: #c0392b;
-            transform: none;
-            box-shadow: none;
-        }
-        .editor-footer {
-            padding: 15px 25px;
-            border-top: 1px solid var(--border-color);
-            text-align: right;
-        }
+        .add-period-btn { background-color: var(--success-color); }
+        .delete-period-btn { background-color: #ef4444; }
+        .editor-footer { padding: 16px 20px; border-top: 1px solid var(--border-color); text-align: right; }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>Flow<span>Read</span></h1>
-            <label class="switch">
+            <h1>Leitura <span>Guiada</span></h1>
+            <label class="switch" title="Alternar Modo Escuro">
                 <input type="checkbox" id="darkModeToggle">
                 <span class="slider"></span>
             </label>
@@ -343,39 +304,39 @@
 
         <aside class="controls-column">
             <div class="card">
-                <h3>1. Insira seu Texto <span id="rawTextCounter" class="secondary" style="font-size: 0.8rem; font-weight: 400; color: var(--secondary-color);"></span></h3>
-               <textarea id="rawText" rows="6" placeholder="Cole seu texto aqui..." oninput="updateCounters()"></textarea>
+                <h3>1. Entrada de Texto <span id="rawTextCounter" style="font-size: 0.75rem; font-weight: 400; color: var(--secondary-color);"></span></h3>
+                <textarea id="rawText" rows="6" placeholder="Cole seu texto aqui..." oninput="updateCounters()"></textarea>
                 <div class="button-group">
                     <button onclick="pasteFromClipboard()">📋 Colar</button>
                     <button onclick="openManualEditor()">✂️ Editar Texto</button>
-                    <button onclick="importFromLink()">📎 Importar de Link</button>
                     <button onclick="clearRawText()" class="secondary">🗑️ Limpar</button>
                 </div>
 				
-				
-				<div style="margin-top: 15px;">
-                    <label for="summaryPercent">Tamanho do Resumo (em % de frases)</label>
-                    <input type="number" id="summaryPercent" value="25" min="5" max="80" step="5" style="width: 100px; display: inline-block;">
+                <div style="margin-top: 14px;">
+                    <label for="summaryPercent">Proporção do Resumo (% de frases)</label>
+                    <input type="number" id="summaryPercent" value="25" min="5" max="80" step="5">
                 </div>
 
-                <div class="button-group" style="margin-top: 15px;">
-                    <button onclick="generateSentences()">📌 Gerar Frases</button>
-                    <button onclick="generateSmartSummary()">📝 Resumo Inteligente</button>
+                <div class="button-group" style="margin-top: 6px;">
+                    <button onclick="generateSentences()" style="width: 100%;">📝 Resumir Texto</button>
                 </div>
             </div>
+
             <div class="card">
-               <h3>2. Revise e Edite <span id="processedTextCounter" class="secondary" style="font-size: 0.8rem; font-weight: 400; color: var(--secondary-color);"></span></h3>
-                <textarea id="processedText" placeholder="Frases extraídas ou resumidas aparecerão aqui." oninput="updateCounters()"></textarea>
+                <h3>2. Leitura Processada <span id="processedTextCounter" style="font-size: 0.75rem; font-weight: 400; color: var(--secondary-color);"></span></h3>
+                <textarea id="processedText" placeholder="As frases extraídas do resumo aparecerão aqui." oninput="updateCounters()"></textarea>
                 <div class="button-group">
                     <button onclick="syncProcessedText()">🔄 Sincronizar Edições</button>
                 </div>
             </div>
+
             <div class="card">
-                <h3>⚙️ Configurações de Leitura</h3>
-                <label for="voiceSelect">Voz</label>
+                <h3>⚙️ Ajustes de Visualização e Voz</h3>
+                <label for="voiceSelect">Voz Selecionada</label>
                 <select id="voiceSelect"></select>
-                <div class="config-group" style="margin-bottom: 20px;">
-                    <label style="font-weight: bold;">Modo Automático:</label>
+
+                <div class="config-group" style="margin-top: 10px; margin-bottom: 15px;">
+                    <label style="font-weight: 600;">Modo Automático:</label>
                     <label class="switch" style="margin-left: auto;">
                          <input type="checkbox" id="autoModeSwitch" onclick="toggleAutoMode()">
                          <span class="slider"></span>
@@ -384,41 +345,34 @@
 
                 <div class="config-group">
                     <label>Velocidade: <input type="number" id="voiceRate" value="1" min="0.1" max="3" step="0.1"></label>
-                    <label>Tamanho: <input type="number" id="fontSize" value="28" min="12" max="60"></label>
+                    <label>Tamanho: <input type="number" id="fontSize" value="26" min="14" max="60"></label>
                 </div>
+
                 <div class="config-group">
-                    <label for="fontColor">Cor:</label>
-                    <input type="color" id="fontColor" value="#1a2533">
+                    <label for="fontColor">Cor da Fonte:</label>
+                    <input type="color" id="fontColor" value="#0f172a">
                 </div>
-                <label for="fontFamily">Fonte</label>
+
+                <label for="fontFamily">Tipografia</label>
                 <select id="fontFamily">
-                  <option value="Poppins, sans-serif">Poppins</option>
+                  <option value="Inter, sans-serif">Inter (Recomendada)</option>
+                  <option value="Roboto Mono, monospace">Roboto Mono (Científica)</option>
                   <option value="Georgia, serif">Georgia</option>
                   <option value="Arial, sans-serif">Arial</option>
-                  <option value="Courier New, monospace">Courier New</option>
                   <option value="Verdana, sans-serif">Verdana</option>
                 </select>
-                <label style="margin-top: 15px;">Alinhamento do Texto</label>
-                <div class="button-group">
-                    <button class="alignment-btn" onclick="alignText('left', this)">Esquerda</button>
-                    <button class="alignment-btn" onclick="alignText('justify', this)">Justificar</button>
-                    <button class="alignment-btn" onclick="alignText('right', this)">Direita</button>
-                </div>
-                <label style="margin-top: 15px;">Frases Motivacionais</label>
-                <div class="config-group">
-                    <label>A cada <input type="number" id="motivationEvery" value="0" min="0" style="width:60px"> frases</label>
-                </div>
             </div>
+
             <div class="card">
-                <h3>💾 Gerenciamento</h3>
+                <h3>💾 Armazenamento</h3>
                 <div class="button-group">
                     <button onclick="exportJSON()">📥 Exportar JSON</button>
-                    <label for="importFile" class="button secondary" style="cursor:pointer;">📤 Importar JSON</label>
+                    <label for="importFile" class="button secondary" style="cursor:pointer; margin: 0;">📤 Importar JSON</label>
                     <input type="file" id="importFile" onchange="importJSON(event)" style="display:none;">
                 </div>
-                 <div class="button-group" style="margin-top: 10px;">
-                    <button onclick="saveToCloud()" class="success">☁️ Salvar e Copiar Link</button>
-                    <button onclick="loadBinByLink()">📂 Carregar da Nuvem</button>
+                <div class="button-group" style="margin-top: 10px;">
+                    <button onclick="saveToCloud()" class="success">☁️ Salvar na Nuvem</button>
+                    <button onclick="loadBinByLink()">📂 Carregar Nuvem</button>
                 </div>
             </div>
         </aside>
@@ -426,33 +380,33 @@
         <main class="reader-column">
             <div class="reader-container">
                 <div id="output">
-                    Bem-vindo ao FlowRead! Cole um texto e gere frases para começar.
+                    Bem-vindo ao Leitura Guiada! Cole um texto e clique em Resumir Texto para começar.
                 </div>
 
                 <div class="controls-vertical">
                     <button id="playPauseBtn" onclick="playPauseToggle()" title="Play/Pause">▶️</button>
-					<button id="stopBtn" onclick="stopReading()" title="Parar Leitura">⏹️</button>
+                    <button id="stopBtn" onclick="stopReading()" title="Parar Leitura">⏹️</button>
                     <button id="nextBtn" onclick="nextSentence()" title="Próxima Frase">⏭️</button>
                     <button id="prevBtn" onclick="prevSentence()" title="Frase Anterior">⏮️</button>
-                    
                     <button id="voiceToggleBtn" onclick="toggleVoice()" title="Voz On/Off">🗣️</button>
-                    </div>
+                </div>
             </div>	
 			
             <div class="card">
                  <h3>Pesquisa Rápida</h3>
                  <div class="search-container" style="display: flex; gap: 10px; align-items: center;">
-                     <input type="text" id="searchInput" placeholder="Pesquisar termo no Google...">
+                     <input type="text" id="searchInput" placeholder="Pesquisar termo científico ou conceito...">
                      <button onclick="searchGoogle()">🔍</button>
                  </div>
             </div>
         </main>
     </div>
 
+    <!-- Modal do Editor Manual -->
     <div id="manual-editor-modal" class="modal-overlay" style="display: none;">
         <div class="modal-content editor-modal">
             <div class="modal-header">
-                <h3>Editor de Períodos</h3>
+                <h3>Editor de Períodos e Parágrafos</h3>
                 <button class="modal-close-btn" onclick="closeManualEditor()">&times;</button>
             </div>
             <div id="editor-list" class="editor-list"></div>
@@ -461,7 +415,6 @@
             </div>
         </div>
     </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -472,18 +425,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function applyTheme(isDark) {
         if (isDark) {
             body.classList.add('dark-mode');
-            // Só muda a cor se a cor atual for a padrão Light
-            if (fontColorInput.value === '#1a2533') {
-                fontColorInput.value = '#ffffff';
-            }
+            if (fontColorInput.value === '#0f172a') fontColorInput.value = '#f8fafc';
         } else {
             body.classList.remove('dark-mode');
-            // Só muda a cor se a cor atual for a padrão Dark
-            if (fontColorInput.value === '#ffffff') {
-                fontColorInput.value = '#1a2533';
-            }
+            if (fontColorInput.value === '#f8fafc') fontColorInput.value = '#0f172a';
         }
     }
+
     const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
     if(darkModeToggle) {
         darkModeToggle.checked = prefersDark;
@@ -493,6 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof showCurrent === 'function') showCurrent();
         });
     }
+
     loadVoices();
 	const rawTextarea = document.getElementById('rawText');
     if (rawTextarea && rawTextarea.value.trim() === '') {
@@ -501,15 +450,14 @@ document.addEventListener('DOMContentLoaded', () => {
 A missão do Curiosity é determinar se Marte já teve as condições ambientais necessárias para sustentar vida microbiana.
 Para isso, o Curiosity explora a cratera Gale, onde ele tem coletado amostras de solo e rochas.
 Recentemente, o Curiosity encontrou evidências de água e compostos orgânicos, o que reforça a possibilidade de vida no passado de Marte.
-O Curiosity continua sua exploração, enviando dados valiosos sobre a história do planeta vermelho.`; // Adicionei quebras de linha para simular parágrafos
+O Curiosity continua sua exploração, enviando dados valiosos sobre a história do planeta vermelho.`;
     }
 	updateCounters();
-    // Garante que o estado do switch seja refletido no JS
     document.getElementById('autoModeSwitch').checked = autoMode;
 });
 
 // =======================================================
-// VARIÁVEIS GLOBAIS E CONSTANTES
+// VARIÁVEIS GLOBAIS
 // =======================================================
 let sentences=[], currentIndex=0, autoMode=false, voiceEnabled=true;
 let voices=[], selectedVoice=null, textReadCounts={};
@@ -517,16 +465,8 @@ let cloudLink = "";
 const output=document.getElementById('output');
 const voiceSelect=document.getElementById('voiceSelect');
 const rawTextArea = document.getElementById('rawText');
-const motivationalPhrases=["Continue firme, você está indo bem!","Mais uma frase! Foque e avance!","Você está se superando a cada leitura!","Mantenha o ritmo, sua mente agradece!","A constância traz o resultado!","Respire fundo, você está no caminho certo!","Seu foco está criando resultados!"];
 
 function sent_tokenize_browser(text) {
-    // CORREÇÃO: Para simular parágrafos no editor, a tokenização deve ser mais flexível.
-    // Usaremos a quebra de linha dupla (parágrafo) OU a pontuação final (frase).
-    // A função original sent_tokenize_browser não é ideal para parágrafos, mas é central
-    // para a leitura frase a frase. Vamos mantê-la e apenas ajustar a forma como o 
-    // texto é re-agregado no 'saveManualChanges' para preservar a quebra de parágrafo.
-
-    // A lógica de tokenização (separação por pontuação) se mantém para o Resumo e Frases.
     return text.match(/[^.!?]+[.!?]+/g) || [text.trim()];
 }
 
@@ -583,9 +523,7 @@ function aplicarPesoEstrutural(pontuacaoFrases, totalFrases) {
     const bonus = 0.25;
     for (let i = 0; i < totalFrases; i++) {
         let b = 0;
-        if (i < numFrasesBonus) {
-            b = pontuacaoFrases[i] * bonus;
-        } else if (i >= totalFrases - numFrasesBonus) {
+        if (i < numFrasesBonus || i >= totalFrases - numFrasesBonus) {
             b = pontuacaoFrases[i] * bonus;
         }
         pontuacaoFrases[i] += b;
@@ -601,11 +539,14 @@ function gerarResumo(textoOriginal) {
     numFrasesDesejadas = Math.max(1, numFrasesDesejadas);
     const frasesParaExtrair = Math.min(totalFrases, numFrasesDesejadas);
     if (totalFrases === 0) { return "Texto muito curto ou sem palavras relevantes."; }
+    
     const tf = calcularTermFrequency(textoOriginal);
     if (Object.keys(tf).length === 0) { return "Texto muito curto ou sem palavras relevantes."; }
+    
     const isf = calcularInverseSentenceFrequency(frases, tf);
     const pontuacaoPalavras = {};
     for (const palavra in tf) { pontuacaoPalavras[palavra] = tf[palavra] * (isf[palavra] || 0); }
+    
     const pontuacaoFrases = {};
     frases.forEach((frase, i) => {
         let score = 0;
@@ -615,68 +556,54 @@ function gerarResumo(textoOriginal) {
         });
         pontuacaoFrases[i] = score;
     });
+
     const pontuacaoFinal = aplicarPesoEstrutural(pontuacaoFrases, totalFrases);
     const frasesOrdenadas = Object.keys(pontuacaoFinal)
         .map(i => [parseInt(i), pontuacaoFinal[i]])
         .sort((a, b) => b[1] - a[1]);
+        
     const indicesResumo = frasesOrdenadas
         .slice(0, frasesParaExtrair)
         .map(item => item[0])
         .sort((a, b) => a - b);
-    const resumo = indicesResumo
-        .map(i => frases[i].trim())
-        .join(' ');
-    return resumo;
+        
+    return indicesResumo.map(i => frases[i].trim()).join(' ');
 }
 
+// =======================================================
+// FILTRAGEM DE VOZES (EXCLUSIVO VOZES COM ESTRELA)
+// =======================================================
 function loadVoices(){
-    // 1. Obtém todas as vozes disponíveis no sistema do usuário
-    voices = speechSynthesis.getVoices();
-    
+    const allVoices = speechSynthesis.getVoices();
     if(!voiceSelect) return;
     
-    voiceSelect.innerHTML = ""; // Limpa a lista atual
-    
-    // --- NOVIDADE: Adiciona a opção "Automático" (fallback do sistema) ---
+    voiceSelect.innerHTML = ""; 
+
+    // Filtro restrito das vozes marcadas na imagem
+    const allowedNames = ['Francisca', 'Antônio', 'Antonio', 'Thalita', 'Raquel', 'Duarte'];
+    voices = allVoices.filter(v => allowedNames.some(name => v.name.includes(name)));
+
+    if (voices.length === 0) {
+        // Fallback para exibir vozes pt-BR ou pt-PT caso os nomes específicos variem no SO
+        voices = allVoices.filter(v => v.lang.startsWith('pt-'));
+    }
+
     let defaultOption = document.createElement("option");
-    defaultOption.value = -1; // Usamos -1 para sinalizar o modo Automático
+    defaultOption.value = -1;
     defaultOption.textContent = "Automático (Padrão do Sistema)";
     voiceSelect.appendChild(defaultOption);
 
-    // 2. Adiciona todas as vozes encontradas ao seletor
-    voices.forEach((v,i) => {
-        
+    voices.forEach((v, i) => {
         let o = document.createElement("option");
-        
         o.value = i;
-        
-        // Exibe o nome da voz e o idioma (Ex: 'Google Portuguese (pt-BR)')
-        o.textContent = `${v.name} (${v.lang})`;
-        
-        // NOVIDADE: Adiciona um ícone de estrela para vozes em português (pt-BR)
-        if (v.lang.startsWith('pt-')) {
-            o.textContent = `⭐ ${o.textContent}`;
-        }
-
+        o.textContent = `⭐ ${v.name} (${v.lang})`;
         voiceSelect.appendChild(o);
-        
     });
-    
-    // 3. Define a voz padrão após carregar todas as opções
-    if(voices.length > 0) {
-        // Tenta encontrar a primeira voz em português como padrão
-        const ptVoiceIndex = voices.findIndex(v => v.lang.startsWith('pt-'));
 
-        if (ptVoiceIndex !== -1) {
-            selectedVoice = voices[ptVoiceIndex];
-            voiceSelect.value = ptVoiceIndex;
-        } else {
-            // Se não houver português, usa a primeira voz e define o valor no seletor.
-            selectedVoice = voices[0];
-            voiceSelect.value = 0;
-        }
+    if(voices.length > 0) {
+        selectedVoice = voices[0];
+        voiceSelect.value = 0;
     } else {
-        // Se não houver vozes, seleciona a opção Automático.
         selectedVoice = null;
         voiceSelect.value = -1;
     }
@@ -685,164 +612,115 @@ function loadVoices(){
 speechSynthesis.onvoiceschanged = loadVoices;
 voiceSelect.addEventListener("change", () => {
     const index = parseInt(voiceSelect.value);
-    // Se o valor for -1, selectedVoice é null (Automático). Caso contrário, é a voz selecionada.
     selectedVoice = (index === -1) ? null : voices[index];
 });
 
-
+// =======================================================
+// FUNÇÃO DE RESUMIR TEXTO (Substituiu Gerar Frases)
+// =======================================================
 function generateSentences(){
     stopReading();
-    const text=document.getElementById('rawText').value;
+    const text = document.getElementById('rawText').value;
     if(!text.trim()) return;
-    // O text.split(/\n\s*\n/) irá separar o texto em parágrafos, 
-    // e o map(sent_tokenize_browser) irá separar as frases dentro de cada parágrafo
-    // O flat() vai achatar a lista de frases.
-    sentences=text.split(/\n\s*\n/).flatMap(p => sent_tokenize_browser(p)).map(s=>s.trim()).filter(Boolean);
-    sentences=insertMotivation(sentences);
-    currentIndex=0;
-    // Precisa juntar com quebra de linha dupla para visualização no processedText
-    document.getElementById('processedText').value=sentences.join("\n\n");
-    showCurrent();
-}
 
-function generateSmartSummary(){
-    stopReading();
-    const text=document.getElementById('rawText').value;
-    if(!text.trim()) return;
     const resumoText = gerarResumo(text);
-    if (resumoText.includes("muito curto")) {
-        alert("O texto é muito curto ou não tem palavras suficientes para resumir.");
-        return;
-    }
-    document.getElementById('processedText').value = resumoText;
-    sentences = sent_tokenize_browser(resumoText).map(s=>s.trim()).filter(Boolean);
-    sentences = insertMotivation(sentences);
-    currentIndex=0;
-    alert(`Resumo gerado com sucesso! ${sentences.length} frases selecionadas.`);
+    const targetText = (resumoText && !resumoText.includes("muito curto")) ? resumoText : text;
+
+    document.getElementById('processedText').value = targetText;
+    sentences = targetText.split(/\n\s*\n/).flatMap(p => sent_tokenize_browser(p)).map(s=>s.trim()).filter(Boolean);
+    currentIndex = 0;
+
     showCurrent();
-	updateCounters();
+    updateCounters();
 }
 
 function syncProcessedText(){
     stopReading();
-    // Aqui usamos o separador de parágrafos (dupla quebra de linha) para criar as sentences
-    sentences=document.getElementById('processedText').value.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean);
-    currentIndex=0;
+    sentences = document.getElementById('processedText').value.split(/\n\s*\n/).flatMap(p => sent_tokenize_browser(p)).map(s=>s.trim()).filter(Boolean);
+    currentIndex = 0;
     showCurrent();
     updateCounters();
 }
 
-function insertMotivation(arr){ const every=parseInt(document.getElementById('motivationEvery').value)||0; if(every<=0) return arr; let final=[]; for(let i=0;i<arr.length;i++){ final.push(arr[i]); if((i+1)%every===0 && i!==arr.length-1){ final.push(motivationalPhrases[Math.floor(Math.random()*motivationalPhrases.length)]); } } return final; }
-
 function clearRawText(){
     stopReading();
-    document.getElementById('rawText').value="";
-    document.getElementById('processedText').value="";
-    sentences=[];
-    output.textContent="Texto apagado.";
+    document.getElementById('rawText').value = "";
+    document.getElementById('processedText').value = "";
+    sentences = [];
+    output.textContent = "Texto apagado.";
     updateCounters();
 }
 
-function searchGoogle(){ const q=document.getElementById('searchInput').value.trim(); if(q) window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank"); else { alert("Digite algo para pesquisar."); document.getElementById('searchInput').focus(); } }
-
-async function importFromLink(){ const url=prompt("Cole o link do site (modo texto recomendado):"); if(!url) return; try{ const res=await fetch(`http://localhost:3000/extract-text?url=${encodeURIComponent(url)}`); const data=await res.json(); if(data.text){ document.getElementById('rawText').value=data.text; alert("Texto extraído com sucesso!"); } else alert("Não foi possível extrair o texto."); } catch(err){ alert("Erro ao importar o texto: "+err.message); } }
+function searchGoogle(){ 
+    const q = document.getElementById('searchInput').value.trim(); 
+    if(q) window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank"); 
+    else alert("Digite algo para pesquisar."); 
+}
 
 function showCurrent(){
-    // Se não houver frases, exibe mensagem de erro.
     if(!sentences || !sentences.length){
-        output.textContent="Nenhuma frase gerada.";
+        output.textContent = "Nenhuma frase gerada.";
         return;
     }
     
-    // Configura estilos
-    const fontSize = document.getElementById('fontSize')?.value || 28;
-    const fontColor = document.getElementById('fontColor')?.value || '#1a2533';
-    const fontFamily = document.getElementById('fontFamily')?.value || 'Poppins, sans-serif';
-    output.style.fontSize=fontSize + "px";
-    output.style.color=fontColor;
-    output.style.fontFamily=fontFamily;
-    output.style.textAlign = output.style.textAlign || 'center';
-    
-    // Exibe a frase atual, aplicando estilo se for motivacional
-    const text=sentences[currentIndex];
-    if(motivationalPhrases.includes(text)) {
-        output.innerHTML=`<span class="motivation">${text}</span>`;
-    } else {
-        output.textContent=text;
-    }
-}
+    const fontSize = document.getElementById('fontSize')?.value || 26;
+    const fontColor = document.getElementById('fontColor')?.value || '#0f172a';
+    const fontFamily = document.getElementById('fontFamily')?.value || 'Inter, sans-serif';
 
-function alignText(alignment, clickedButton) {
-    document.getElementById('output').style.textAlign = alignment;
-    document.querySelectorAll('.alignment-btn').forEach(btn => btn.classList.remove('active'));
-    clickedButton.classList.add('active');
+    output.style.fontSize = fontSize + "px";
+    output.style.color = fontColor;
+    output.style.fontFamily = fontFamily;
+    
+    output.textContent = sentences[currentIndex];
 }
 
 function speakCurrent() {
     const text = sentences[currentIndex];
     
-    // CORREÇÃO CRÍTICA: Apenas verifica se a voz está DESLIGADA ou o texto está vazio.
-    // Se selectedVoice for null (Modo Automático), o código segue para usar a voz padrão.
-    if (!voiceEnabled || !text.trim()) {
-        if (autoMode) nextSentenceAuto(); // Chama a função para tentar avançar
+    if (!voiceEnabled || !text || !text.trim()) {
+        if (autoMode) nextSentenceAuto();
         return;
     }
     
     speechSynthesis.cancel();
-    
     const utter = new SpeechSynthesisUtterance(text);
     
-    // CORREÇÃO ESSENCIAL: Só define utter.voice se uma voz específica foi selecionada.
-    // Se selectedVoice for null, a API de Voz usará automaticamente a voz padrão do sistema,
-    // permitindo que a leitura inicie.
     if (selectedVoice) {
         utter.voice = selectedVoice;
     }
     
-    const rate = parseFloat(document.getElementById('voiceRate')?.value) || 1;
-    utter.rate = rate;
+    utter.rate = parseFloat(document.getElementById('voiceRate')?.value) || 1;
     
-    // --- Lógica de Início/Fim (Que está correta) ---
     utter.onstart = () => {
         document.getElementById('playPauseBtn').textContent = '⏸️';
-        output.style.border = '3px solid var(--primary-color)';
-        output.style.boxShadow = '0 0 20px color-mix(in srgb, var(--primary-color) 40%, transparent)';
+        output.style.border = '2px solid var(--primary-color)';
+        output.style.boxShadow = '0 0 15px var(--accent-glow)';
     };
     
     utter.onend = () => {
         output.style.border = '1px solid var(--border-color)';
-        output.style.boxShadow = '0 8px 30px var(--shadow-color)';
+        output.style.boxShadow = '0 4px 15px var(--shadow-color)';
 
         if (autoMode) {
-            // Chama a função que avança e reinicia a leitura
-            setTimeout(nextSentenceAuto, 200);
+            setTimeout(nextSentenceAuto, 250);
         } else {
             document.getElementById('playPauseBtn').textContent = '▶️';
         }
     };
     
     utter.onerror = (event) => {
-        if (event.error === 'interrupted') return; // Ignora interrupções intencionais
-        
+        if (event.error === 'interrupted') return;
         console.error('SpeechSynthesis Error:', event.error);
-        alert(`Erro de voz: ${event.error}. Tentando avançar...`);
         document.getElementById('playPauseBtn').textContent = '▶️';
         if (autoMode) nextSentenceAuto();
     };
 
-    // Certifica que a voz está ativada e tenta falar
-    if ('speechSynthesis' in window && !speechSynthesis.speaking) {
-           speechSynthesis.speak(utter);
-    } else if (speechSynthesis.speaking) {
-           speechSynthesis.cancel();
-           speechSynthesis.speak(utter);
-    }
+    speechSynthesis.speak(utter);
 }
 
-// ⚠️ CORRIGIDO: O Play/Pause não liga mais o autoMode por padrão
 function playPauseToggle() {
     if (!sentences.length) {
-        alert("Gere frases primeiro!");
+        alert("Resuma o texto primeiro!");
         return;
     }
     
@@ -853,8 +731,6 @@ function playPauseToggle() {
         speechSynthesis.resume();
         document.getElementById('playPauseBtn').textContent = '⏸️';
     } else {
-        // Se não estiver falando nem pausado, inicia a leitura na frase atual.
-        // Não altera o estado do autoMode.
         if (currentIndex < 0 || currentIndex >= sentences.length) currentIndex = 0;
         showCurrent();
         speakCurrent();
@@ -862,150 +738,204 @@ function playPauseToggle() {
 }
 
 function stopReading() {
-    // 1. Desliga o modo automático para impedir que a voz reinicie
     autoMode = false;
-    // Garante que o switch seja desligado visualmente
     document.getElementById('autoModeSwitch').checked = false;
-    
-    // 2. Cancela a síntese de voz (para a leitura)
     speechSynthesis.cancel();
-    
-    // 3. Garante que o ícone volte para PLAY.
     document.getElementById('playPauseBtn').textContent = '▶️';
-    
-    // 4. Remove o estilo visual de "lendo"
-    const output = document.getElementById('output');
     output.style.border = '1px solid var(--border-color)';
-    output.style.boxShadow = '0 8px 30px var(--shadow-color)';
+    output.style.boxShadow = '0 4px 15px var(--shadow-color)';
 }
 
-// ⚙️ CORRIGIDO: Função de toggle do Switch
 function toggleAutoMode() {
     autoMode = document.getElementById('autoModeSwitch').checked;
-    
     if (autoMode) {
-        // Se ligar, inicia a leitura (se não estiver lendo)
         if (!speechSynthesis.speaking && !speechSynthesis.paused) {
             if (currentIndex < 0 || currentIndex >= sentences.length) currentIndex = 0;
             showCurrent();
             speakCurrent();
         }
     } else {
-        // Se desligar o autoMode, para qualquer leitura em andamento
         speechSynthesis.cancel();
         document.getElementById('playPauseBtn').textContent = '▶️';
     }
 }
 
-/** * NOVO: Esta função é chamada automaticamente pelo 'utter.onend' quando o autoMode está ativo. */function nextSentenceAuto(){
+function nextSentenceAuto(){
     if (!sentences.length || !autoMode) {
         stopReading();
         return;
     }
     
-    // Verifica se a frase atual é a última
     const isLastSentence = currentIndex === sentences.length - 1;
-    
-    // Avança o índice (usando módulo para garantir que não saia do limite)
     currentIndex = (currentIndex + 1) % sentences.length;
     
-    // Se era a última frase, o currentIndex resetou para 0. Paramos o autoMode.
     if (isLastSentence) {
-        stopReading(); // Desliga autoMode e cancela fala.
+        stopReading();
         return;
     }
     
-    // Mostra a próxima frase e fala.
     showCurrent();
     speakCurrent();
 }
 
-function manualMode(){
-    stopReading(); // Reutiliza a função de parada total
-    showCurrent();
-}
-
 function nextSentence(){
     if (!sentences.length) return;
-    stopReading(); // Garante que o modo automático seja desativado ao avançar
-    currentIndex=(currentIndex+1)%sentences.length;
+    stopReading();
+    currentIndex = (currentIndex + 1) % sentences.length;
     showCurrent();
     if(voiceEnabled) speakCurrent();
 }
 
 function prevSentence(){
     if (!sentences.length) return;
-    stopReading(); // Garante que o modo automático seja desativado ao recuar
-    currentIndex=(currentIndex-1+sentences.length)%sentences.length;
+    stopReading();
+    currentIndex = (currentIndex - 1 + sentences.length) % sentences.length;
     showCurrent();
     if(voiceEnabled) speakCurrent();
 }
+
 function toggleVoice(){
-    voiceEnabled=!voiceEnabled;
+    voiceEnabled = !voiceEnabled;
     const voiceBtn = document.getElementById('voiceToggleBtn');
-    if (voiceBtn) {
-        voiceBtn.textContent = voiceEnabled ? '🗣️' : '🔇';
-    }
+    if (voiceBtn) voiceBtn.textContent = voiceEnabled ? '🗣️' : '🔇';
+    
     if (!voiceEnabled && (speechSynthesis.speaking || speechSynthesis.paused)) {
         speechSynthesis.cancel();
         document.getElementById('playPauseBtn').textContent = '▶️';
-        alert("Voz desativada. Leitura de texto interrompida.");
-    } else if (voiceEnabled) {
-        alert("Voz ativada.");
     }
 }
 
-function exportJSON(){ const data={sentences,textReadCounts:{}}; const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='flowread_data.json'; a.click(); URL.revokeObjectURL(url); }
+function exportJSON(){ 
+    const data = { sentences, textReadCounts: {} }; 
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }); 
+    const url = URL.createObjectURL(blob); 
+    const a = document.createElement('a'); 
+    a.href = url; 
+    a.download = 'leitura_guiada_data.json'; 
+    a.click(); 
+    URL.revokeObjectURL(url); 
+}
 
-function importJSON(event){ const file=event.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=(e)=>{ try{ const data=JSON.parse(e.target.result); if(data.sentences) sentences=data.sentences; if(data.textReadCounts) textReadCounts=data.textReadCounts; currentIndex=0; document.getElementById('processedText').value=sentences.join("\n\n"); showCurrent(); alert("JSON importado com sucesso!"); }catch(err){ alert("Erro ao importar JSON: "+err); } }; reader.readAsText(file); }
+function importJSON(event){ 
+    const file = event.target.files[0]; 
+    if(!file) return; 
+    const reader = new FileReader(); 
+    reader.onload = (e) => { 
+        try { 
+            const data = JSON.parse(e.target.result); 
+            if(data.sentences) sentences = data.sentences; 
+            currentIndex = 0; 
+            document.getElementById('processedText').value = sentences.join("\n\n"); 
+            showCurrent(); 
+            alert("JSON carregado com sucesso!"); 
+        } catch(err) { 
+            alert("Erro ao importar JSON: " + err); 
+        } 
+    }; 
+    reader.readAsText(file); 
+}
 
-const MASTER_KEY="$2a$10$2wR5NQoVsUWczmL.U8MAs.YILi4/aKD3YK01iPbnyFzfLn.xiChGK";async function saveToCloud(){ try{ const data={sentences,textReadCounts:{}}; const res=await fetch("https://api.jsonbin.io/v3/b",{method:"POST",headers:{"Content-Type":"application/json","X-Master-Key":MASTER_KEY},body:JSON.stringify(data)}); const json=await res.json(); cloudLink=json.metadata.id; copyCloudLink(); } catch(err){ alert("Erro ao salvar na nuvem: "+err.message); }}function copyCloudLink(){ if(!cloudLink){ alert("Nenhum JSON salvo ainda."); return; } const url="https://jsonbin.io/b/"+cloudLink; navigator.clipboard.writeText(url).then(()=>alert("Salvo! Link copiado."),()=>alert("Falha ao copiar."));}async function loadBinByLink(){ const input = prompt("Cole o ID ou link do bin JSON:"); if(!input) return; let binId = input.includes("jsonbin.io") ? input.split("/b/")[1].split("/")[0] : input; try{ const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, { headers: {"X-Master-Key": MASTER_KEY} }); const json = await res.json(); if(json.record){ sentences = json.record.sentences || []; textReadCounts = json.record.textReadCounts || {}; currentIndex = 0; document.getElementById('processedText').value = sentences.join("\n\n"); showCurrent(); alert("Bin carregado com sucesso!"); } else alert("Não foi possível carregar o bin."); } catch(err){ alert("Erro ao carregar bin: "+err.message); }}
+const MASTER_KEY = "$2a$10$2wR5NQoVsUWczmL.U8MAs.YILi4/aKD3YK01iPbnyFzfLn.xiChGK";
+
+async function saveToCloud(){ 
+    try { 
+        const data = { sentences, textReadCounts: {} }; 
+        const res = await fetch("https://api.jsonbin.io/v3/b", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-Master-Key": MASTER_KEY },
+            body: JSON.stringify(data)
+        }); 
+        const json = await res.json(); 
+        cloudLink = json.metadata.id; 
+        copyCloudLink(); 
+    } catch(err) { 
+        alert("Erro ao salvar na nuvem: " + err.message); 
+    }
+}
+
+function copyCloudLink(){ 
+    if(!cloudLink) return; 
+    const url = "https://jsonbin.io/b/" + cloudLink; 
+    navigator.clipboard.writeText(url).then(() => alert("Salvo na nuvem! Link copiado."), () => alert("Falha ao copiar link."));
+}
+
+async function loadBinByLink(){ 
+    const input = prompt("Cole o ID ou link do bin JSON:"); 
+    if(!input) return; 
+    let binId = input.includes("jsonbin.io") ? input.split("/b/")[1].split("/")[0] : input; 
+    try { 
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, { headers: { "X-Master-Key": MASTER_KEY } }); 
+        const json = await res.json(); 
+        if(json.record){ 
+            sentences = json.record.sentences || []; 
+            currentIndex = 0; 
+            document.getElementById('processedText').value = sentences.join("\n\n"); 
+            showCurrent(); 
+            alert("Nuvem carregada com sucesso!"); 
+        } 
+    } catch(err) { 
+        alert("Erro ao carregar dados: " + err.message); 
+    }
+}
 
 async function pasteFromClipboard() {
     try {
         const text = await navigator.clipboard.readText();
-        if (text) {
-            document.getElementById('rawText').value = text;
-        } else {
-            alert('Sua área de transferência está vazia.');
-        }
+        if (text) document.getElementById('rawText').value = text;
+        else alert('Área de transferência vazia.');
     } catch (err) {
-        console.error('Falha ao colar texto: ', err);
         alert('Não foi possível ler da área de transferência.');
     }
 }
 
+async function carregarBinAutomaticoPorUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const binId = urlParams.get('id');
+    if (!binId) return;
+
+    try {
+        const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, { headers: { "X-Master-Key": MASTER_KEY } });
+        const json = await res.json();
+        if (json.record) {
+            sentences = json.record.sentences || [];
+            currentIndex = 0;
+            const processedField = document.getElementById('processedText');
+            if (processedField) processedField.value = sentences.join("\n\n");
+            showCurrent();
+            updateCounters();
+        }
+    } catch(err) {
+        console.error("Erro ao carregar automático da nuvem:", err);
+    }
+}
+
+carregarBinAutomaticoPorUrl();
+
 // =======================================================
-// FUNÇÕES DO EDITOR MANUAL
+// EDITOR MANUAL DE TEXTO
 // =======================================================
 function openManualEditor() {
-    
     const editorList = document.getElementById('editor-list');
     const manualEditorModal = document.getElementById('manual-editor-modal');
     const text = rawTextArea.value;
     
     if (!text.trim()) {
-        
         alert('A caixa de texto está vazia.');
         return;
     }
     
-    // Tokeniza o texto em "parágrafos" (períodos separados por dupla quebra de linha).
-    // Isso garante que a edição manual realmente trabalhe com a estrutura que o usuário quer.
     const periods = text.split(/\n\s*\n/).map(s => s.trim()).filter(Boolean);
     editorList.innerHTML = '';
     
     periods.forEach(period => {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'editor-item';
-        // Adicionamos um novo botão com a classe 'add-period-btn'
         itemDiv.innerHTML = `
             <p contenteditable="true">${period}</p>
             <div class="editor-item-controls">
-                <button class="add-period-btn" onclick="insertNewPeriodAfter(this)" title="Adicionar período abaixo">+</button>
-                <button class="delete-period-btn" onclick="this.parentElement.parentElement.remove()" title="Apagar este período">&times;</button>
+                <button class="add-period-btn" onclick="insertNewPeriodAfter(this)" title="Adicionar abaixo">+</button>
+                <button class="delete-period-btn" onclick="this.parentElement.parentElement.remove()" title="Remover">&times;</button>
             </div>`;
-
         editorList.appendChild(itemDiv);
     });
     
@@ -1013,32 +943,37 @@ function openManualEditor() {
 }
 
 function closeManualEditor() {
-    
     document.getElementById('manual-editor-modal').style.display = 'none';
 }
 
 function saveManualChanges() {
-    
     const editorList = document.getElementById('editor-list');
     const remainingItems = editorList.querySelectorAll('.editor-item p');
-    
     let newText = [];
     
     remainingItems.forEach(item => {
         const textContent = item.textContent.trim();
-        if (textContent) {
-            newText.push(textContent);
-        }
+        if (textContent) newText.push(textContent);
     });
 
-    // CORREÇÃO APLICADA: Juntar os períodos com '\n\n' para que cada um se torne um parágrafo separado 
-    // no textarea principal, preservando a formatação do editor.
     rawTextArea.value = newText.join('\n\n');
-    
     closeManualEditor();
     updateCounters();
 }
-// =======================================================
+
+function insertNewPeriodAfter(buttonElement) {
+    const currentItem = buttonElement.closest('.editor-item');
+    const newItem = document.createElement('div');
+    newItem.className = 'editor-item';
+    newItem.innerHTML = `
+        <p contenteditable="true"></p>
+        <div class="editor-item-controls">
+            <button class="add-period-btn" onclick="insertNewPeriodAfter(this)" title="Adicionar abaixo">+</button>
+            <button class="delete-period-btn" onclick="this.parentElement.parentElement.remove()" title="Remover">&times;</button>
+        </div>`;
+    currentItem.insertAdjacentElement('afterend', newItem);
+    newItem.querySelector('p').focus();
+}
 
 function countWords(text) {
     const cleanText = text.trim().replace(/\s+/g, ' ');
@@ -1050,42 +985,9 @@ function updateCounters() {
     const rawText = document.getElementById('rawText').value;
     const processedText = document.getElementById('processedText').value;
 
-    const rawCharCount = rawText.length;
-    const rawWordCount = countWords(rawText);
-    
-    const processedCharCount = processedText.length;
-    const processedWordCount = countWords(processedText);
-
-    document.getElementById('rawTextCounter').textContent = `(${rawWordCount} palavras, ${rawCharCount} caracteres)`;
-    document.getElementById('processedTextCounter').textContent = `(${processedWordCount} palavras, ${processedCharCount} caracteres)`;
+    document.getElementById('rawTextCounter').textContent = `(${countWords(rawText)} palavras, ${rawText.length} carac.)`;
+    document.getElementById('processedTextCounter').textContent = `(${countWords(processedText)} palavras, ${processedText.length} carac.)`;
 }
-
-/** * Insere uma nova célula de período em branco logo após o item de referência. * @param {HTMLElement} buttonElement - O botão '+' que foi clicado. */function insertNewPeriodAfter(buttonElement) {
-    // 1. A partir do botão, encontra o item da lista (a div 'editor-item') que o contém.
-    const currentItem = buttonElement.closest('.editor-item');
-
-    // 2. Cria a nova célula (div 'editor-item') que será inserida.
-    const newItem = document.createElement('div');
-    newItem.className = 'editor-item';
-
-    // 3. Define o HTML da nova célula, que também precisa ter os botões de adicionar e apagar.
-    newItem.innerHTML = `
-        <p contenteditable="true"></p>
-        <div class="editor-item-controls">
-            <button class="add-period-btn" onclick="insertNewPeriodAfter(this)" title="Adicionar período abaixo">+</button>
-            <button class="delete-period-btn" onclick="this.parentElement.parentElement.remove()" title="Apagar este período">&times;</button>
-        </div>
-    `;
-
-    // 4. Esta é a linha mais importante: Insere a nova célula criada
-    //    imediatamente após o item atual na estrutura do HTML.
-    currentItem.insertAdjacentElement('afterend', newItem);
-
-    // 5. Coloca o foco do cursor na nova célula para o usuário já poder digitar.
-    newItem.querySelector('p').focus();
-}
-
 </script>
-
 </body>
 </html>
