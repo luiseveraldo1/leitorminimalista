@@ -7,6 +7,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- SDKs do Firebase (Versão Compatível) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
     <style>
         :root {
             --bg-color: #f0f4f8; 
@@ -75,9 +80,7 @@
             letter-spacing: -0.02em;
         }
 
-        header h1 span { 
-            color: var(--primary-color); 
-        }
+        header h1 span { color: var(--primary-color); }
 
         .controls-column { 
             display: flex; 
@@ -99,7 +102,6 @@
             color: var(--heading-color); 
             font-size: 1rem; 
             font-weight: 600;
-            letter-spacing: -0.01em;
             border-bottom: 1px solid var(--border-color); 
             padding-bottom: 8px; 
         }
@@ -113,7 +115,6 @@
             font-family: inherit;
             background: var(--bg-color); 
             color: var(--text-color); 
-            transition: border-color 0.2s, box-shadow 0.2s; 
             box-sizing: border-box; 
             margin-bottom: 10px; 
         }
@@ -146,15 +147,9 @@
             gap: 6px; 
         }
 
-        button:hover { 
-            background-color: var(--primary-hover-color); 
-            transform: translateY(-1px); 
-        }
-
+        button:hover { background-color: var(--primary-hover-color); transform: translateY(-1px); }
         button.secondary { background-color: var(--secondary-color); }
-        button.secondary:hover { opacity: 0.9; }
         button.success { background-color: var(--success-color); }
-        button.success:hover { opacity: 0.9; }
 
         label { display: block; margin-bottom: 5px; font-weight: 500; font-size: 13px; color: var(--secondary-color); } 
         .config-group { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; } 
@@ -163,7 +158,6 @@
 
         .reader-column { display: flex; flex-direction: column; gap: 20px; }
         
-        /* Switch UI */
         .switch { position: relative; display: inline-block; width: 50px; height: 28px; } 
         .switch input { opacity: 0; width: 0; height: 0; } 
         .slider { 
@@ -179,16 +173,9 @@
 
         #darkModeToggle:not(:checked) + .slider:after { content: '☀️'; position: absolute; top: 50%; right: 6px; transform: translateY(-50%); font-size: 12px; }
         #darkModeToggle:checked + .slider:after { content: '🌙'; position: absolute; top: 50%; left: 6px; transform: translateY(-50%); font-size: 12px; }
-
         #autoModeSwitch:checked + .slider { background-color: var(--success-color); }
 
-        /* Estudo Visual & Ergonômico de Leitura Guiada */
-        .reader-container {
-            display: flex; 
-            gap: 20px; 
-            align-items: stretch; 
-            width: 100%; 
-        }
+        .reader-container { display: flex; gap: 20px; align-items: stretch; width: 100%; }
         
         .reader-container #output { 
             flex-grow: 1; 
@@ -202,8 +189,7 @@
             color: var(--heading-color);
             display: flex; 
             align-items: center;
-            justify-content: flex-start;
-            text-align: left !important; /* Alinhamento fixo à esquerda */
+            text-align: left !important;
             overflow-wrap: break-word; 
             white-space: pre-wrap;
             border: 1px solid var(--border-color);
@@ -211,46 +197,19 @@
         }
 
         .controls-vertical {
-            display: flex;
-            flex-direction: column; 
-            gap: 12px; 
-            padding: 16px 12px; 
-            background-color: var(--card-bg-color);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 12px var(--shadow-color);
-            align-self: flex-start; 
-            flex-shrink: 0; 
+            display: flex; flex-direction: column; gap: 12px; padding: 16px 12px; 
+            background-color: var(--card-bg-color); border-radius: var(--border-radius);
+            border: 1px solid var(--border-color); box-shadow: 0 4px 12px var(--shadow-color);
+            align-self: flex-start; flex-shrink: 0; 
         }
         
         .controls-vertical button {
-            width: 44px; 
-            height: 44px; 
-            font-size: 1.2em; 
-            border-radius: 50%; 
-            background-color: var(--primary-color);
-            color: white;
-            padding: 0; 
-            display: flex; 
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
+            width: 44px; height: 44px; font-size: 1.2em; border-radius: 50%; 
+            background-color: var(--primary-color); color: white; padding: 0; 
+            display: flex; align-items: center; justify-content: center;
         }
-        .controls-vertical button:hover {
-            background-color: var(--primary-hover-color);
-            transform: scale(1.08); 
-        }
+        .controls-vertical button:hover { background-color: var(--primary-hover-color); transform: scale(1.08); }
 
-        .search-container button {
-            width: 42px; 
-            height: 42px; 
-            border-radius: 8px; 
-            padding: 0;
-            flex-shrink: 0;
-        }
-        .search-container input { margin-bottom: 0; }
-        
-        /* Modal Editor */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(15, 23, 42, 0.6);
@@ -258,37 +217,23 @@
             backdrop-filter: blur(2px);
         }
         .modal-content {
-            background-color: var(--card-bg-color);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--border-color);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-            max-width: 750px; width: 90%;
-            display: flex; flex-direction: column; max-height: 85vh;
+            background-color: var(--card-bg-color); border-radius: var(--border-radius);
+            border: 1px solid var(--border-color); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+            max-width: 750px; width: 90%; display: flex; flex-direction: column; max-height: 85vh;
         }
         .modal-header {
             display: flex; justify-content: space-between; align-items: center;
             padding: 16px 20px; border-bottom: 1px solid var(--border-color);
         }
         .modal-header h3 { margin: 0; color: var(--heading-color); }
-        .modal-close-btn {
-            background: none; border: none; font-size: 1.4em; cursor: pointer; color: var(--secondary-color);
-        }
+        .modal-close-btn { background: none; border: none; font-size: 1.4em; cursor: pointer; color: var(--secondary-color); }
         .editor-list { padding: 20px; overflow-y: auto; flex-grow: 1; }
         .editor-item {
             display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
             padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 8px;
             background-color: var(--bg-color);
         }
-        .editor-item p {
-            flex-grow: 1; margin: 0; padding: 4px; outline: none; color: var(--text-color);
-        }
-        .editor-item-controls { display: flex; gap: 6px; flex-shrink: 0; }
-        .editor-item-controls button {
-            border: none; border-radius: 50%; width: 26px; height: 26px;
-            font-size: 1em; cursor: pointer; padding: 0; color: white;
-        }
-        .add-period-btn { background-color: var(--success-color); }
-        .delete-period-btn { background-color: #ef4444; }
+        .editor-item p { flex-grow: 1; margin: 0; padding: 4px; outline: none; color: var(--text-color); }
         .editor-footer { padding: 16px 20px; border-top: 1px solid var(--border-color); text-align: right; }
     </style>
 </head>
@@ -308,7 +253,7 @@
                 <textarea id="rawText" rows="6" placeholder="Cole seu texto aqui..." oninput="updateCounters()"></textarea>
                 <div class="button-group">
                     <button onclick="pasteFromClipboard()">📋 Colar</button>
-                    <button onclick="openManualEditor()">✂️ Editar Texto</button>
+                    <button onclick="openManualEditor()">✂️ Editar</button>
                     <button onclick="clearRawText()" class="secondary">🗑️ Limpar</button>
                 </div>
 				
@@ -316,22 +261,17 @@
                     <label for="summaryPercent">Proporção do Resumo (% de frases)</label>
                     <input type="number" id="summaryPercent" value="25" min="5" max="80" step="5">
                 </div>
-
-                <div class="button-group" style="margin-top: 6px;">
-                    <button onclick="generateSentences()" style="width: 100%;">📝 Resumir Texto</button>
-                </div>
+                <button onclick="generateSentences()" style="width: 100%; margin-top: 6px;">📝 Resumir Texto</button>
             </div>
 
             <div class="card">
                 <h3>2. Leitura Processada <span id="processedTextCounter" style="font-size: 0.75rem; font-weight: 400; color: var(--secondary-color);"></span></h3>
-                <textarea id="processedText" placeholder="As frases extraídas do resumo aparecerão aqui." oninput="updateCounters()"></textarea>
-                <div class="button-group">
-                    <button onclick="syncProcessedText()">🔄 Sincronizar Edições</button>
-                </div>
+                <textarea id="processedText" placeholder="As frases extraídas aparecerão aqui." oninput="updateCounters()"></textarea>
+                <button onclick="syncProcessedText()" style="width: 100%;">🔄 Sincronizar Edições</button>
             </div>
 
             <div class="card">
-                <h3>⚙️ Ajustes de Visualização e Voz</h3>
+                <h3>⚙️ Visualização e Voz</h3>
                 <label for="voiceSelect">Voz Selecionada</label>
                 <select id="voiceSelect"></select>
 
@@ -356,46 +296,45 @@
                 <label for="fontFamily">Tipografia</label>
                 <select id="fontFamily">
                   <option value="Inter, sans-serif">Inter (Recomendada)</option>
-                  <option value="Roboto Mono, monospace">Roboto Mono (Científica)</option>
+                  <option value="Roboto Mono, monospace">Roboto Mono</option>
                   <option value="Georgia, serif">Georgia</option>
                   <option value="Arial, sans-serif">Arial</option>
-                  <option value="Verdana, sans-serif">Verdana</option>
                 </select>
             </div>
 
             <div class="card">
-                <h3>💾 Armazenamento</h3>
-                <div class="button-group">
-                    <button onclick="exportJSON()">📥 Exportar JSON</button>
-                    <label for="importFile" class="button secondary" style="cursor:pointer; margin: 0;">📤 Importar JSON</label>
-                    <input type="file" id="importFile" onchange="importJSON(event)" style="display:none;">
-                </div>
+                <h3>💾 Vincular ao Tópico Atual</h3>
+                <p id="statusVinculo" style="font-size: 13px; color: var(--secondary-color); margin-bottom: 10px;">Carregando dados do tópico...</p>
+
+                <label for="rotuloLinkInput">Rótulo do Link:</label>
+                <input type="text" id="rotuloLinkInput" value="Leitura Guiada" placeholder="Ex: Leitura Guiada - Aula 1">
+
+                <button onclick="salvarVinculoFirebase()" class="success" style="width: 100%;">🔥 Salvar e Enviar para o Alumno</button>
+
                 <div class="button-group" style="margin-top: 10px;">
-                    <button onclick="saveToCloud()" class="success">☁️ Salvar na Nuvem</button>
-                    <button onclick="loadBinByLink()">📂 Carregar Nuvem</button>
+                    <button onclick="exportJSON()" class="secondary" style="flex: 1;">📥 JSON</button>
+                    <label for="importFile" class="button secondary" style="cursor:pointer; margin: 0; flex: 1; text-align: center;">📤 Importar</label>
+                    <input type="file" id="importFile" onchange="importJSON(event)" style="display:none;">
                 </div>
             </div>
         </aside>
 
         <main class="reader-column">
             <div class="reader-container">
-                <div id="output">
-                    Bem-vindo ao Leitura Guiada! Cole um texto e clique em Resumir Texto para começar.
-                </div>
-
+                <div id="output">Bem-vindo ao Leitura Guiada! Cole um texto e clique em Resumir.</div>
                 <div class="controls-vertical">
                     <button id="playPauseBtn" onclick="playPauseToggle()" title="Play/Pause">▶️</button>
-                    <button id="stopBtn" onclick="stopReading()" title="Parar Leitura">⏹️</button>
-                    <button id="nextBtn" onclick="nextSentence()" title="Próxima Frase">⏭️</button>
-                    <button id="prevBtn" onclick="prevSentence()" title="Frase Anterior">⏮️</button>
+                    <button id="stopBtn" onclick="stopReading()" title="Parar">⏹️</button>
+                    <button id="nextBtn" onclick="nextSentence()" title="Próxima">⏭️</button>
+                    <button id="prevBtn" onclick="prevSentence()" title="Anterior">⏮️</button>
                     <button id="voiceToggleBtn" onclick="toggleVoice()" title="Voz On/Off">🗣️</button>
                 </div>
             </div>	
 			
             <div class="card">
                  <h3>Pesquisa Rápida</h3>
-                 <div class="search-container" style="display: flex; gap: 10px; align-items: center;">
-                     <input type="text" id="searchInput" placeholder="Pesquisar termo científico ou conceito...">
+                 <div style="display: flex; gap: 10px; align-items: center;">
+                     <input type="text" id="searchInput" placeholder="Pesquisar termo..." style="margin-bottom:0;">
                      <button onclick="searchGoogle()">🔍</button>
                  </div>
             </div>
@@ -404,19 +343,42 @@
 
     <!-- Modal do Editor Manual -->
     <div id="manual-editor-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content editor-modal">
+        <div class="modal-content">
             <div class="modal-header">
                 <h3>Editor de Períodos e Parágrafos</h3>
                 <button class="modal-close-btn" onclick="closeManualEditor()">&times;</button>
             </div>
             <div id="editor-list" class="editor-list"></div>
             <div class="editor-footer">
-                <button class="success" onclick="saveManualChanges()">✓ Salvar Alterações e Fechar</button>
+                <button class="success" onclick="saveManualChanges()">✓ Salvar Alterações</button>
             </div>
         </div>
     </div>
 
 <script>
+// =======================================================
+// FIREBASE CONFIG
+// =======================================================
+const firebaseConfig = {
+  apiKey: "AIzaSyCkkY-jMqHAulldhSCHf7LF3Bc45DzXL1w",
+  authDomain: "estudante-7b878.firebaseapp.com",
+  projectId: "estudante-7b878",
+  storageBucket: "estudante-7b878.firebasestorage.app",
+  messagingSenderId: "160273673549",
+  appId: "1:160273673549:web:4ef24ef1c57fd87f5b5b04",
+  measurementId: "G-Z2YK4X5V9E"
+};
+
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
+
+// Parâmetros recebidos da URL do Alumno
+const urlParams = new URLSearchParams(window.location.search);
+const userIdUrl = urlParams.get('userId') || urlParams.get('alumnoId'); // Compatibilidade com UID do users
+const topicoIdUrl = urlParams.get('topicoId');
+const leituraIdParam = urlParams.get('id');
+
 document.addEventListener('DOMContentLoaded', () => {
     const darkModeToggle = document.getElementById('darkModeToggle');
     const body = document.body;
@@ -436,32 +398,37 @@ document.addEventListener('DOMContentLoaded', () => {
     if(darkModeToggle) {
         darkModeToggle.checked = prefersDark;
         applyTheme(prefersDark);
-        darkModeToggle.addEventListener('change', () => {
-            applyTheme(darkModeToggle.checked);
-            if (typeof showCurrent === 'function') showCurrent();
-        });
+        darkModeToggle.addEventListener('change', () => applyTheme(darkModeToggle.checked));
     }
 
     loadVoices();
-	const rawTextarea = document.getElementById('rawText');
-    if (rawTextarea && rawTextarea.value.trim() === '') {
-        rawTextarea.value = `O rover Curiosity, da NASA, pousou em Marte em 2012 para investigar o passado geológico do planeta.
+    verificarContextoUrl();
 
-A missão do Curiosity é determinar se Marte já teve as condições ambientais necessárias para sustentar vida microbiana.
-Para isso, o Curiosity explora a cratera Gale, onde ele tem coletado amostras de solo e rochas.
-Recentemente, o Curiosity encontrou evidências de água e compostos orgânicos, o que reforça a possibilidade de vida no passado de Marte.
-O Curiosity continua sua exploração, enviando dados valiosos sobre a história do planeta vermelho.`;
+    if (leituraIdParam) {
+        carregarLeituraFirebasePorUrl(leituraIdParam);
+    } else {
+        document.getElementById('rawText').value = `O rover Curiosity, da NASA, pousou em Marte em 2012 para investigar o passado geológico do planeta.\n\nA missão do Curiosity é determinar se Marte já teve as condições ambientais necessárias para sustentar vida microbiana.`;
     }
-	updateCounters();
+    updateCounters();
     document.getElementById('autoModeSwitch').checked = autoMode;
 });
 
+function verificarContextoUrl() {
+    const statusEl = document.getElementById('statusVinculo');
+    if (userIdUrl && topicoIdUrl) {
+        statusEl.innerHTML = "✅ Conectado ao usuário e tópico com sucesso!";
+        statusEl.style.color = "var(--success-color)";
+    } else {
+        statusEl.innerHTML = "⚠️ Aberto de forma avulsa (Parâmetros incompletos na URL).";
+        statusEl.style.color = "#d97706";
+    }
+}
+
 // =======================================================
-// VARIÁVEIS GLOBAIS
+// VARIÁVEIS GLOBAIS DE LEITURA
 // =======================================================
 let sentences=[], currentIndex=0, autoMode=false, voiceEnabled=true;
-let voices=[], selectedVoice=null, textReadCounts={};
-let cloudLink = "";
+let voices=[], selectedVoice=null;
 const output=document.getElementById('output');
 const voiceSelect=document.getElementById('voiceSelect');
 const rawTextArea = document.getElementById('rawText');
@@ -470,166 +437,50 @@ function sent_tokenize_browser(text) {
     return text.match(/[^.!?]+[.!?]+/g) || [text.trim()];
 }
 
-const stopWordsPt = new Set([
-    'de', 'do', 'da', 'e', 'a', 'o', 'que', 'em', 'um', 'uma', 'para', 'com', 'não', 'se', 'por', 'os', 'as', 'no', 'na', 'dos', 'das',
-    'ao', 'aos', 'meu', 'minha', 'seu', 'sua', 'nosso', 'nossa', 'dele', 'dela', 'este', 'esta', 'isto',
-    'aquele', 'aquela', 'aquilo', 'ser', 'foi', 'fui', 'somos', 'sou', 'são', 'você',
-    'ele', 'ela', 'nós', 'vós', 'eles', 'elas', 'que', 'quem', 'onde', 'qual', 'quais',
-    '.', ',', ':', ';', '!', '?', '(', ')', '[', ']', '{', '}', '"', "'", '-', '—',
-    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']);
-
-function calcularTermFrequency(texto) {
-    const frequencia = {};
-    const palavras = texto.toLowerCase().split(/[\s\n]+/);
-    for (let palavra of palavras) {
-        const palavraLimpa = palavra.replace(/[.,:;!?()"']/g, '');
-        if (palavraLimpa.length > 1 && !stopWordsPt.has(palavraLimpa)) {
-            frequencia[palavraLimpa] = (frequencia[palavraLimpa] || 0) + 1;
-        }
-    }
-    const maxFrequencia = Math.max(...Object.values(frequencia));
-    if (maxFrequencia === 0) return {};
-    for (let palavra in frequencia) {
-        frequencia[palavra] /= maxFrequencia;
-    }
-    return frequencia;
-}
-
-function calcularInverseSentenceFrequency(frases, tf) {
-    const isf = {};
-    const totalFrases = frases.length;
-    const contagemFrases = {};
-    for (const frase of frases) {
-        const palavrasUnicas = new Set();
-        frase.toLowerCase().split(/[\s\n]+/).forEach(w => {
-            const palavraLimpa = w.replace(/[.,:;!?()"']/g, '');
-            if (tf[palavraLimpa]) {
-                palavrasUnicas.add(palavraLimpa);
-            }
-        });
-        palavrasUnicas.forEach(palavra => {
-            contagemFrases[palavra] = (contagemFrases[palavra] || 0) + 1;
-        });
-    }
-    for (const palavra in contagemFrases) {
-        isf[palavra] = Math.log10(totalFrases / contagemFrases[palavra]);
-    }
-    return isf;
-}
-
-function aplicarPesoEstrutural(pontuacaoFrases, totalFrases) {
-    const pesoPercentual = 0.2;
-    const numFrasesBonus = Math.ceil(totalFrases * pesoPercentual);
-    const bonus = 0.25;
-    for (let i = 0; i < totalFrases; i++) {
-        let b = 0;
-        if (i < numFrasesBonus || i >= totalFrases - numFrasesBonus) {
-            b = pontuacaoFrases[i] * bonus;
-        }
-        pontuacaoFrases[i] += b;
-    }
-    return pontuacaoFrases;
-}
-
 function gerarResumo(textoOriginal) {
     const frases = sent_tokenize_browser(textoOriginal.trim());
     const totalFrases = frases.length;
     const percentual = document.getElementById('summaryPercent')?.value || 25;
-    let numFrasesDesejadas = Math.ceil(totalFrases * (percentual / 100));
-    numFrasesDesejadas = Math.max(1, numFrasesDesejadas);
-    const frasesParaExtrair = Math.min(totalFrases, numFrasesDesejadas);
-    if (totalFrases === 0) { return "Texto muito curto ou sem palavras relevantes."; }
+    let numFrasesDesejadas = Math.max(1, Math.ceil(totalFrases * (percentual / 100)));
+    if (totalFrases === 0) return "Texto muito curto.";
     
-    const tf = calcularTermFrequency(textoOriginal);
-    if (Object.keys(tf).length === 0) { return "Texto muito curto ou sem palavras relevantes."; }
-    
-    const isf = calcularInverseSentenceFrequency(frases, tf);
-    const pontuacaoPalavras = {};
-    for (const palavra in tf) { pontuacaoPalavras[palavra] = tf[palavra] * (isf[palavra] || 0); }
-    
-    const pontuacaoFrases = {};
-    frases.forEach((frase, i) => {
-        let score = 0;
-        frase.toLowerCase().split(/[\s\n]+/).forEach(w => {
-            const palavraLimpa = w.replace(/[.,:;!?()"']/g, '');
-            score += (pontuacaoPalavras[palavraLimpa] || 0);
-        });
-        pontuacaoFrases[i] = score;
-    });
-
-    const pontuacaoFinal = aplicarPesoEstrutural(pontuacaoFrases, totalFrases);
-    const frasesOrdenadas = Object.keys(pontuacaoFinal)
-        .map(i => [parseInt(i), pontuacaoFinal[i]])
-        .sort((a, b) => b[1] - a[1]);
-        
-    const indicesResumo = frasesOrdenadas
-        .slice(0, frasesParaExtrair)
-        .map(item => item[0])
-        .sort((a, b) => a - b);
-        
-    return indicesResumo.map(i => frases[i].trim()).join(' ');
+    return frases.slice(0, numFrasesDesejadas).join(' ');
 }
 
-// =======================================================
-// FILTRAGEM DE VOZES (EXCLUSIVO VOZES COM ESTRELA)
-// =======================================================
 function loadVoices(){
     const allVoices = speechSynthesis.getVoices();
     if(!voiceSelect) return;
-    
     voiceSelect.innerHTML = ""; 
-
-    // Filtro restrito das vozes marcadas na imagem
-    const allowedNames = ['Francisca', 'Antônio', 'Antonio', 'Thalita', 'Raquel', 'Duarte'];
-    voices = allVoices.filter(v => allowedNames.some(name => v.name.includes(name)));
-
-    if (voices.length === 0) {
-        // Fallback para exibir vozes pt-BR ou pt-PT caso os nomes específicos variem no SO
-        voices = allVoices.filter(v => v.lang.startsWith('pt-'));
-    }
+    voices = allVoices.filter(v => v.lang.startsWith('pt-'));
 
     let defaultOption = document.createElement("option");
     defaultOption.value = -1;
-    defaultOption.textContent = "Automático (Padrão do Sistema)";
+    defaultOption.textContent = "Automático (Padrão)";
     voiceSelect.appendChild(defaultOption);
 
     voices.forEach((v, i) => {
         let o = document.createElement("option");
         o.value = i;
-        o.textContent = `⭐ ${v.name} (${v.lang})`;
+        o.textContent = `${v.name} (${v.lang})`;
         voiceSelect.appendChild(o);
     });
 
-    if(voices.length > 0) {
-        selectedVoice = voices[0];
-        voiceSelect.value = 0;
-    } else {
-        selectedVoice = null;
-        voiceSelect.value = -1;
-    }
+    if(voices.length > 0) { selectedVoice = voices[0]; voiceSelect.value = 0; }
 }
-
 speechSynthesis.onvoiceschanged = loadVoices;
 voiceSelect.addEventListener("change", () => {
     const index = parseInt(voiceSelect.value);
     selectedVoice = (index === -1) ? null : voices[index];
 });
 
-// =======================================================
-// FUNÇÃO DE RESUMIR TEXTO (Substituiu Gerar Frases)
-// =======================================================
 function generateSentences(){
     stopReading();
     const text = document.getElementById('rawText').value;
     if(!text.trim()) return;
-
     const resumoText = gerarResumo(text);
-    const targetText = (resumoText && !resumoText.includes("muito curto")) ? resumoText : text;
-
-    document.getElementById('processedText').value = targetText;
-    sentences = targetText.split(/\n\s*\n/).flatMap(p => sent_tokenize_browser(p)).map(s=>s.trim()).filter(Boolean);
+    document.getElementById('processedText').value = resumoText;
+    sentences = resumoText.split(/\n\s*\n/).flatMap(p => sent_tokenize_browser(p)).map(s=>s.trim()).filter(Boolean);
     currentIndex = 0;
-
     showCurrent();
     updateCounters();
 }
@@ -654,87 +505,33 @@ function clearRawText(){
 function searchGoogle(){ 
     const q = document.getElementById('searchInput').value.trim(); 
     if(q) window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank"); 
-    else alert("Digite algo para pesquisar."); 
 }
 
 function showCurrent(){
-    if(!sentences || !sentences.length){
-        output.textContent = "Nenhuma frase gerada.";
-        return;
-    }
-    
-    const fontSize = document.getElementById('fontSize')?.value || 26;
-    const fontColor = document.getElementById('fontColor')?.value || '#0f172a';
-    const fontFamily = document.getElementById('fontFamily')?.value || 'Inter, sans-serif';
-
-    output.style.fontSize = fontSize + "px";
-    output.style.color = fontColor;
-    output.style.fontFamily = fontFamily;
-    
+    if(!sentences || !sentences.length){ output.textContent = "Nenhuma frase gerada."; return; }
+    output.style.fontSize = (document.getElementById('fontSize')?.value || 26) + "px";
+    output.style.color = document.getElementById('fontColor')?.value || '#0f172a';
+    output.style.fontFamily = document.getElementById('fontFamily')?.value || 'Inter, sans-serif';
     output.textContent = sentences[currentIndex];
 }
 
 function speakCurrent() {
     const text = sentences[currentIndex];
-    
-    if (!voiceEnabled || !text || !text.trim()) {
-        if (autoMode) nextSentenceAuto();
-        return;
-    }
-    
+    if (!voiceEnabled || !text || !text.trim()) { if (autoMode) nextSentenceAuto(); return; }
     speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
-    
-    if (selectedVoice) {
-        utter.voice = selectedVoice;
-    }
-    
+    if (selectedVoice) utter.voice = selectedVoice;
     utter.rate = parseFloat(document.getElementById('voiceRate')?.value) || 1;
     
-    utter.onstart = () => {
-        document.getElementById('playPauseBtn').textContent = '⏸️';
-        output.style.border = '2px solid var(--primary-color)';
-        output.style.boxShadow = '0 0 15px var(--accent-glow)';
-    };
-    
-    utter.onend = () => {
-        output.style.border = '1px solid var(--border-color)';
-        output.style.boxShadow = '0 4px 15px var(--shadow-color)';
-
-        if (autoMode) {
-            setTimeout(nextSentenceAuto, 250);
-        } else {
-            document.getElementById('playPauseBtn').textContent = '▶️';
-        }
-    };
-    
-    utter.onerror = (event) => {
-        if (event.error === 'interrupted') return;
-        console.error('SpeechSynthesis Error:', event.error);
-        document.getElementById('playPauseBtn').textContent = '▶️';
-        if (autoMode) nextSentenceAuto();
-    };
-
+    utter.onend = () => { if (autoMode) setTimeout(nextSentenceAuto, 250); else document.getElementById('playPauseBtn').textContent = '▶️'; };
     speechSynthesis.speak(utter);
 }
 
 function playPauseToggle() {
-    if (!sentences.length) {
-        alert("Resuma o texto primeiro!");
-        return;
-    }
-    
-    if (speechSynthesis.speaking && !speechSynthesis.paused) {
-        speechSynthesis.pause();
-        document.getElementById('playPauseBtn').textContent = '▶️';
-    } else if (speechSynthesis.paused) {
-        speechSynthesis.resume();
-        document.getElementById('playPauseBtn').textContent = '⏸️';
-    } else {
-        if (currentIndex < 0 || currentIndex >= sentences.length) currentIndex = 0;
-        showCurrent();
-        speakCurrent();
-    }
+    if (!sentences.length) { alert("Resuma o texto primeiro!"); return; }
+    if (speechSynthesis.speaking && !speechSynthesis.paused) { speechSynthesis.pause(); document.getElementById('playPauseBtn').textContent = '▶️'; }
+    else if (speechSynthesis.paused) { speechSynthesis.resume(); document.getElementById('playPauseBtn').textContent = '⏸️'; }
+    else { if (currentIndex < 0 || currentIndex >= sentences.length) currentIndex = 0; showCurrent(); speakCurrent(); }
 }
 
 function stopReading() {
@@ -742,78 +539,30 @@ function stopReading() {
     document.getElementById('autoModeSwitch').checked = false;
     speechSynthesis.cancel();
     document.getElementById('playPauseBtn').textContent = '▶️';
-    output.style.border = '1px solid var(--border-color)';
-    output.style.boxShadow = '0 4px 15px var(--shadow-color)';
 }
 
 function toggleAutoMode() {
     autoMode = document.getElementById('autoModeSwitch').checked;
-    if (autoMode) {
-        if (!speechSynthesis.speaking && !speechSynthesis.paused) {
-            if (currentIndex < 0 || currentIndex >= sentences.length) currentIndex = 0;
-            showCurrent();
-            speakCurrent();
-        }
-    } else {
-        speechSynthesis.cancel();
-        document.getElementById('playPauseBtn').textContent = '▶️';
-    }
+    if (autoMode && !speechSynthesis.speaking) { showCurrent(); speakCurrent(); }
+    else speechSynthesis.cancel();
 }
 
 function nextSentenceAuto(){
-    if (!sentences.length || !autoMode) {
-        stopReading();
-        return;
-    }
-    
-    const isLastSentence = currentIndex === sentences.length - 1;
+    if (!sentences.length || !autoMode) { stopReading(); return; }
     currentIndex = (currentIndex + 1) % sentences.length;
-    
-    if (isLastSentence) {
-        stopReading();
-        return;
-    }
-    
     showCurrent();
     speakCurrent();
 }
 
-function nextSentence(){
-    if (!sentences.length) return;
-    stopReading();
-    currentIndex = (currentIndex + 1) % sentences.length;
-    showCurrent();
-    if(voiceEnabled) speakCurrent();
-}
-
-function prevSentence(){
-    if (!sentences.length) return;
-    stopReading();
-    currentIndex = (currentIndex - 1 + sentences.length) % sentences.length;
-    showCurrent();
-    if(voiceEnabled) speakCurrent();
-}
-
-function toggleVoice(){
-    voiceEnabled = !voiceEnabled;
-    const voiceBtn = document.getElementById('voiceToggleBtn');
-    if (voiceBtn) voiceBtn.textContent = voiceEnabled ? '🗣️' : '🔇';
-    
-    if (!voiceEnabled && (speechSynthesis.speaking || speechSynthesis.paused)) {
-        speechSynthesis.cancel();
-        document.getElementById('playPauseBtn').textContent = '▶️';
-    }
-}
+function nextSentence(){ if (!sentences.length) return; stopReading(); currentIndex = (currentIndex + 1) % sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); }
+function prevSentence(){ if (!sentences.length) return; stopReading(); currentIndex = (currentIndex - 1 + sentences.length) % sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); }
+function toggleVoice(){ voiceEnabled = !voiceEnabled; document.getElementById('voiceToggleBtn').textContent = voiceEnabled ? '🗣️' : '🔇'; if (!voiceEnabled) speechSynthesis.cancel(); }
 
 function exportJSON(){ 
-    const data = { sentences, textReadCounts: {} }; 
+    const data = { sentences }; 
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }); 
     const url = URL.createObjectURL(blob); 
-    const a = document.createElement('a'); 
-    a.href = url; 
-    a.download = 'leitura_guiada_data.json'; 
-    a.click(); 
-    URL.revokeObjectURL(url); 
+    const a = document.createElement('a'); a.href = url; a.download = 'leitura_guiada.json'; a.click(); 
 }
 
 function importJSON(event){ 
@@ -824,169 +573,145 @@ function importJSON(event){
         try { 
             const data = JSON.parse(e.target.result); 
             if(data.sentences) sentences = data.sentences; 
-            currentIndex = 0; 
             document.getElementById('processedText').value = sentences.join("\n\n"); 
-            showCurrent(); 
-            alert("JSON carregado com sucesso!"); 
-        } catch(err) { 
-            alert("Erro ao importar JSON: " + err); 
-        } 
+            showCurrent(); alert("Importado com sucesso!"); 
+        } catch(err) { alert("Erro: " + err); } 
     }; 
     reader.readAsText(file); 
 }
 
-const MASTER_KEY = "$2a$10$2wR5NQoVsUWczmL.U8MAs.YILi4/aKD3YK01iPbnyFzfLn.xiChGK";
-
-async function saveToCloud(){ 
-    try { 
-        const data = { sentences, textReadCounts: {} }; 
-        const res = await fetch("https://api.jsonbin.io/v3/b", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "X-Master-Key": MASTER_KEY },
-            body: JSON.stringify(data)
-        }); 
-        const json = await res.json(); 
-        cloudLink = json.metadata.id; 
-        copyCloudLink(); 
-    } catch(err) { 
-        alert("Erro ao salvar na nuvem: " + err.message); 
+// ===============================================
+// SALVAMENTO AUTOMATIZADO VIA PONTE (FIRESTORE)
+// ===============================================
+async function salvarVinculoFirebase() {
+    if (!userIdUrl || !topicoIdUrl) {
+        alert("Erro: Parâmetros do usuário ou tópico ausentes na URL.");
+        return;
     }
-}
 
-function copyCloudLink(){ 
-    if(!cloudLink) return; 
-    const url = "https://jsonbin.io/b/" + cloudLink; 
-    navigator.clipboard.writeText(url).then(() => alert("Salvo na nuvem! Link copiado."), () => alert("Falha ao copiar link."));
-}
-
-async function loadBinByLink(){ 
-    const input = prompt("Cole o ID ou link do bin JSON:"); 
-    if(!input) return; 
-    let binId = input.includes("jsonbin.io") ? input.split("/b/")[1].split("/")[0] : input; 
-    try { 
-        const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, { headers: { "X-Master-Key": MASTER_KEY } }); 
-        const json = await res.json(); 
-        if(json.record){ 
-            sentences = json.record.sentences || []; 
-            currentIndex = 0; 
-            document.getElementById('processedText').value = sentences.join("\n\n"); 
-            showCurrent(); 
-            alert("Nuvem carregada com sucesso!"); 
-        } 
-    } catch(err) { 
-        alert("Erro ao carregar dados: " + err.message); 
+    if (!sentences || !sentences.length) {
+        alert("Resuma ou processe o texto antes de salvar!");
+        return;
     }
-}
 
-async function pasteFromClipboard() {
-    try {
-        const text = await navigator.clipboard.readText();
-        if (text) document.getElementById('rawText').value = text;
-        else alert('Área de transferência vazia.');
-    } catch (err) {
-        alert('Não foi possível ler da área de transferência.');
-    }
-}
-
-async function carregarBinAutomaticoPorUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const binId = urlParams.get('id');
-    if (!binId) return;
+    const rotulo = document.getElementById('rotuloLinkInput').value.trim() || "Leitura Guiada";
 
     try {
-        const res = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, { headers: { "X-Master-Key": MASTER_KEY } });
-        const json = await res.json();
-        if (json.record) {
-            sentences = json.record.sentences || [];
-            currentIndex = 0;
-            const processedField = document.getElementById('processedText');
-            if (processedField) processedField.value = sentences.join("\n\n");
-            showCurrent();
-            updateCounters();
+        // 1. Salva o conteúdo completo na coleção isolada 'leituras_guiadas'
+        const leituraRef = await firebase.firestore().collection('leituras_guiadas').add({
+            rawText: document.getElementById('rawText').value,
+            processedText: document.getElementById('processedText').value,
+            sentences: sentences,
+            criadoEm: new Date().toISOString()
+        });
+        
+        const leituraId = leituraRef.id;
+        const urlAcesso = `${window.location.origin}${window.location.pathname}?id=${leituraId}`;
+
+        // 2. Cria a ponte atualizando diretamente a árvore do usuário na coleção 'users'
+        const userDocRef = firebase.firestore().collection('users').doc(userIdUrl);
+        
+        const novoLink = {
+            id: leituraId,
+            title: rotulo, // Atualizado para usar 'title' para compatibilidade perfeita com o Alumno
+            url: urlAcesso,
+            tipo: 'Web',
+            criadoEm: new Date().toISOString()
+        };
+
+        // Buscamos o documento atual do usuário para mesclar com segurança no studyPlan
+        const userSnap = await userDocRef.get();
+        let updateData = {};
+
+        if (userSnap.exists) {
+            const userData = userSnap.data();
+            const studyPlan = userData.studyPlan || {};
+            
+            if (studyPlan[topicoIdUrl]) {
+                if (!studyPlan[topicoIdUrl].links) {
+                    studyPlan[topicoIdUrl].links = [];
+                }
+                studyPlan[topicoIdUrl].links.push(novoLink);
+            } else {
+                // Caso o tópico ainda não exista na árvore, inicializa estruturado
+                studyPlan[topicoIdUrl] = {
+                    links: [novoLink]
+                };
+            }
+            updateData.studyPlan = studyPlan;
+        } else {
+            // Caso o doc do usuário não exista ainda, cria a estrutura base
+            updateData.studyPlan = {
+                [topicoIdUrl]: {
+                    links: [novoLink]
+                }
+            };
+        }
+
+        await userDocRef.set(updateData, { merge: true });
+
+        alert("Link salvo com sucesso e integrado ao seu perfil no Alumno!");
+        
+    } catch (error) {
+        console.error("Erro ao salvar no Firestore:", error.code, error.message);
+        alert("Erro ao salvar: " + error.message);
+    }
+}
+
+async function carregarLeituraFirebasePorUrl(id) {
+    try {
+        const docRef = await firebase.firestore().collection('leituras_guiadas').doc(id).get();
+        if (docRef.exists) {
+            const data = docRef.data();
+            if (data && data.sentences) {
+                sentences = data.sentences;
+                currentIndex = 0;
+                if (data.rawText) document.getElementById('rawText').value = data.rawText;
+                if (data.processedText) document.getElementById('processedText').value = data.processedText;
+                showCurrent();
+                updateCounters();
+            }
         }
     } catch(err) {
-        console.error("Erro ao carregar automático da nuvem:", err);
+        console.error("Erro ao carregar leitura do Firestore:", err);
     }
 }
 
-carregarBinAutomaticoPorUrl();
-
 // =======================================================
-// EDITOR MANUAL DE TEXTO
+// EDITOR MANUAL
 // =======================================================
 function openManualEditor() {
     const editorList = document.getElementById('editor-list');
-    const manualEditorModal = document.getElementById('manual-editor-modal');
     const text = rawTextArea.value;
-    
-    if (!text.trim()) {
-        alert('A caixa de texto está vazia.');
-        return;
-    }
-    
+    if (!text.trim()) { alert('Caixa vazia.'); return; }
     const periods = text.split(/\n\s*\n/).map(s => s.trim()).filter(Boolean);
     editorList.innerHTML = '';
     
     periods.forEach(period => {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'editor-item';
-        itemDiv.innerHTML = `
-            <p contenteditable="true">${period}</p>
-            <div class="editor-item-controls">
-                <button class="add-period-btn" onclick="insertNewPeriodAfter(this)" title="Adicionar abaixo">+</button>
-                <button class="delete-period-btn" onclick="this.parentElement.parentElement.remove()" title="Remover">&times;</button>
-            </div>`;
+        itemDiv.innerHTML = `<p contenteditable="true">${period}</p><button class="secondary" onclick="this.parentElement.remove()" style="border-radius:50%; width:28px; height:28px; padding:0;">&times;</button>`;
         editorList.appendChild(itemDiv);
     });
-    
-    manualEditorModal.style.display = 'flex';
+    document.getElementById('manual-editor-modal').style.display = 'flex';
 }
 
-function closeManualEditor() {
-    document.getElementById('manual-editor-modal').style.display = 'none';
-}
+function closeManualEditor() { document.getElementById('manual-editor-modal').style.display = 'none'; }
 
 function saveManualChanges() {
-    const editorList = document.getElementById('editor-list');
-    const remainingItems = editorList.querySelectorAll('.editor-item p');
+    const items = document.querySelectorAll('#editor-list p');
     let newText = [];
-    
-    remainingItems.forEach(item => {
-        const textContent = item.textContent.trim();
-        if (textContent) newText.push(textContent);
-    });
-
+    items.forEach(item => { if (item.textContent.trim()) newText.push(item.textContent.trim()); });
     rawTextArea.value = newText.join('\n\n');
     closeManualEditor();
     updateCounters();
 }
 
-function insertNewPeriodAfter(buttonElement) {
-    const currentItem = buttonElement.closest('.editor-item');
-    const newItem = document.createElement('div');
-    newItem.className = 'editor-item';
-    newItem.innerHTML = `
-        <p contenteditable="true"></p>
-        <div class="editor-item-controls">
-            <button class="add-period-btn" onclick="insertNewPeriodAfter(this)" title="Adicionar abaixo">+</button>
-            <button class="delete-period-btn" onclick="this.parentElement.parentElement.remove()" title="Remover">&times;</button>
-        </div>`;
-    currentItem.insertAdjacentElement('afterend', newItem);
-    newItem.querySelector('p').focus();
-}
-
-function countWords(text) {
-    const cleanText = text.trim().replace(/\s+/g, ' ');
-    if (cleanText === '') return 0;
-    return cleanText.split(' ').length;
-}
-
 function updateCounters() {
     const rawText = document.getElementById('rawText').value;
     const processedText = document.getElementById('processedText').value;
-
-    document.getElementById('rawTextCounter').textContent = `(${countWords(rawText)} palavras, ${rawText.length} carac.)`;
-    document.getElementById('processedTextCounter').textContent = `(${countWords(processedText)} palavras, ${processedText.length} carac.)`;
+    document.getElementById('rawTextCounter').textContent = `(${rawText.length} carac.)`;
+    document.getElementById('processedTextCounter').textContent = `(${processedText.length} carac.)`;
 }
 </script>
 </body>
