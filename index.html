@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,489 +7,214 @@
     <title>Leitura Guiada</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;600;800&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- SDKs do Firebase (Versão Compatível) -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
     <style>
-        /* ================= SKIN: MINIMALISTA (Padrão) ================= */
-        :root, body.skin-minimalista {
-            --bg-color: #f8fafc; 
-            --card-bg-color: #ffffff; 
-            --text-color: #1e293b;
-            --heading-color: #0f172a; 
-            --primary-color: #2563eb; 
-            --primary-hover-color: #1d4ed8;
-            --secondary-color: #64748b; 
-            --border-color: #e2e8f0; 
-            --shadow-color: rgba(15, 23, 42, 0.04);
-            --accent-glow: rgba(37, 99, 235, 0.12);
-            --success-color: #059669; 
-            --font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            --border-radius: 10px; 
-            --card-padding: 16px;
-        }
-
-        body.dark-mode.skin-minimalista {
-            --bg-color: #0b1320; 
-            --card-bg-color: #111c2e; 
-            --text-color: #cbd5e1;
-            --heading-color: #f8fafc; 
-            --primary-color: #3b82f6;
-            --primary-hover-color: #60a5fa;
-            --secondary-color: #94a3b8; 
-            --border-color: #1e293b; 
-            --shadow-color: rgba(0, 0, 0, 0.2);
-            --accent-glow: rgba(59, 130, 246, 0.2);
-        }
-
-        /* ================= SKIN: MODERNA ================= */
-        body.skin-moderna {
-            --bg-color: #f1f5f9;
-            --card-bg-color: #ffffff;
-            --text-color: #334155;
-            --heading-color: #0f172a;
-            --primary-color: #6366f1;
-            --primary-hover-color: #4f46e5;
-            --secondary-color: #64748b;
-            --border-color: #cbd5e1;
-            --shadow-color: rgba(99, 102, 241, 0.08);
-            --accent-glow: rgba(99, 102, 241, 0.2);
-            --success-color: #10b981;
-            --font-family: 'Plus Jakarta Sans', sans-serif;
-            --border-radius: 16px;
-            --card-padding: 20px;
-        }
-        body.dark-mode.skin-moderna {
-            --bg-color: #0f172a;
-            --card-bg-color: #1e293b;
-            --text-color: #cbd5e1;
-            --heading-color: #f8fafc;
-            --primary-color: #818cf8;
-            --primary-hover-color: #6366f1;
-            --secondary-color: #94a3b8;
-            --border-color: #334155;
-            --shadow-color: rgba(0, 0, 0, 0.4);
-            --accent-glow: rgba(129, 140, 248, 0.3);
-        }
-
-        /* ================= SKIN: FUTURÍSTICA ================= */
-        body.skin-futuristica {
-            --bg-color: #030712;
-            --card-bg-color: #0b0f19;
-            --text-color: #9ca3af;
-            --heading-color: #38bdf8;
-            --primary-color: #0ea5e9;
-            --primary-hover-color: #0284c7;
-            --secondary-color: #4b5563;
-            --border-color: #1e293b;
-            --shadow-color: rgba(14, 165, 233, 0.15);
-            --accent-glow: rgba(14, 165, 233, 0.4);
-            --success-color: #22c55e;
-            --font-family: 'Orbitron', sans-serif;
-            --border-radius: 4px;
-            --card-padding: 16px;
-        }
-
-        /* ================= SKIN: TECNOLÓGICA ================= */
-        body.skin-tecnologica {
-            --bg-color: #0d1117;
-            --card-bg-color: #161b22;
-            --text-color: #c9d1d9;
-            --heading-color: #58a6ff;
-            --primary-color: #238636;
-            --primary-hover-color: #2ea043;
-            --secondary-color: #8b949e;
-            --border-color: #30363d;
-            --shadow-color: rgba(0, 0, 0, 0.5);
-            --accent-glow: rgba(35, 134, 54, 0.3);
-            --success-color: #2ea043;
-            --font-family: 'Roboto Mono', monospace;
-            --border-radius: 6px;
-            --card-padding: 16px;
-        }
-
-        /* ================= SKIN: PINK GIRL ================= */
-        body.skin-pinkgirl {
-            --bg-color: #fff1f2;
-            --card-bg-color: #ffffff;
-            --text-color: #4c0519;
-            --heading-color: #9f1239;
-            --primary-color: #e11d48;
-            --primary-hover-color: #be123c;
-            --secondary-color: #9f1239;
-            --border-color: #fecdd3;
-            --shadow-color: rgba(225, 29, 72, 0.08);
-            --accent-glow: rgba(225, 29, 72, 0.2);
-            --success-color: #db2777;
-            --font-family: 'Inter', sans-serif;
-            --border-radius: 20px;
-            --card-padding: 18px;
-        }
-        body.dark-mode.skin-pinkgirl {
-            --bg-color: #1c050a;
-            --card-bg-color: #2c0b14;
-            --text-color: #fbcfe8;
-            --heading-color: #fda4af;
-            --primary-color: #f43f5e;
-            --primary-hover-color: #e11d48;
-            --secondary-color: #fda4af;
-            --border-color: #4c0519;
-            --shadow-color: rgba(0, 0, 0, 0.4);
-            --accent-glow: rgba(244, 63, 94, 0.3);
-        }
-
-        /* ================= SKIN: MUSICAL ================= */
-        body.skin-musical {
-            --bg-color: #121212;
-            --card-bg-color: #1e1e1e;
-            --text-color: #e0e0e0;
-            --heading-color: #1ed760;
-            --primary-color: #1ed760;
-            --primary-hover-color: #1aa34a;
-            --secondary-color: #b3b3b3;
-            --border-color: #2c2c2c;
-            --shadow-color: rgba(30, 215, 96, 0.1);
-            --accent-glow: rgba(30, 215, 96, 0.3);
-            --success-color: #1ed760;
-            --font-family: 'Plus Jakarta Sans', sans-serif;
-            --border-radius: 12px;
-            --card-padding: 16px;
-        }
-
-        body { 
-            font-family: var(--font-family); 
-            background: var(--bg-color); 
-            color: var(--text-color); 
-            margin: 0; 
-            padding: 16px; 
-            display: flex; 
-            justify-content: center; 
-            transition: background 0.2s ease, color 0.2s ease; 
-        }
-
-        .container { 
-            width: 100%; 
-            max-width: 1280px; 
-            display: grid; 
-            grid-template-columns: 340px 1fr; 
-            gap: 16px; 
-        }
-
-        header { 
-            grid-column: 1 / -1; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding-bottom: 4px;
-            border-bottom: 1px solid var(--border-color);
-            margin-bottom: 2px;
-        }
-
-        header h1 { 
-            color: var(--heading-color); 
-            margin: 0; 
-            font-size: 1.4rem; 
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        header h1 span { color: var(--primary-color); }
-
-        .header-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .controls-column { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-        }
-
-        .card { 
-            background: var(--card-bg-color); 
-            border-radius: var(--border-radius); 
-            padding: var(--card-padding); 
-            border: 1px solid var(--border-color);
-            box-shadow: 0 2px 8px var(--shadow-color); 
-        }
-
-        .card h3 { 
-            margin: 0 0 10px 0; 
-            color: var(--heading-color); 
-            font-size: 0.9rem; 
-            font-weight: 600;
-            border-bottom: 1px solid var(--border-color); 
-            padding-bottom: 6px; 
-        }
-
-        textarea, input[type="text"], input[type="number"], select { 
-            width: 100%; 
-            padding: 8px 10px; 
-            border-radius: var(--border-radius); 
-            border: 1px solid var(--border-color); 
-            font-size: 13px; 
-            font-family: inherit;
-            background: var(--bg-color); 
-            color: var(--text-color); 
-            box-sizing: border-box; 
-            margin-bottom: 8px; 
-        }
-
-        textarea:focus, input:focus, select:focus { 
-            outline: none; 
-            border-color: var(--primary-color); 
-            box-shadow: 0 0 0 2px var(--accent-glow); 
-        }
-
-        #rawText { height: 90px; resize: vertical; }
-        #processedText { height: 110px; resize: vertical; margin-top: 8px;}
-
-        .button-group { display: flex; flex-wrap: wrap; gap: 6px; }
-
-        button { 
-            background-color: var(--primary-color); 
-            color: #ffffff; 
-            border: none; 
-            border-radius: var(--border-radius); 
-            cursor: pointer; 
-            font-weight: 500; 
-            padding: 7px 12px; 
-            font-size: 13px; 
-            font-family: inherit; 
-            transition: all 0.15s ease; 
-            display: inline-flex; 
-            align-items: center; 
-            justify-content: center;
-            gap: 5px; 
-        }
-
-        button:hover { background-color: var(--primary-hover-color); }
-        button.secondary { background-color: var(--secondary-color); color: #ffffff; }
-        button.success { background-color: var(--success-color); color: #ffffff; }
-
-        label { display: block; margin-bottom: 3px; font-weight: 500; font-size: 12px; color: var(--secondary-color); } 
-        .config-group { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; } 
-        .config-group label { margin-bottom: 0; color: var(--text-color); } 
-        .config-group input, .config-group select { margin-bottom: 0; }
-
-        .reader-column { display: flex; flex-direction: column; gap: 12px; }
-        
-        .switch { position: relative; display: inline-block; width: 40px; height: 22px; } 
-        .switch input { opacity: 0; width: 0; height: 0; } 
-        .slider { 
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; 
-            background-color: var(--secondary-color); transition: .2s; border-radius: 22px; 
-        } 
-        .slider:before { 
-            position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; 
-            background-color: white; transition: .2s; border-radius: 50%; 
-        } 
-        input:checked + .slider { background-color: var(--primary-color); } 
-        input:checked + .slider:before { transform: translateX(18px); }
-
-        #darkModeToggle:not(:checked) + .slider:after { content: '☀️'; position: absolute; top: 50%; right: 4px; transform: translateY(-50%); font-size: 10px; }
-        #darkModeToggle:checked + .slider:after { content: '🌙'; position: absolute; top: 50%; left: 4px; transform: translateY(-50%); font-size: 10px; }
-        #autoModeSwitch:checked + .slider { background-color: var(--success-color); }
-
-        .reader-container { display: flex; gap: 16px; align-items: stretch; width: 100%; }
-        
-        .reader-container #output { 
-            flex-grow: 1; 
-            min-height: 340px; 
-            padding: 35px 45px; 
-            background: var(--card-bg-color); 
-            border-radius: var(--border-radius);
-            box-shadow: 0 2px 10px var(--shadow-color);
-            font-size: 24px; 
-            line-height: 1.6;
-            color: var(--heading-color);
-            display: flex; 
-            align-items: center;
-            text-align: left !important;
-            overflow-wrap: break-word; 
-            white-space: pre-wrap;
-            border: 1px solid var(--border-color);
-            box-sizing: border-box;
-        }
-
-        .controls-vertical {
-            display: flex; flex-direction: column; gap: 10px; padding: 12px 10px; 
-            background-color: var(--card-bg-color); border-radius: var(--border-radius);
-            border: 1px solid var(--border-color); box-shadow: 0 2px 8px var(--shadow-color);
-            align-self: flex-start; flex-shrink: 0; 
-        }
-        
-        .controls-vertical button {
-            width: 40px; height: 40px; font-size: 1.1em; border-radius: 50%; 
-            background-color: var(--primary-color); color: white; padding: 0; 
-            display: flex; align-items: center; justify-content: center;
-        }
-        .controls-vertical button:hover { background-color: var(--primary-hover-color); transform: scale(1.05); }
-
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(15, 23, 42, 0.5);
-            display: flex; justify-content: center; align-items: center; z-index: 1000;
-            backdrop-filter: blur(2px);
-        }
-        .modal-content {
-            background-color: var(--card-bg-color); border-radius: var(--border-radius);
-            border: 1px solid var(--border-color); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
-            max-width: 700px; width: 90%; display: flex; flex-direction: column; max-height: 80vh;
-        }
-        .modal-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 16px; border-bottom: 1px solid var(--border-color);
-        }
-        .modal-header h3 { margin: 0; color: var(--heading-color); font-size: 1rem; }
-        .modal-close-btn { background: none; border: none; font-size: 1.2em; cursor: pointer; color: var(--secondary-color); }
-        .editor-list { padding: 16px; overflow-y: auto; flex-grow: 1; }
-        .editor-item {
-            display: flex; align-items: center; gap: 8px; margin-bottom: 8px;
-            padding: 6px 10px; border: 1px solid var(--border-color); border-radius: var(--border-radius);
-            background-color: var(--bg-color);
-        }
-        .editor-item p { flex-grow: 1; margin: 0; padding: 4px; outline: none; color: var(--text-color); font-size: 13px; }
-        .editor-footer { padding: 12px 16px; border-top: 1px solid var(--border-color); text-align: right; }
-    </style>
+:root {
+    --bg-color:#f5f7fa;
+    --card-bg-color:#fff;
+    --text-color:#334155;
+    --heading-color:#0f172a;
+    --primary-color:#2563eb;
+    --primary-hover-color:#1d4ed8;
+    --secondary-color:#64748b;
+    --border-color:#dbe3ee;
+    --shadow-color:rgba(15,23,42,.05);
+    --accent-glow:rgba(37,99,235,.12);
+    --success-color:#059669;
+    --font-family:'Inter',system-ui,-apple-system,sans-serif;
+    --border-radius:10px;
+}
+body.dark-mode {
+    --bg-color:#0b1320; --card-bg-color:#111c2e; --text-color:#cbd5e1;
+    --heading-color:#f8fafc; --primary-color:#3b82f6; --primary-hover-color:#60a5fa;
+    --secondary-color:#94a3b8; --border-color:#243244; --shadow-color:rgba(0,0,0,.22);
+    --accent-glow:rgba(59,130,246,.2); --success-color:#10b981;
+}
+*{box-sizing:border-box}
+body{font-family:var(--font-family);background:var(--bg-color);color:var(--text-color);margin:0;padding:14px;display:flex;justify-content:center;min-height:100vh}
+.container{width:100%;max-width:1400px;display:grid;grid-template-columns:330px minmax(0,1fr);grid-template-areas:'header header' 'input reader' 'link link';gap:12px;align-items:start}
+header{grid-area:header;display:flex;justify-content:space-between;align-items:center;padding:2px 0 9px;border-bottom:1px solid var(--border-color)}
+header h1{color:var(--heading-color);margin:0;font-size:1.35rem;font-weight:700;letter-spacing:-.02em} header h1 span{color:var(--primary-color)}
+.header-controls{display:flex;align-items:center;gap:9px}
+.controls-column{grid-area:input;display:flex;flex-direction:column;gap:10px;min-width:0}
+.reader-column{grid-area:reader;display:flex;flex-direction:column;gap:10px;min-width:0}
+.link-card{grid-area:link}
+.card{background:var(--card-bg-color);border-radius:var(--border-radius);padding:13px;border:1px solid var(--border-color);box-shadow:0 2px 8px var(--shadow-color)}
+.card h3{margin:0 0 9px;color:var(--heading-color);font-size:.88rem;font-weight:650;border-bottom:1px solid var(--border-color);padding-bottom:7px}
+textarea,input[type=text],input[type=number],select{width:100%;padding:8px 10px;border-radius:8px;border:1px solid var(--border-color);font-size:13px;font-family:inherit;background:var(--bg-color);color:var(--text-color);margin-bottom:7px}
+textarea:focus,input:focus,select:focus{outline:none;border-color:var(--primary-color);box-shadow:0 0 0 2px var(--accent-glow)}
+#rawText{height:210px;resize:vertical}
+.button-group{display:flex;flex-wrap:wrap;gap:5px}
+button{background:var(--primary-color);color:#fff;border:0;border-radius:8px;cursor:pointer;font-weight:600;padding:7px 10px;font-size:12px;font-family:inherit;transition:.15s;display:inline-flex;align-items:center;justify-content:center;gap:5px}
+button:hover{background:var(--primary-hover-color)} button.secondary{background:var(--secondary-color)} button.success{background:var(--success-color)}
+label{display:block;margin-bottom:3px;font-weight:500;font-size:11px;color:var(--secondary-color)}
+.config-group{display:flex;gap:8px;align-items:center;margin-bottom:8px}.config-group label{margin-bottom:0;color:var(--text-color)}.config-group input,.config-group select{margin-bottom:0}
+.switch{position:relative;display:inline-block;width:40px;height:22px}.switch input{opacity:0;width:0;height:0}.slider{position:absolute;cursor:pointer;inset:0;background:var(--secondary-color);transition:.2s;border-radius:22px}.slider:before{position:absolute;content:"";height:16px;width:16px;left:3px;bottom:3px;background:#fff;transition:.2s;border-radius:50%}input:checked+.slider{background:var(--primary-color)}input:checked+.slider:before{transform:translateX(18px)}
+#darkModeToggle:not(:checked)+.slider:after{content:'☀️';position:absolute;top:50%;right:4px;transform:translateY(-50%);font-size:10px}#darkModeToggle:checked+.slider:after{content:'🌙';position:absolute;top:50%;left:4px;transform:translateY(-50%);font-size:10px}#autoModeSwitch:checked+.slider{background:var(--success-color)}
+.reader-container{display:flex;flex-direction:column;gap:8px;width:100%}
+.reader-stage{min-width:0}
+.reader-status{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:0 0 7px;padding:0 3px;font-size:12px;color:var(--secondary-color)}.reader-status span:first-child{font-weight:650;color:var(--heading-color)}
+.reader-container #output{min-height:430px;width:100%;padding:42px 56px;background:var(--card-bg-color);border-radius:12px;box-shadow:0 2px 10px var(--shadow-color);font-size:27px;line-height:1.65;color:var(--heading-color);display:flex;align-items:center;text-align:left;overflow-wrap:break-word;white-space:pre-wrap;border:1px solid var(--border-color)}
+.controls-vertical{display:flex;flex-direction:row;gap:7px;padding:8px;background:var(--card-bg-color);border-radius:10px;border:1px solid var(--border-color);box-shadow:0 2px 8px var(--shadow-color);justify-content:center}
+.controls-vertical button{width:42px;height:38px;font-size:1rem;padding:0}.controls-vertical button:hover{transform:translateY(-1px)}
+.search-row{display:flex;gap:7px;align-items:center}.search-row input{flex:1;margin-bottom:0}.search-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px;font-size:11px;color:var(--secondary-color)}
+.search-results{margin-top:9px;display:none;max-height:260px;overflow-y:auto;border-top:1px solid var(--border-color);padding-top:7px}.search-results.active{display:block}.search-result{padding:8px 0;border-bottom:1px solid var(--border-color)}.search-result:last-child{border-bottom:0}.search-result a{color:var(--primary-color);font-weight:650;text-decoration:none;font-size:13px}.search-result a:hover{text-decoration:underline}.search-result p{margin:3px 0 0;font-size:12px;line-height:1.45;color:var(--text-color)}.search-empty{color:var(--secondary-color);font-size:12px;padding:7px 0}
+.link-layout{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}.link-status{font-size:12px;margin:0 0 6px;color:var(--secondary-color)}.link-actions{min-width:250px}
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;justify-content:center;align-items:center;z-index:1000;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.modal-content{background:var(--card-bg-color);border-radius:12px;border:1px solid var(--border-color);box-shadow:0 20px 50px rgba(0,0,0,.2);width:min(1000px,94vw);display:flex;flex-direction:column;max-height:90vh}.modal-header{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;border-bottom:1px solid var(--border-color);position:sticky;top:0;z-index:30;background:var(--card-bg-color)}.modal-header h3{margin:0;color:var(--heading-color);font-size:1rem}.modal-close-btn{background:var(--bg-color);border:1px solid var(--border-color);width:36px;height:36px;border-radius:50%;font-size:1.25em;cursor:pointer;color:var(--secondary-color);display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto}.modal-close-btn:hover{background:var(--border-color);color:var(--heading-color)}.editor-list{padding:12px 15px;overflow-y:auto;flex-grow:1}.editor-item{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:9px;padding:10px;border:1px solid var(--border-color);border-radius:10px;background:var(--bg-color);transition:.12s}.editor-item.selected-cell{border-color:var(--primary-color);box-shadow:0 0 0 2px var(--accent-glow)}.editor-item p{min-height:42px;margin:0;padding:8px 7px;outline:none;color:#111;font-size:26px;line-height:1.5;word-spacing:2px;cursor:text}.editor-item p:focus{background:var(--card-bg-color);border-radius:7px}.word-module{display:inline-block;color:#111;background:rgba(59,130,246,.10);border:1px solid rgba(59,130,246,.10);border-radius:5px;padding:1px 3px;margin:1px 1px;cursor:pointer;transition:.1s}.word-module:nth-child(6n+2){background:rgba(16,185,129,.10);border-color:rgba(16,185,129,.10)}.word-module:nth-child(6n+3){background:rgba(245,158,11,.11);border-color:rgba(245,158,11,.11)}.word-module:nth-child(6n+4){background:rgba(139,92,246,.10);border-color:rgba(139,92,246,.10)}.word-module:nth-child(6n+5){background:rgba(236,72,153,.09);border-color:rgba(236,72,153,.09)}.word-module:nth-child(6n){background:rgba(14,165,233,.10);border-color:rgba(14,165,233,.10)}.word-module:hover{filter:brightness(.96)}.word-module.selected-word{outline:2px solid var(--primary-color);background:rgba(37,99,235,.18)}.editor-actions{display:flex;flex-direction:column;gap:5px}.editor-actions button{width:34px;height:31px;padding:0;border-radius:7px;font-size:14px}.editor-actions .insert{background:var(--primary-color)}.editor-actions .move{background:var(--secondary-color)}.editor-actions .delete{background:#ef4444}.word-toolbar{display:flex;flex-direction:column;border-top:1px solid var(--border-color);background:var(--card-bg-color);position:sticky;bottom:0;z-index:20;box-shadow:0 -3px 10px rgba(15,23,42,.06)}.selection-display{min-height:34px;display:flex;align-items:center;padding:7px 15px;border-bottom:1px solid var(--border-color);box-sizing:border-box}.word-toolbar .selected-label{font-size:14px;color:var(--text-color);width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.toolbar-fixed-actions{display:flex;align-items:center;justify-content:center;gap:7px;flex-wrap:wrap;padding:8px 15px}.word-toolbar button{padding:6px 10px}.word-toolbar button:disabled{opacity:.45;cursor:not-allowed;filter:grayscale(.35)}.editor-footer{padding:10px 15px;border-top:1px solid var(--border-color);display:flex;justify-content:space-between;gap:10px;align-items:center}
+.reading-overlay{position:fixed;inset:0;z-index:3000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(15,23,42,.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.reading-overlay.active{display:flex}.reading-banner{width:min(1050px,96vw);max-height:92vh;overflow-y:auto;padding:42px 52px;border-radius:16px;background:var(--card-bg-color);color:var(--heading-color);box-shadow:0 25px 80px rgba(0,0,0,.25);border:1px solid var(--border-color);position:relative}.reading-banner-close{position:sticky;float:right;top:10px;margin:-32px -42px 0 0;width:36px;height:36px;padding:0;border-radius:50%;z-index:40;box-shadow:0 2px 8px rgba(0,0,0,.12)}.reading-text{white-space:pre-wrap;overflow-wrap:break-word;line-height:1.8;font-size:1.35rem}
+.google-overlay{position:fixed;inset:0;z-index:4000;display:none;align-items:center;justify-content:center;padding:14px;background:rgba(15,23,42,.42);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}.google-overlay.active{display:flex}.google-banner{width:97vw;height:94vh;background:var(--card-bg-color);border:1px solid var(--border-color);border-radius:14px;box-shadow:0 30px 90px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden}.google-banner-header{height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 12px 0 16px;border-bottom:1px solid var(--border-color);flex-shrink:0}.google-banner-title{font-size:13px;font-weight:650;color:var(--heading-color);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.google-banner-close{width:34px;height:34px;border-radius:50%;padding:0;background:var(--secondary-color)}.google-frame{width:100%;height:100%;border:0;background:#fff;flex:1}.google-fallback{display:none;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:30px;text-align:center;color:var(--text-color)}
+@media(max-width:900px){.container{grid-template-columns:1fr;grid-template-areas:'header' 'input' 'reader' 'link'}.reader-container #output{min-height:360px;padding:30px 28px}.link-layout{grid-template-columns:1fr}.link-actions{min-width:0}.google-banner{width:98vw;height:95vh}}
+@media(max-width:600px){body{padding:9px}.header-controls button{font-size:11px}.reader-container #output{font-size:22px;min-height:320px;padding:25px 20px}.reader-status{flex-direction:column;align-items:flex-start;gap:2px}.reading-banner{padding:38px 22px 26px}.google-overlay{padding:6px}.google-banner{width:99vw;height:97vh;border-radius:10px}}
+</style>
 </head>
-<body class="skin-minimalista">
-    <div class="container">
-        <header>
-            <h1>Leitura <span>Guiada</span></h1>
-            <div class="header-controls">
-                <select id="skinSelector" onchange="changeSkin(this.value)" style="margin-bottom:0; width:auto; font-size:12px; padding:5px 8px;">
-                    <option value="skin-minimalista">🎨 Minimalista</option>
-                    <option value="skin-moderna">🎨 Moderna</option>
-                    <option value="skin-futuristica">🎨 Futurística</option>
-                    <option value="skin-tecnologica">🎨 Tecnológica</option>
-                    <option value="skin-pinkgirl">🎨 Pink Girl</option>
-                    <option value="skin-musical">🎨 Musical</option>
-                </select>
-                <label class="switch" title="Alternar Modo Escuro">
-                    <input type="checkbox" id="darkModeToggle">
-                    <span class="slider"></span>
-                </label>
+<body>
+<div class="container">
+    <header>
+        <h1>Leitura <span>Guiada</span></h1>
+        <div class="header-controls">
+            <button type="button" onclick="toggleReadingMode()" title="Abrir modo leitura">📖 Modo Leitura</button>
+            <label class="switch" title="Alternar Modo Escuro">
+                <input type="checkbox" id="darkModeToggle"><span class="slider"></span>
+            </label>
+        </div>
+    </header>
+
+    <aside class="controls-column">
+        <div class="card">
+            <h3>1. Entrada e preparação</h3>
+            <label for="rawText">Texto original <span id="rawTextCounter" style="font-weight:400"></span></label>
+            <textarea id="rawText" placeholder="Cole ou digite seu texto aqui..." oninput="updateCounters()"></textarea>
+            <div class="button-group">
+                <button onclick="copyRawText()">📑 Copiar</button>
+                <button onclick="pasteFromClipboard()">📋 Colar</button>
+                <button onclick="openManualEditor()">✂️ Aparar e organizar</button>
+                <button onclick="clearRawText()" class="secondary">🗑️ Limpar</button>
             </div>
-        </header>
-
-        <aside class="controls-column">
-            <div class="card">
-                <h3>1. Entrada de Texto <span id="rawTextCounter" style="font-size: 0.7rem; font-weight: 400; color: var(--secondary-color);"></span></h3>
-                <textarea id="rawText" placeholder="Cole seu texto aqui..." oninput="updateCounters()"></textarea>
-                <div class="button-group">
-                    <button onclick="copyRawText()">📑 Copiar</button>
-                    <button onclick="pasteFromClipboard()">📋 Colar</button>
-                    <button onclick="openManualEditor()">✂️ Aparar Texto</button>
-                    <button onclick="clearRawText()" class="secondary">🗑️ Limpar</button>
-                </div>
-				
-                <div style="margin-top: 10px;">
-                    <label for="summaryPercent">Proporção do Resumo (% de frases)</label>
-                    <input type="number" id="summaryPercent" value="100" min="5" max="100" step="5">
-                </div>
-                <button onclick="generateSentences()" style="width: 100%; margin-top: 4px;">📝 Resumir Texto</button>
+            <div style="margin-top:10px">
+                <label for="summaryPercent">Proporção do resumo (% de frases)</label>
+                <input type="number" id="summaryPercent" value="100" min="5" max="100" step="5">
             </div>
+            <button onclick="generateSentences()" style="width:100%;margin-top:2px">📝 Resumir e iniciar leitura</button>
+        </div>
 
-            <div class="card">
-                <h3>2. Prévia do Texto para Leitura <span id="processedTextCounter" style="font-size: 0.7rem; font-weight: 400; color: var(--secondary-color);"></span></h3>
-                <textarea id="processedText" placeholder="As frases extraídas aparecerão aqui." oninput="updateCounters()"></textarea>
-                <div class="button-group" style="margin-bottom: 8px;">
-                    <button onclick="copyProcessedText()" style="flex: 1;">📑 Copiar</button>
-                    <button onclick="pasteToProcessedText()" style="flex: 1;">📋 Colar</button>
-                </div>
-                <button onclick="syncProcessedText()" style="width: 100%;">🔄 Sincronizar Edições</button>
+        <div class="card">
+            <h3>2. Leitura e voz</h3>
+            <label for="voiceSelect">Voz selecionada</label>
+            <select id="voiceSelect"></select>
+            <div class="config-group" style="margin-top:7px">
+                <label style="font-weight:600">Leitura automática</label>
+                <label class="switch" style="margin-left:auto"><input type="checkbox" id="autoModeSwitch" onclick="toggleAutoMode()"><span class="slider"></span></label>
             </div>
-
-            <div class="card">
-                <h3>⚙️ Visualização e Voz</h3>
-                <label for="voiceSelect">Voz Selecionada</label>
-                <select id="voiceSelect"></select>
-
-                <div class="config-group" style="margin-top: 8px; margin-bottom: 10px;">
-                    <label style="font-weight: 600;">Modo Automático:</label>
-                    <label class="switch" style="margin-left: auto;">
-                         <input type="checkbox" id="autoModeSwitch" onclick="toggleAutoMode()">
-                         <span class="slider"></span>
-                    </label>
-                </div>
-
-                <div class="config-group">
-                    <label>Velocidade: <input type="number" id="voiceRate" value="1" min="0.1" max="3" step="0.1"></label>
-                    <label>Tamanho: <input type="number" id="fontSize" value="24" min="14" max="60"></label>
-                </div>
-
-                <div class="config-group">
-                    <label for="fontColor">Cor da Fonte:</label>
-                    <input type="color" id="fontColor" value="#0f172a">
-                </div>
-
-                <label for="fontFamily">Tipografia</label>
-                <select id="fontFamily">
-                  <option value="Inter, sans-serif">Inter (Recomendada)</option>
-                  <option value="Roboto Mono, monospace">Roboto Mono</option>
-                  <option value="Georgia, serif">Georgia</option>
-                  <option value="Arial, sans-serif">Arial</option>
-                </select>
+            <div class="config-group">
+                <label style="flex:1">Velocidade<input type="number" id="voiceRate" value="1" min="0.1" max="3" step="0.1"></label>
+                <label style="flex:1">Tamanho<input type="number" id="fontSize" value="27" min="14" max="60"></label>
             </div>
-
-            <div class="card">
-                <h3>💾 Vincular ao Tópico Atual</h3>
-                <p id="statusVinculo" style="font-size: 12px; color: var(--secondary-color); margin-bottom: 8px;">Carregando dados do tópico...</p>
-
-                <label for="rotuloLinkInput">Rótulo do Link:</label>
-                <input type="text" id="rotuloLinkInput" value="Leitura Guiada" placeholder="Ex: Leitura Guiada - Aula 1">
-
-                <button onclick="salvarVinculoFirebase()" class="success" style="width: 100%;">🔥 Salvar e Enviar para o Alumno</button>
-
-                <div class="button-group" style="margin-top: 8px;">
-                    <button onclick="exportJSON()" class="secondary" style="flex: 1;">📥 JSON</button>
-                    <label for="importFile" class="button secondary" style="cursor:pointer; margin: 0; flex: 1; text-align: center;">📤 Importar</label>
-                    <input type="file" id="importFile" onchange="importJSON(event)" style="display:none;">
-                </div>
+            <div class="config-group">
+                <label style="flex:1">Cor da fonte<input type="color" id="fontColor" value="#0f172a"></label>
+                <label style="flex:1">Tipografia<select id="fontFamily"><option value="Inter, sans-serif">Inter</option><option value="Georgia, serif">Georgia</option><option value="Arial, sans-serif">Arial</option><option value="Roboto Mono, monospace">Roboto Mono</option></select></label>
             </div>
-        </aside>
+        </div>
+    </aside>
 
-        <main class="reader-column">
-            <div class="reader-container">
+    <main class="reader-column">
+        <div class="reader-container">
+            <div class="reader-stage">
+                <div class="reader-status"><span id="readingPosition">Pronto para leitura</span><span id="readingHint">Cole o texto e clique em Resumir.</span></div>
                 <div id="output">Bem-vindo ao Leitura Guiada! Cole um texto e clique em Resumir.</div>
-                <div class="controls-vertical">
-                    <button id="playPauseBtn" onclick="playPauseToggle()" title="Play/Pause">▶️</button>
-                    <button id="stopBtn" onclick="stopReading()" title="Parar">⏹️</button>
-                    <button id="nextBtn" onclick="nextSentence()" title="Próxima">⏭️</button>
-                    <button id="prevBtn" onclick="prevSentence()" title="Anterior">⏮️</button>
-                    <button id="voiceToggleBtn" onclick="toggleVoice()" title="Voz On/Off">🗣️</button>
-                </div>
-            </div>	
-			
-            <div class="card">
-                 <h3>Pesquisa Rápida</h3>
-                 <div style="display: flex; gap: 8px; align-items: center;">
-                     <input type="text" id="searchInput" placeholder="Pesquisar termo..." style="margin-bottom:0;">
-                     <button onclick="searchGoogle()">🔍</button>
-                 </div>
             </div>
-        </main>
-    </div>
+            <div class="controls-vertical" aria-label="Controles de leitura">
+                <button id="prevBtn" onclick="prevSentence()" title="Anterior">⏮️</button>
+                <button id="playPauseBtn" onclick="playPauseToggle()" title="Reproduzir/Pausar">▶️</button>
+                <button id="stopBtn" onclick="stopReading()" title="Parar">⏹️</button>
+                <button id="nextBtn" onclick="nextSentence()" title="Próxima">⏭️</button>
+                <button id="voiceToggleBtn" onclick="toggleVoice()" title="Voz On/Off">🗣️</button>
+            </div>
+        </div>
 
-    <!-- Modal do Editor Manual (Aparar Texto) -->
-    <div id="manual-editor-modal" class="modal-overlay" style="display: none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Aparar Texto (Divisão por Frases)</h3>
-                <button class="modal-close-btn" onclick="closeManualEditor()">&times;</button>
+        <div class="card quick-search-card">
+            <h3>🔎 Pesquisa rápida</h3>
+            <div class="search-row">
+                <input type="text" id="searchInput" placeholder="Pesquisar conceito, palavra ou assunto..." onkeydown="if(event.key==='Enter') searchQuick()">
+                <button onclick="searchQuick()">Pesquisar</button>
             </div>
-            <div id="editor-list" class="editor-list"></div>
-            <div class="editor-footer">
-                <button class="success" onclick="saveManualChanges()">✓ Salvar Alterações</button>
+            <div class="search-actions">
+                <button type="button" class="secondary" onclick="searchGoogle()">🌐 Ver resultados do Google</button>
+                <span id="searchStatus">Os resultados rápidos aparecerão aqui.</span>
+            </div>
+            <div id="searchResults" class="search-results" aria-live="polite"></div>
+        </div>
+    </main>
+
+    <div class="card link-card">
+        <h3>🔗 Salvar no Alumno</h3>
+        <div class="link-layout">
+            <div>
+                <p id="statusVinculo" class="link-status">Carregando dados do tópico...</p>
+                <label for="rotuloLinkInput">Nome do link</label>
+                <input type="text" id="rotuloLinkInput" value="Leitura Guiada" placeholder="Ex.: Leitura Guiada - Aula 1" style="margin-bottom:0">
+            </div>
+            <div class="link-actions">
+                <button id="saveLinkBtn" onclick="salvarVinculoFirebase()" class="success" style="width:100%">💾 Salvar e enviar para o Alumno</button>
             </div>
         </div>
     </div>
+</div>
+
+<div id="reading-overlay" class="reading-overlay" aria-hidden="true">
+    <div class="reading-banner">
+        <button type="button" class="reading-banner-close" onclick="closeReadingMode()" title="Fechar modo leitura">✕</button>
+        <div id="reading-text" class="reading-text"></div>
+    </div>
+</div>
+
+<div id="google-search-overlay" class="google-overlay" aria-hidden="true">
+    <div class="google-banner" role="dialog" aria-modal="true" aria-label="Resultados do Google">
+        <div class="google-banner-header">
+            <div class="google-banner-title" id="googleBannerTitle">Pesquisa Google</div>
+            <button type="button" class="google-banner-close" onclick="closeGoogleSearch()" title="Fechar pesquisa">✕</button>
+        </div>
+        <iframe id="googleSearchFrame" class="google-frame" title="Resultados da pesquisa Google"></iframe>
+        <div id="googleFallback" class="google-fallback">
+            <strong>O Google não permitiu exibir os resultados dentro desta janela.</strong>
+            <span>Você ainda pode abrir a pesquisa em uma nova aba.</span>
+            <button type="button" onclick="openGoogleExternal()">🌐 Abrir pesquisa no Google</button>
+        </div>
+    </div>
+</div>
+
+<div id="manual-editor-modal" class="modal-overlay" style="display:none">
+    <div class="modal-content">
+        <div class="modal-header"><h3>Aparar e organizar texto</h3><button class="modal-close-btn" onclick="closeManualEditor()">&times;</button></div>
+        <div id="editor-list" class="editor-list"></div>
+        <div id="word-toolbar" class="word-toolbar">
+            <div class="selection-display" aria-live="polite">
+                <span id="selected-word-label" class="selected-label">Nenhuma palavra selecionada</span>
+            </div>
+            <div class="toolbar-fixed-actions">
+                <button type="button" onclick="copySelectedWords()">📋 Copiar</button>
+                <button type="button" onclick="cutSelectedWords()">✂️ Recortar</button>
+                <button type="button" id="pasteCutBtn" onclick="pasteCutWords()" class="success">📌 Colar</button>
+                <button type="button" onclick="deleteSelectedWords()" class="secondary">🗑️ Apagar</button>
+                <button type="button" onclick="moveSelectedWords(-1)" title="Mover palavra(s) para a esquerda">◀</button>
+                <button type="button" onclick="moveSelectedWords(1)" title="Mover palavra(s) para a direita">▶</button>
+                <button type="button" id="moveCellBtn" onclick="moveSelectedWordsToCell()">↪ Outra célula</button>
+                <button type="button" onclick="undoEditor()" id="undoBtn" class="secondary" title="Desfazer (Ctrl+Z)">↶ Desfazer</button>
+                <button type="button" onclick="redoEditor()" id="redoBtn" class="secondary" title="Refazer (Ctrl+Y ou Ctrl+Shift+Z)">↷ Refazer</button>
+                <button type="button" onclick="clearWordSelection()" class="secondary" title="Desselecionar todas as palavras">✕ Limpar seleção</button>
+            </div>
+        </div>
+        <div class="editor-footer">
+            <span style="font-size:12px;color:var(--secondary-color)">Clique numa palavra para selecioná-la. Use + para nova célula, ↑↓ para reorganizar e × para excluir.</span>
+            <button class="success" onclick="saveManualChanges()">✓ Aplicar alterações</button>
+        </div>
+    </div>
+</div>
 
 <script>
 // =======================================================
@@ -554,10 +280,35 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('autoModeSwitch').checked = autoMode;
 });
 
-function changeSkin(skinName) {
-    document.body.className = document.body.className.replace(/skin-\S+/g, '');
-    document.body.classList.add(skinName);
+
+function toggleReadingMode() {
+    const overlay = document.getElementById('reading-overlay');
+    if (overlay.classList.contains('active')) {
+        closeReadingMode();
+        return;
+    }
+
+    const texto = (sentences.join('\n\n') || rawTextArea.value).trim();
+    if (!texto) {
+        alert('Não há texto para exibir no modo leitura.');
+        return;
+    }
+
+    const readingText = document.getElementById('reading-text');
+    readingText.textContent = texto;
+    readingText.style.fontSize = (document.getElementById('fontSize')?.value || 24) + 'px';
+    readingText.style.fontFamily = document.getElementById('fontFamily')?.value || 'inherit';
+    readingText.style.color = document.getElementById('fontColor')?.value || '';
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden', 'false');
 }
+
+function closeReadingMode() {
+    const overlay = document.getElementById('reading-overlay');
+    overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden', 'true');
+}
+
 
 function verificarContextoUrl() {
     const statusEl = document.getElementById('statusVinculo');
@@ -575,10 +326,11 @@ function verificarContextoUrl() {
 // =======================================================
 let sentences=[], currentIndex=0, autoMode=false, voiceEnabled=true;
 let voices=[], selectedVoice=null;
+// ID da leitura existente. Quando presente, Salvar atualiza o mesmo documento e mantém o mesmo link.
+let leituraIdAtual = leituraIdParam || null;
 const output=document.getElementById('output');
 const voiceSelect=document.getElementById('voiceSelect');
 const rawTextArea = document.getElementById('rawText');
-const processedTextArea = document.getElementById('processedText');
 
 // Função de blindagem contra palavras coladas
 function garantirEspacos(texto) {
@@ -723,20 +475,13 @@ voiceSelect.addEventListener("change", () => {
 function generateSentences(){
     stopReading();
     const text = rawTextArea.value;
-    if(!text.trim()) return;
+    if(!text.trim()) {
+        alert("Cole ou digite um texto antes de resumir.");
+        return;
+    }
     const resumoText = gerarResumo(text);
-    processedTextArea.value = resumoText;
-    sentences = resumoText.split(/\n\s*\n/).flatMap(p => sent_tokenize_browser(p)).map(s=>garantirEspacos(s)).filter(Boolean);
-    currentIndex = 0;
-    showCurrent();
-    updateCounters();
-}
-
-function syncProcessedText(){
-    stopReading();
-    let textCorrigido = garantirEspacos(processedTextArea.value);
-    processedTextArea.value = textCorrigido;
-    sentences = textCorrigido.split(/\n\s*\n/).flatMap(p => sent_tokenize_browser(p)).map(s=>garantirEspacos(s)).filter(Boolean);
+    sentences = resumoText.split(/\n\s*\n/).flatMap(p => sent_tokenize_browser(p))
+        .map(s => garantirEspacos(s)).filter(Boolean);
     currentIndex = 0;
     showCurrent();
     updateCounters();
@@ -745,9 +490,11 @@ function syncProcessedText(){
 function clearRawText(){
     stopReading();
     rawTextArea.value = "";
-    processedTextArea.value = "";
     sentences = [];
+    currentIndex = 0;
     output.textContent = "Texto apagado.";
+    document.getElementById('readingPosition').textContent = "Pronto para leitura";
+    document.getElementById('readingHint').textContent = "Cole o texto e clique em Resumir.";
     updateCounters();
 }
 
@@ -781,45 +528,108 @@ async function copyRawText() {
     }
 }
 
-async function copyProcessedText() {
+
+let googleSearchUrlAtual = "";
+
+function searchGoogle(){
+    const q = document.getElementById('searchInput').value.trim();
+    if(!q){ alert('Digite um termo para pesquisar.'); return; }
+    googleSearchUrlAtual = `https://www.google.com/search?igu=1&q=${encodeURIComponent(q)}`;
+    const overlay = document.getElementById('google-search-overlay');
+    const frame = document.getElementById('googleSearchFrame');
+    const title = document.getElementById('googleBannerTitle');
+    const fallback = document.getElementById('googleFallback');
+    title.textContent = `Google: ${q}`;
+    fallback.style.display = 'none';
+    frame.style.display = 'block';
+    frame.src = googleSearchUrlAtual;
+    overlay.classList.add('active');
+    overlay.setAttribute('aria-hidden','false');
+}
+
+function closeGoogleSearch(){
+    const overlay = document.getElementById('google-search-overlay');
+    const frame = document.getElementById('googleSearchFrame');
+    overlay.classList.remove('active');
+    overlay.setAttribute('aria-hidden','true');
+    frame.src = 'about:blank';
+}
+
+function openGoogleExternal(){
+    if(googleSearchUrlAtual) window.open(googleSearchUrlAtual, '_blank', 'noopener,noreferrer');
+}
+
+async function searchQuick() {
+    const input = document.getElementById('searchInput');
+    const results = document.getElementById('searchResults');
+    const status = document.getElementById('searchStatus');
+    const q = input.value.trim();
+
+    if (!q) {
+        results.classList.remove('active');
+        results.innerHTML = '';
+        status.textContent = 'Digite um termo para pesquisar.';
+        return;
+    }
+
+    status.textContent = 'Pesquisando...';
+    results.classList.add('active');
+    results.innerHTML = '<div class="search-empty">Buscando referências...</div>';
+
     try {
-        await navigator.clipboard.writeText(processedTextArea.value);
-        alert("Prévia do texto copiada para a área de transferência!");
-    } catch (err) {
-        console.error('Erro ao copiar:', err);
-        alert("Não foi possível copiar automaticamente.");
+        const url = `https://pt.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(q)}&utf8=1&format=json&origin=*&srlimit=6`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Falha na pesquisa');
+        const data = await response.json();
+        const items = data?.query?.search || [];
+
+        if (!items.length) {
+            results.innerHTML = '<div class="search-empty">Nenhum resultado encontrado na Wikipédia. Use “Pesquisa Web” para uma busca mais ampla.</div>';
+            status.textContent = 'Nenhum resultado';
+            return;
+        }
+
+        results.innerHTML = items.map(item => {
+            const title = item.title;
+            const snippet = item.snippet.replace(/<[^>]*>/g, '');
+            const link = `https://pt.wikipedia.org/wiki/${encodeURIComponent(title.replace(/ /g, '_'))}`;
+            return `<div class="search-result">
+                <a href="${link}" target="_blank" rel="noopener noreferrer">${escapeHtml(title)}</a>
+                <p>${escapeHtml(snippet)}...</p>
+            </div>`;
+        }).join('');
+
+        status.textContent = `${items.length} resultado(s) na Wikipédia`;
+    } catch (error) {
+        console.error('Erro na Pesquisa Rápida:', error);
+        results.innerHTML = '<div class="search-empty">Não foi possível carregar os resultados agora. Use “Pesquisa Web” para continuar.</div>';
+        status.textContent = 'Pesquisa indisponível';
     }
 }
 
-async function pasteToProcessedText() {
-    try {
-        if (navigator.clipboard && navigator.clipboard.readText) {
-            const text = await navigator.clipboard.readText();
-            processedTextArea.value = garantirEspacos(text);
-            updateCounters();
-        } else {
-            throw new Error("API Clipboard não suportada.");
-        }
-    } catch (err) {
-        const userText = prompt("Cole o texto na prévia aqui (Ctrl+V):");
-        if (userText !== null) {
-            processedTextArea.value = garantirEspacos(userText);
-            updateCounters();
-        }
-    }
-}
-
-function searchGoogle(){ 
-    const q = document.getElementById('searchInput').value.trim(); 
-    if(q) window.open(`https://www.google.com/search?q=${encodeURIComponent(q)}`, "_blank"); 
+function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+        '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#039;'
+    }[char]));
 }
 
 function showCurrent(){
-    if(!sentences || !sentences.length){ output.textContent = "Nenhuma frase gerada."; return; }
+    const position = document.getElementById('readingPosition');
+    const hint = document.getElementById('readingHint');
+    if(!sentences || !sentences.length){
+        output.textContent = "Nenhuma frase gerada.";
+        if (position) position.textContent = "Pronto para leitura";
+        if (hint) hint.textContent = "Cole o texto e clique em Resumir.";
+        return;
+    }
+    if (currentIndex < 0) currentIndex = 0;
+    if (currentIndex >= sentences.length) currentIndex = sentences.length - 1;
     output.style.fontSize = (document.getElementById('fontSize')?.value || 24) + "px";
     output.style.color = document.getElementById('fontColor')?.value || '';
     output.style.fontFamily = document.getElementById('fontFamily')?.value || '';
     output.textContent = garantirEspacos(sentences[currentIndex]);
+    if (position) position.textContent = `Frase ${currentIndex + 1} de ${sentences.length}`;
+    if (hint) hint.textContent = autoMode ? "Leitura automática ativa" : "Use os controles para navegar";
 }
 
 function speakCurrent() {
@@ -865,27 +675,6 @@ function nextSentence(){ if (!sentences.length) return; stopReading(); currentIn
 function prevSentence(){ if (!sentences.length) return; stopReading(); currentIndex = (currentIndex - 1 + sentences.length) % sentences.length; showCurrent(); if(voiceEnabled) speakCurrent(); }
 function toggleVoice(){ voiceEnabled = !voiceEnabled; document.getElementById('voiceToggleBtn').textContent = voiceEnabled ? '🗣️' : '🔇'; if (!voiceEnabled) speechSynthesis.cancel(); }
 
-function exportJSON(){ 
-    const data = { sentences }; 
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }); 
-    const url = URL.createObjectURL(blob); 
-    const a = document.createElement('a'); a.href = url; a.download = 'leitura_guiada.json'; a.click(); 
-}
-
-function importJSON(event){ 
-    const file = event.target.files[0]; 
-    if(!file) return; 
-    const reader = new FileReader(); 
-    reader.onload = (e) => { 
-        try { 
-            const data = JSON.parse(e.target.result); 
-            if(data.sentences) sentences = data.sentences.map(s => garantirEspacos(s)); 
-            processedTextArea.value = sentences.join("\n\n"); 
-            showCurrent(); alert("Importado com sucesso!"); 
-        } catch(err) { alert("Erro: " + err); } 
-    }; 
-    reader.readAsText(file); 
-}
 
 // ===============================================
 // SALVAMENTO AUTOMATIZADO VIA PONTE (FIRESTORE)
@@ -897,63 +686,111 @@ async function salvarVinculoFirebase() {
     }
 
     if (!sentences || !sentences.length) {
+        // Permite salvar também quando o texto foi editado mas ainda não sincronizado.
+        const textoAtual = (sentences.join('\n\n') || rawTextArea.value).trim();
+        if (textoAtual) {
+            sentences = textoAtual.split(/\n\s*\n/).flatMap(p => sent_tokenize_browser(p))
+                .map(s => garantirEspacos(s)).filter(Boolean);
+        }
+    }
+
+    if (!sentences || !sentences.length) {
         alert("Resuma ou processe o texto antes de salvar!");
         return;
     }
 
     const rotulo = document.getElementById('rotuloLinkInput').value.trim() || "Leitura Guiada";
+    const saveBtn = document.getElementById('saveLinkBtn');
+    const agora = new Date().toISOString();
 
     try {
-        const leituraRef = await firebase.firestore().collection('leituras_guiadas').add({
+        let leituraId = leituraIdAtual;
+        const leituraData = {
             rawText: rawTextArea.value,
-            processedText: processedTextArea.value,
+            processedText: sentences.join('\n\n'),
             sentences: sentences,
-            criadoEm: new Date().toISOString()
-        });
-        
-        const leituraId = leituraRef.id;
-        const urlAcesso = `${window.location.origin}${window.location.pathname}?id=${leituraId}`;
-
-        const userDocRef = firebase.firestore().collection('users').doc(userIdUrl);
-        
-        const novoLink = {
-            id: leituraId,
-            title: rotulo,
-            url: urlAcesso,
-            tipo: 'Web',
-            criadoEm: new Date().toISOString()
+            atualizadoEm: agora
         };
 
+        if (leituraIdAtual) {
+            // MODO EDIÇÃO: atualiza o documento existente e preserva o mesmo ID/link.
+            await firebase.firestore().collection('leituras_guiadas').doc(leituraIdAtual).set(
+                leituraData,
+                { merge: true }
+            );
+        } else {
+            // MODO NOVO: cria a leitura uma única vez.
+            leituraData.criadoEm = agora;
+            const leituraRef = await firebase.firestore().collection('leituras_guiadas').add(leituraData);
+            leituraId = leituraRef.id;
+            leituraIdAtual = leituraId;
+        }
+
+        const urlAcesso = `${window.location.origin}${window.location.pathname}?id=${encodeURIComponent(leituraId)}&userId=${encodeURIComponent(userIdUrl)}&topicoId=${encodeURIComponent(topicoIdUrl)}`;
+
+        const userDocRef = firebase.firestore().collection('users').doc(userIdUrl);
         const userSnap = await userDocRef.get();
         let updateData = {};
+        let linkEncontrado = false;
 
         if (userSnap.exists) {
             const userData = userSnap.data();
             const studyPlan = userData.studyPlan || {};
-            
-            if (studyPlan[topicoIdUrl]) {
-                if (!studyPlan[topicoIdUrl].links) {
-                    studyPlan[topicoIdUrl].links = [];
-                }
-                studyPlan[topicoIdUrl].links.push(novoLink);
+
+            if (!studyPlan[topicoIdUrl]) studyPlan[topicoIdUrl] = {};
+            if (!Array.isArray(studyPlan[topicoIdUrl].links)) studyPlan[topicoIdUrl].links = [];
+
+            const links = studyPlan[topicoIdUrl].links;
+            const indiceExistente = links.findIndex(link => link && link.id === leituraId);
+
+            const linkAtualizado = {
+                ...(indiceExistente >= 0 ? links[indiceExistente] : {}),
+                id: leituraId,
+                title: rotulo,
+                url: urlAcesso,
+                tipo: 'Web',
+                atualizadoEm: agora
+            };
+
+            if (indiceExistente >= 0) {
+                links[indiceExistente] = linkAtualizado;
+                linkEncontrado = true;
             } else {
-                studyPlan[topicoIdUrl] = {
-                    links: [novoLink]
-                };
+                links.push({ ...linkAtualizado, criadoEm: agora });
             }
+
             updateData.studyPlan = studyPlan;
         } else {
             updateData.studyPlan = {
                 [topicoIdUrl]: {
-                    links: [novoLink]
+                    links: [{
+                        id: leituraId,
+                        title: rotulo,
+                        url: urlAcesso,
+                        tipo: 'Web',
+                        criadoEm: agora
+                    }]
                 }
             };
         }
 
         await userDocRef.set(updateData, { merge: true });
 
-        alert("Link salvo com sucesso e integrado ao seu perfil no Alumno!");
-        
+        // Atualiza a URL local para manter o contexto da edição.
+        const novaUrl = new URL(window.location.href);
+        novaUrl.searchParams.set('id', leituraId);
+        novaUrl.searchParams.set('userId', userIdUrl);
+        novaUrl.searchParams.set('topicoId', topicoIdUrl);
+        window.history.replaceState({}, '', novaUrl.toString());
+
+        if (saveBtn) {
+            saveBtn.textContent = "💾 Atualizar Leitura Vinculada";
+        }
+
+        alert(linkEncontrado || leituraIdAtual
+            ? "Leitura atualizada com sucesso! O mesmo link foi preservado."
+            : "Link salvo com sucesso e integrado ao seu perfil no Alumno!");
+
     } catch (error) {
         console.error("Erro ao salvar no Firestore:", error.code, error.message);
         alert("Erro ao salvar: " + error.message);
@@ -964,12 +801,14 @@ async function carregarLeituraFirebasePorUrl(id) {
     try {
         const docRef = await firebase.firestore().collection('leituras_guiadas').doc(id).get();
         if (docRef.exists) {
+            leituraIdAtual = id;
+            const saveBtn = document.getElementById('saveLinkBtn');
+            if (saveBtn) saveBtn.textContent = "💾 Atualizar Leitura Vinculada";
             const data = docRef.data();
             if (data && data.sentences) {
                 sentences = data.sentences.map(s => garantirEspacos(s));
                 currentIndex = 0;
                 if (data.rawText) rawTextArea.value = garantirEspacos(data.rawText);
-                if (data.processedText) processedTextArea.value = garantirEspacos(data.processedText);
                 showCurrent();
                 updateCounters();
             }
@@ -982,40 +821,428 @@ async function carregarLeituraFirebasePorUrl(id) {
 // =======================================================
 // MÓDULO APARAR TEXTO
 // =======================================================
+let selectedWord = null;
+let selectedWords = [];
+let selectedCell = null;
+let cutWordBuffer = null;
+let lastSelectedIndex = null;
+
+// Histórico do editor: cada estado guarda as células e sua ordem.
+let editorUndoStack = [];
+let editorRedoStack = [];
+let historyReady = false;
+let historyApplying = false;
+const MAX_EDITOR_HISTORY = 80;
+
 function openManualEditor() {
     const editorList = document.getElementById('editor-list');
     const text = rawTextArea.value;
     if (!text.trim()) { alert('A caixa de entrada de texto está vazia.'); return; }
-    
+
     const frasesAparadas = sent_tokenize_browser(text);
-    
     editorList.innerHTML = '';
-    
-    frasesAparadas.forEach(frase => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'editor-item';
-        itemDiv.innerHTML = `<p contenteditable="true">${garantirEspacos(frase)}</p><button class="secondary" onclick="this.parentElement.remove()" style="border-radius:50%; width:24px; height:24px; padding:0; font-size:11px;" title="Remover trecho">&times;</button>`;
-        editorList.appendChild(itemDiv);
-    });
+    editorUndoStack = [];
+    editorRedoStack = [];
+    historyReady = false;
+    historyApplying = false;
+    selectedWord = null;
+    selectedWords = [];
+    selectedCell = null;
+    cutWordBuffer = null;
+    lastSelectedIndex = null;
+    updateWordToolbar();
+    frasesAparadas.forEach(frase => addEditorCell(frase));
+    historyReady = true;
+    updateHistoryButtons();
     document.getElementById('manual-editor-modal').style.display = 'flex';
 }
 
-function closeManualEditor() { document.getElementById('manual-editor-modal').style.display = 'none'; }
+function captureEditorState() {
+    return Array.from(document.querySelectorAll('#editor-list .editor-item')).map(item => {
+        const p = item.querySelector('p');
+        return garantirEspacos(p ? p.textContent : '');
+    });
+}
+
+function editorStatesEqual(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+}
+
+function updateHistoryButtons() {
+    const undoBtn = document.getElementById('undoBtn');
+    const redoBtn = document.getElementById('redoBtn');
+    if (undoBtn) undoBtn.disabled = !editorUndoStack.length;
+    if (redoBtn) redoBtn.disabled = !editorRedoStack.length;
+}
+
+function recordEditorHistory(beforeState) {
+    if (!historyReady || historyApplying || !beforeState) return;
+    const afterState = captureEditorState();
+    if (editorStatesEqual(beforeState, afterState)) return;
+    editorUndoStack.push(beforeState);
+    if (editorUndoStack.length > MAX_EDITOR_HISTORY) editorUndoStack.shift();
+    editorRedoStack = [];
+    updateHistoryButtons();
+}
+
+function beginEditorHistory() {
+    return historyReady && !historyApplying ? captureEditorState() : null;
+}
+
+function applyEditorState(state) {
+    const editorList = document.getElementById('editor-list');
+    if (!editorList || !Array.isArray(state)) return;
+    historyApplying = true;
+    selectedWords = [];
+    selectedWord = null;
+    selectedCell = null;
+    lastSelectedIndex = null;
+    editorList.innerHTML = '';
+    state.forEach(text => addEditorCell(text));
+    clearWordSelection();
+    historyApplying = false;
+    updateHistoryButtons();
+}
+
+function undoEditor() {
+    if (!editorUndoStack.length) return;
+    const current = captureEditorState();
+    const previous = editorUndoStack.pop();
+    editorRedoStack.push(current);
+    applyEditorState(previous);
+}
+
+function redoEditor() {
+    if (!editorRedoStack.length) return;
+    const current = captureEditorState();
+    const next = editorRedoStack.pop();
+    editorUndoStack.push(current);
+    applyEditorState(next);
+}
+
+function commitTypingHistory(beforeState) {
+    recordEditorHistory(beforeState);
+}
+
+function tokenizeWords(texto) {
+    return String(texto || '').trim().split(/\s+/).filter(Boolean);
+}
+
+function renderWordModules(p, texto) {
+    p.innerHTML = '';
+    const palavras = tokenizeWords(texto);
+    palavras.forEach((palavra, index) => {
+        const span = document.createElement('span');
+        span.className = 'word-module';
+        span.textContent = palavra;
+        span.dataset.word = palavra;
+        span.dataset.index = index;
+        span.title = 'Clique para selecionar • Ctrl/Cmd para selecionar várias • Shift para selecionar um intervalo';
+        span.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            selectWord(span, event);
+        });
+        span.addEventListener('dragstart', (event) => {
+            const selected = getSelectedWordsInCell(span.closest('.editor-item'));
+            if (!selected.includes(span)) selectWord(span, event);
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/plain', 'word-modules');
+            span.closest('.editor-item')?.classList.add('dragging-word');
+        });
+        span.addEventListener('dragend', () => {
+            document.querySelectorAll('.editor-item.dragging-word').forEach(el => el.classList.remove('dragging-word'));
+        });
+        span.draggable = true;
+        p.appendChild(span);
+        if (index < palavras.length - 1) p.appendChild(document.createTextNode(' '));
+    });
+    restoreSelectionForCell(p.closest('.editor-item'));
+}
+
+function getSelectedWordsInCell(cell) {
+    return selectedWords.filter(w => w && document.body.contains(w) && w.closest('.editor-item') === cell);
+}
+
+function selectWord(span, event = {}) {
+    const cell = span.closest('.editor-item');
+    if (!cell) return;
+    selectedCell = cell;
+    document.querySelectorAll('.editor-item.selected-cell').forEach(el => el.classList.remove('selected-cell'));
+    cell.classList.add('selected-cell');
+
+    const words = Array.from(cell.querySelectorAll('.word-module'));
+    const idx = words.indexOf(span);
+    const multi = event.ctrlKey || event.metaKey;
+    const range = event.shiftKey && lastSelectedIndex !== null;
+
+    if (range) {
+        const a = Math.min(lastSelectedIndex, idx), b = Math.max(lastSelectedIndex, idx);
+        if (!multi) selectedWords = selectedWords.filter(w => w.closest('.editor-item') !== cell);
+        words.slice(a, b + 1).forEach(w => { if (!selectedWords.includes(w)) selectedWords.push(w); });
+    } else if (multi) {
+        const pos = selectedWords.indexOf(span);
+        if (pos >= 0) selectedWords.splice(pos, 1); else selectedWords.push(span);
+        lastSelectedIndex = idx;
+    } else {
+        // Clique normal: seleciona uma palavra; se ela já era a única selecionada, solta a seleção.
+        if (selectedWords.length === 1 && selectedWords[0] === span) {
+            selectedWords = [];
+            selectedWord = null;
+            lastSelectedIndex = null;
+        } else {
+            selectedWords = [span];
+            lastSelectedIndex = idx;
+        }
+    }
+
+    selectedWords = selectedWords.filter(w => w && document.body.contains(w));
+    selectedWord = selectedWords[0] || null;
+    document.querySelectorAll('.word-module.selected-word').forEach(el => el.classList.remove('selected-word'));
+    selectedWords.forEach(w => w.classList.add('selected-word'));
+    updateWordToolbar();
+}
+
+function restoreSelectionForCell(cell) {
+    if (!cell) return;
+    selectedWords = selectedWords.filter(w => w && document.body.contains(w));
+    selectedWords.forEach(w => w.classList.add('selected-word'));
+    selectedWord = selectedWords[0] || null;
+}
+
+function selectCell(itemDiv) {
+    document.querySelectorAll('.editor-item.selected-cell').forEach(el => el.classList.remove('selected-cell'));
+    selectedCell = itemDiv;
+    itemDiv.classList.add('selected-cell');
+    if (!getSelectedWordsInCell(itemDiv).length) {
+        selectedWords = [];
+        selectedWord = null;
+    }
+    updateWordToolbar();
+}
+
+function addEditorCell(texto = '', afterElement = null) {
+    const beforeState = beginEditorHistory();
+    const editorList = document.getElementById('editor-list');
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'editor-item';
+    itemDiv.addEventListener('click', (event) => {
+        if (!event.target.closest('.word-module') && !event.target.closest('.editor-actions')) {
+            selectCell(itemDiv);
+            clearWordSelection();
+        }
+    });
+
+    const p = document.createElement('p');
+    p.contentEditable = 'true';
+    p.spellcheck = true;
+    p.dataset.placeholder = 'Digite ou cole um trecho aqui...';
+    renderWordModules(p, texto);
+    p.addEventListener('dragover', event => {
+        if (event.dataTransfer.types.includes('text/plain')) {
+            event.preventDefault();
+            p.classList.add('drop-target');
+        }
+    });
+    p.addEventListener('dragleave', () => p.classList.remove('drop-target'));
+    p.addEventListener('drop', event => {
+        event.preventDefault();
+        p.classList.remove('drop-target');
+        if (selectedWords.length) moveSelectedWordsToCell(itemDiv, p, event.clientX, event.clientY);
+    });
+    p.addEventListener('focus', () => {
+        if (historyReady && !historyApplying && !p._historyBefore) p._historyBefore = captureEditorState();
+    });
+    p.addEventListener('input', () => {
+        clearTimeout(p._wordTimer);
+        const oldSelected = [...getSelectedWordsInCell(itemDiv)].map(w => w.dataset.word);
+        p._wordTimer = setTimeout(() => {
+            const txt = garantirEspacos(p.textContent);
+            renderWordModules(p, txt);
+            if (oldSelected.length) {
+                const all = Array.from(p.querySelectorAll('.word-module'));
+                selectedWords = all.filter(w => oldSelected.includes(w.dataset.word));
+                selectedWord = selectedWords[0] || null;
+                updateWordToolbar();
+            }
+            const before = p._historyBefore;
+            p._historyBefore = null;
+            commitTypingHistory(before);
+        }, 350);
+    });
+
+    const actions = document.createElement('div');
+    actions.className = 'editor-actions';
+    const addBtn = document.createElement('button'); addBtn.className='insert'; addBtn.textContent='+'; addBtn.title='Criar uma célula em branco abaixo';
+    addBtn.onclick = e => { e.stopPropagation(); const novo=addEditorCell('',itemDiv); novo.querySelector('p').focus(); selectCell(novo); };
+    const upBtn = document.createElement('button'); upBtn.className='move'; upBtn.textContent='↑'; upBtn.title='Mover célula para cima'; upBtn.onclick=e=>{e.stopPropagation();moveEditorCell(itemDiv,-1);};
+    const downBtn = document.createElement('button'); downBtn.className='move'; downBtn.textContent='↓'; downBtn.title='Mover célula para baixo'; downBtn.onclick=e=>{e.stopPropagation();moveEditorCell(itemDiv,1);};
+    const deleteBtn = document.createElement('button'); deleteBtn.className='delete'; deleteBtn.textContent='×'; deleteBtn.title='Excluir célula';
+    deleteBtn.onclick=e=>{e.stopPropagation();const beforeState=beginEditorHistory();selectedWords=selectedWords.filter(w=>w.closest('.editor-item')!==itemDiv);if(selectedCell===itemDiv)selectedCell=null;itemDiv.remove();if(!document.querySelector('#editor-list .editor-item')){const wasReady=historyReady;historyReady=false;addEditorCell('');historyReady=wasReady;}recordEditorHistory(beforeState);updateWordToolbar();};
+    actions.append(addBtn,upBtn,downBtn,deleteBtn);
+    itemDiv.append(p,actions);
+    if (afterElement && afterElement.parentNode) afterElement.parentNode.insertBefore(itemDiv,afterElement.nextSibling); else editorList.appendChild(itemDiv);
+    recordEditorHistory(beforeState);
+    return itemDiv;
+}
+
+function moveEditorCell(item, direction) {
+    const beforeState = beginEditorHistory();
+    const list=document.getElementById('editor-list'); const target=direction<0?item.previousElementSibling:item.nextElementSibling;
+    if(!target||!target.classList.contains('editor-item'))return;
+    if(direction<0)list.insertBefore(item,target);else list.insertBefore(target,item);selectCell(item);
+    recordEditorHistory(beforeState);
+}
+
+function getSelectedWords() { return selectedWords.filter(w => w && document.body.contains(w)); }
+
+function clearWordSelection() {
+    document.querySelectorAll('.word-module.selected-word').forEach(el => el.classList.remove('selected-word'));
+    selectedWords = [];
+    selectedWord = null;
+    lastSelectedIndex = null;
+    updateWordToolbar();
+}
+
+function updateWordToolbar() {
+    const toolbar=document.getElementById('word-toolbar'); const label=document.getElementById('selected-word-label');
+    const pasteBtn=document.getElementById('pasteCutBtn'); const moveCellBtn=document.getElementById('moveCellBtn');
+    const selected=getSelectedWords();
+    if(!toolbar)return;
+    label.textContent=selected.length
+        ? (selected.length===1 ? `Selecionada: “${selected[0].textContent}”` : `Selecionadas: ${selected.map(w=>w.textContent).join(' ')}`)
+        : (cutWordBuffer ? 'Conteúdo pronto para colar' : 'Nenhuma palavra selecionada');
+    if(pasteBtn) pasteBtn.style.display='inline-flex';
+    if(moveCellBtn) moveCellBtn.style.display='inline-flex';
+}
+
+async function copySelectedWords() {
+    const selected=getSelectedWords(); if(!selected.length)return;
+    const text=selected.map(w=>w.textContent).join(' ');
+    try{await navigator.clipboard.writeText(text);}catch(e){prompt('Copie o texto:',text);}
+    cutWordBuffer={text,mode:'copy'}; updateWordToolbar();
+}
+
+function cutSelectedWords() {
+    const beforeState=beginEditorHistory();
+    const selected=getSelectedWords(); if(!selected.length)return;
+    const text=selected.map(w=>w.textContent).join(' ');
+    cutWordBuffer={text,mode:'cut'};
+    const cells=[...new Set(selected.map(w=>w.closest('.editor-item')))];
+    selected.forEach(w=>w.remove());
+    cells.forEach(normalizeCellFromModules);
+    selectedWords=[]; selectedWord=null; recordEditorHistory(beforeState); updateWordToolbar();
+}
+
+function deleteSelectedWords(){
+    const beforeState=beginEditorHistory();
+    const selected=getSelectedWords(); if(!selected.length)return;
+    const cells=[...new Set(selected.map(w=>w.closest('.editor-item')))]; selected.forEach(w=>w.remove()); cells.forEach(normalizeCellFromModules);
+    selectedWords=[];selectedWord=null;recordEditorHistory(beforeState);updateWordToolbar();
+}
+
+function normalizeCellFromModules(cell){
+    if(!cell)return; const p=cell.querySelector('p'); if(!p)return;
+    const text=Array.from(p.querySelectorAll('.word-module')).map(w=>w.textContent).join(' ');
+    renderWordModules(p,text);
+}
+
+function moveSelectedWords(direction){
+    const beforeState=beginEditorHistory();
+    const selected=getSelectedWords(); if(!selected.length)return;
+    const cell=selected[0].closest('.editor-item');
+    if(selected.some(w=>w.closest('.editor-item')!==cell))return alert('Selecione palavras da mesma célula para movê-las dentro da frase.');
+    const words=Array.from(cell.querySelectorAll('.word-module'));
+    const ordered=selected.slice().sort((a,b)=>words.indexOf(a)-words.indexOf(b));
+    if(direction<0){
+        ordered.forEach(w=>{const prev=w.previousElementSibling?.classList.contains('word-module')?w.previousElementSibling:null;if(prev&&!selected.includes(prev))prev.before(w);});
+    }else{
+        [...ordered].reverse().forEach(w=>{const next=w.nextElementSibling?.classList.contains('word-module')?w.nextElementSibling:null;if(next&&!selected.includes(next))next.after(w);});
+    }
+    normalizeCellFromModules(cell); selectedWords=[]; const all=Array.from(cell.querySelectorAll('.word-module')); const selectedTexts=ordered.map(w=>w.textContent); selectedWords=all.filter(w=>selectedTexts.includes(w.textContent)); selectedWord=selectedWords[0]||null; recordEditorHistory(beforeState); updateWordToolbar();
+}
+
+async function pasteCutWords(){
+    const beforeState=beginEditorHistory();
+    if(!selectedCell){alert('Clique primeiro na célula onde deseja colar.');return;}
+    let text = cutWordBuffer?.text || '';
+    if(!text){
+        try {
+            if(navigator.clipboard && navigator.clipboard.readText) text = await navigator.clipboard.readText();
+        } catch(e) {}
+    }
+    text = garantirEspacos(text);
+    if(!text){alert('Não há conteúdo para colar. Copie ou recorte palavras primeiro.');return;}
+    const p=selectedCell.querySelector('p'); if(!p)return;
+    const atual=garantirEspacos(p.textContent);
+    renderWordModules(p, atual ? `${atual} ${text}` : text);
+    if(cutWordBuffer?.mode==='cut') cutWordBuffer=null;
+    selectedWords=[]; selectedWord=null; recordEditorHistory(beforeState); updateWordToolbar();
+}
+
+function moveSelectedWordsToCell(targetCell = null, targetP = null, clientX = null) {
+    const beforeState=beginEditorHistory();
+    const selected=getSelectedWords(); if(!selected.length)return;
+    targetCell=targetCell||selectedCell;
+    if(!targetCell){alert('Selecione a célula de destino.');return;}
+    const sourceCells=[...new Set(selected.map(w=>w.closest('.editor-item')))];
+    const text=selected.map(w=>w.textContent).join(' ');
+    selected.forEach(w=>w.remove()); sourceCells.forEach(normalizeCellFromModules);
+    const p=targetP||targetCell.querySelector('p'); if(!p)return;
+    const words=Array.from(p.querySelectorAll('.word-module'));
+    if(clientX!==null && words.length){
+        // Em drop, posiciona aproximadamente no ponto horizontal escolhido.
+        const target=words.find(w=>clientX < w.getBoundingClientRect().left+w.getBoundingClientRect().width/2);
+        if(target){
+            const temp=document.createElement('span'); temp.className='word-module'; temp.textContent=text; target.before(temp); normalizeCellFromModules(targetCell); renderWordModules(p,p.textContent); }
+            else { renderWordModules(p,garantirEspacos(p.textContent)+' '+text); }
+    } else {
+        renderWordModules(p,garantirEspacos(p.textContent)?garantirEspacos(p.textContent)+' '+text:text);
+    }
+    selectedWords=[];selectedWord=null;selectedCell=targetCell;targetCell.classList.add('selected-cell');
+    if(cutWordBuffer?.mode==='cut')cutWordBuffer=null; recordEditorHistory(beforeState); updateWordToolbar();
+}
+
+document.addEventListener('keydown', (event) => {
+    const modal = document.getElementById('manual-editor-modal');
+    if (!modal || modal.style.display === 'none') return;
+    if (event.key === 'Escape') {
+        clearWordSelection();
+        return;
+    }
+    if ((event.ctrlKey || event.metaKey) && !event.shiftKey && event.key.toLowerCase() === 'z') {
+        event.preventDefault();
+        undoEditor();
+    } else if ((event.ctrlKey || event.metaKey) && (event.key.toLowerCase() === 'y' || (event.shiftKey && event.key.toLowerCase() === 'z'))) {
+        event.preventDefault();
+        redoEditor();
+    }
+});
+
+function closeManualEditor() {
+    document.getElementById('manual-editor-modal').style.display = 'none';
+    selectedWord = null;
+    selectedWords = [];
+    selectedCell = null;
+    cutWordBuffer = null;
+    updateWordToolbar();
+}
 
 function saveManualChanges() {
-    const items = document.querySelectorAll('#editor-list p');
-    let newText = [];
-    items.forEach(item => { 
-        let textoLimpo = garantirEspacos(item.textContent);
-        if (textoLimpo) newText.push(textoLimpo); 
+    const items = document.querySelectorAll('#editor-list .editor-item');
+    const paragraphs = [];
+    items.forEach(item => {
+        const p = item.querySelector('p');
+        const textoLimpo = garantirEspacos(p ? p.textContent : '');
+        if (textoLimpo) paragraphs.push(textoLimpo);
     });
-    
-    const combinedText = newText.join('\n\n');
+
+    // Cada célula é preservada como um parágrafo no texto resultante.
+    const combinedText = paragraphs.join('\n\n');
     rawTextArea.value = combinedText;
-    processedTextArea.value = combinedText;
-    sentences = newText.map(s => garantirEspacos(s)).filter(Boolean);
+    sentences = paragraphs.map(s => garantirEspacos(s)).filter(Boolean);
     currentIndex = 0;
-    
+
     closeManualEditor();
     showCurrent();
     updateCounters();
@@ -1023,10 +1250,27 @@ function saveManualChanges() {
 
 function updateCounters() {
     const rawText = rawTextArea.value;
-    const processedText = processedTextArea.value;
     document.getElementById('rawTextCounter').textContent = `(${rawText.length} carac.)`;
-    document.getElementById('processedTextCounter').textContent = `(${processedText.length} carac.)`;
 }
+
+// Fechar pesquisa Google ao clicar fora do banner ou pressionar Esc
+document.addEventListener('click', (event) => {
+    const overlay = document.getElementById('google-search-overlay');
+    if (overlay && event.target === overlay) closeGoogleSearch();
+});
+document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+        const overlay = document.getElementById('google-search-overlay');
+        if (overlay && overlay.classList.contains('active')) {
+            closeGoogleSearch();
+            return;
+        }
+        if (document.getElementById('manual-editor-modal')?.style.display !== 'none') {
+            clearWordSelection();
+        }
+    }
+});
+
 </script>
 </body>
 </html>
