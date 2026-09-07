@@ -1107,6 +1107,10 @@
                 // Texto enviado diretamente pelo Alumno
                 document.getElementById('rawText').value = textoUrl;
 
+                // Deixa a anotação pronta na Pesquisa rápida, sem executar a busca.
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) searchInput.value = textoUrl;
+
                 // Atualiza contador
                 updateCounters();
 
